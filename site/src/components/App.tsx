@@ -3,7 +3,7 @@ import en from '../i18n/en.json';
 import uk from '../i18n/uk.json';
 import {
   search, installScript, installSnippet, wizardRank,
-  type Catalog, type WizardStep, type WizardAnswers, type Plugin,
+  type Catalog, type WizardStep, type WizardAnswers, type Plugin, type Artifact,
 } from '../lib/catalog';
 
 type Strings = typeof en;
@@ -13,6 +13,8 @@ const TYPES = ['all', 'plugin', 'skill', 'agent', 'hook', 'mcp'];
 const VIEWS: View[] = ['browse', 'compare', 'wizard'];
 
 const fill = (t: string, n: number) => t.replace('{n}', String(n));
+// Changelog items use `code` spans; render them without pulling in a markdown parser.
+const inline = (t: string) => t.split('`').map((x, i) => (i % 2 ? <code key={i}>{x}</code> : x));
 
 function readUrl() {
   const p = new URLSearchParams(location.search);
@@ -22,6 +24,7 @@ function readUrl() {
     type: p.get('type') ?? 'all',
     sort: (sort === 'az' || sort === 'new' ? sort : 'rel') as 'rel' | 'az' | 'new',
     basket: (p.get('basket') ?? '').split(',').filter(Boolean),
+    item: p.get('item'),
   };
 }
 
@@ -50,6 +53,7 @@ export default function App({ base }: { base: string }) {
   const [basket, setBasket] = useState<string[]>(init.basket);
   const [cmp, setCmp] = useState<string[]>([]);
   const [drawer, setDrawer] = useState(false);
+  const [detail, setDetail] = useState<string | null>(init.item);
   const [copied, setCopied] = useState('');
   const [step, setStep] = useState(0);
   const [ans, setAns] = useState<WizardAnswers>({});
@@ -82,22 +86,24 @@ export default function App({ base }: { base: string }) {
     if (type !== 'all') p.set('type', type);
     if (sort !== 'rel') p.set('sort', sort);
     if (basket.length) p.set('basket', basket.join(','));
+    if (detail) p.set('item', detail);
     const qs = p.toString();
     history.replaceState(null, '', location.pathname + (qs ? `?${qs}` : ''));
-  }, [q, type, sort, basket]);
+  }, [q, type, sort, basket, detail]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       const t = (e.target as HTMLElement).tagName;
       if (e.key === '/' && t !== 'INPUT' && t !== 'SELECT') { e.preventDefault(); qRef.current?.focus(); }
       if (e.key === 'Escape') {
-        if (drawer) setDrawer(false);
+        if (detail) setDetail(null);
+        else if (drawer) setDrawer(false);
         else if (t === 'INPUT') { setQ(''); (e.target as HTMLElement).blur(); }
       }
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [drawer]);
+  }, [drawer, detail]);
 
   const results = useMemo(() => (cat ? search(cat, { q, type, hooksOnly, sort }) : []), [cat, q, type, hooksOnly, sort]);
 
@@ -106,7 +112,7 @@ export default function App({ base }: { base: string }) {
     try { await navigator.clipboard.writeText(text); flash(k); }
     catch { window.prompt('Copy:', text); }
   };
-  const addPlugin = (id: string) => { setBasket((b) => (b.includes(id) ? b : [...b, id])); setDrawer(true); };
+  const addPlugin = (id: string) => { setBasket((b) => (b.includes(id) ? b : [...b, id])); setDetail(null); setDrawer(true); };
   const clearAll = () => { setQ(''); setType('all'); setHooksOnly(false); };
   const toggleCmp = (id: string) => setCmp((c) => (c.includes(id) ? c.filter((i) => i !== id) : c.length < 3 ? [...c, id] : c));
   const typeLabel = (t: string) => (t === 'all' ? s.all : t);
@@ -171,14 +177,16 @@ export default function App({ base }: { base: string }) {
         <div class="grid">
           {results.map((a) => {
             const p = plugin(a.plugin), inB = basket.includes(a.plugin);
+            // The whole card opens the details; its own controls keep their behaviour.
+            const open = (e: MouseEvent) => { if (!(e.target as HTMLElement).closest('button, a, input, label, select')) setDetail(a.id); };
             return (
-              <article class={`card rcard${inB ? ' in-basket' : ''}`} key={a.id}>
+              <article class={`card rcard clickable${inB ? ' in-basket' : ''}`} key={a.id} onClick={open}>
                 <div class="rcard-top">
                   <span class="tag tag-accent">{a.type}</span>
-                  <label><input type="checkbox" checked={cmp.includes(a.plugin)} onChange={() => toggleCmp(a.plugin)} /> {s.compare}</label>
+                  <label><input type="checkbox" checked={cmp.includes(a.id)} disabled={!cmp.includes(a.id) && cmp.length >= 3} onChange={() => toggleCmp(a.id)} /> {s.compare}</label>
                 </div>
-                <h3>{a.name}</h3>
-                <div class="meta muted">{s.in} <a href="#" onClick={(e) => { e.preventDefault(); setQ(a.plugin); }}>{a.plugin}</a> · {p?.updatedAt}</div>
+                <h3><button class="rcard-title" onClick={() => setDetail(a.id)}>{a.name}</button></h3>
+                <div class="meta muted">{s.in} <a href="#" onClick={(e) => { e.preventDefault(); setQ(a.plugin); }}>{a.plugin}</a> · <span class="ver">v{p?.version}</span> · {p?.updatedAt}</div>
                 <p class="desc">{a.description}</p>
                 <div class="tags">{a.tags.map((t) => <span class="tag tag-outline" key={t}>{t}</span>)}</div>
                 <div class="actions">
@@ -203,40 +211,49 @@ export default function App({ base }: { base: string }) {
     </main>
   );
 
-  // ---- compare ----
-  const cp = cmp.map(plugin).filter(Boolean);
+  // ---- compare (individual artifacts, 2–3 at a time) ----
+  const ca = cmp.map((id) => cat.artifacts.find((a) => a.id === id)).filter(Boolean) as Artifact[];
   const yn = (b: boolean) => (b ? s.declaredYes : s.no);
-  const rows: [string, (p: Plugin) => string][] = [
-    [s.rows.description, (p) => cat.artifacts.find((a) => a.type === 'plugin' && a.plugin === p.id)?.description ?? cat.artifacts.filter((a) => a.plugin === p.id).map((a) => a.name).join(', ')],
-    [s.rows.version, (p) => p.version],
-    ['Skills', (p) => String(p.counts.skills)], ['Agents', (p) => String(p.counts.agents)],
-    ['Hooks', (p) => String(p.counts.hooks)], ['MCP', (p) => String(p.counts.mcp)],
-    [s.rows.runs, (p) => yn(p.trust.runsCommands)], [s.rows.net, (p) => yn(p.trust.usesNetwork)],
-    [s.rows.keywords, (p) => p.keywords.join(', ')], [s.rows.updated, (p) => p.updatedAt],
-    [s.rows.install, (p) => `claude plugin install ${p.id}@${cat.marketplace.name}`],
+  const list = (xs?: string[]) => (xs && xs.length ? xs.join(', ') : '—');
+  // [label, value, highlight differences?, monospace?]
+  const rows: [string, (a: Artifact) => string, boolean, boolean][] = [
+    [s.d.type, (a) => a.type, true, false],
+    [s.d.plugin, (a) => a.plugin, true, false],
+    [s.rows.version, (a) => `v${plugin(a.plugin).version}`, true, false],
+    [s.rows.description, (a) => a.description, false, false],
+    [s.d.model, (a) => a.meta?.model ?? '—', true, false],
+    [s.d.tools, (a) => list(a.meta?.tools), true, false],
+    [s.d.skillsUsed, (a) => list(a.meta?.skills), true, false],
+    [s.rows.runs, (a) => yn(plugin(a.plugin).trust.runsCommands), true, false],
+    [s.rows.net, (a) => yn(plugin(a.plugin).trust.usesNetwork), true, false],
+    [s.d.tags, (a) => a.tags.join(', '), false, false],
+    [s.rows.updated, (a) => plugin(a.plugin).updatedAt, true, false],
+    [s.rows.install, (a) => `claude plugin install ${a.plugin}@${cat.marketplace.name}`, false, true],
   ];
-  const cols = `180px repeat(${Math.max(cp.length, 1)},minmax(200px,1fr))`;
+  const cols = `180px repeat(${Math.max(ca.length, 1)},minmax(200px,1fr))`;
   const compare = (
     <main class="main">
       <h1 class="h-page">{s.compare}</h1>
-      <p class="muted" style="font-size:14px;margin-bottom:28px">?ids={cmp.join(',')}</p>
-      {cp.length < 2 ? (
+      {ca.length < 2 ? (
         <div class="guide">{s.cmpGuide} <button class="btn btn-ghost" style="margin-left:12px" onClick={() => setView('browse')}>{s.browse}</button></div>
       ) : (
         <>
           <div class="cmp-wrap">
             <div class="cmp-row" style={{ gridTemplateColumns: cols }}>
               <div class="cmp-label" />
-              {cp.map((p) => (
-                <div class="cmp-head" key={p.id}>{p.id}<div><button class="linkbtn" onClick={() => toggleCmp(p.id)}>{s.remove}</button></div></div>
+              {ca.map((a) => (
+                <div class="cmp-head" key={a.id}>
+                  <button class="rcard-title" onClick={() => setDetail(a.id)}>{a.name}</button>
+                  <div><button class="linkbtn" onClick={() => toggleCmp(a.id)}>{s.remove}</button></div>
+                </div>
               ))}
             </div>
-            {rows.map(([label, f], i) => {
-              const vals = cp.map(f), diff = new Set(vals).size > 1 && i > 0 && i < 10;
+            {rows.map(([label, f, hl, mono]) => {
+              const vals = ca.map(f), diff = hl && new Set(vals).size > 1;
               return (
                 <div class="cmp-row" style={{ gridTemplateColumns: cols }} key={label}>
                   <div class="cmp-label">{label}</div>
-                  {vals.map((v, j) => <div class={`cmp-cell${diff ? ' diff' : ''}${i === 10 ? ' mono' : ''}`} key={j}>{v}</div>)}
+                  {vals.map((v, j) => <div class={`cmp-cell${diff ? ' diff' : ''}${mono ? ' mono' : ''}`} key={j}>{v}</div>)}
                 </div>
               );
             })}
@@ -290,6 +307,90 @@ export default function App({ base }: { base: string }) {
     </main>
   );
 
+  // ---- details panel ----
+  const da = detail ? cat.artifacts.find((a) => a.id === detail) : undefined;
+  const dp = da ? plugin(da.plugin) : undefined;
+  const gh = (ref: string, path = '') => `https://github.com/${cat.marketplace.repo}/${path ? 'blob' : 'tree'}/${ref}${path ? `/${path}` : ''}`;
+  const facts: [string, string | undefined][] = da ? [
+    [s.d.model, da.meta?.model],
+    [s.d.tools, da.meta?.tools?.join(', ')],
+    [s.d.disallowed, da.meta?.disallowedTools?.join(', ')],
+    [s.d.skillsUsed, da.meta?.skills?.join(', ')],
+    [s.d.allowedTools, da.meta?.allowedTools],
+    [s.d.event, da.meta?.event],
+    [s.d.matcher, da.meta?.matcher],
+    [s.d.transport, da.meta?.transport],
+    [s.d.scripts, da.meta?.bundledScripts ? s.declaredYes : undefined],
+  ].filter(([, v]) => v) as [string, string][] : [];
+  const siblings = da ? cat.artifacts.filter((a) => a.plugin === da.plugin && a.id !== da.id) : [];
+  const details = da && dp && (
+    <>
+      <div class="scrim" onClick={() => setDetail(null)} />
+      <aside class="drawer detail" role="dialog" aria-modal="true" aria-label={da.name}>
+        <div class="drawer-head">
+          <span class="tag tag-accent">{da.type}</span>
+          <button class="btn btn-ghost" onClick={() => setDetail(null)} aria-label={s.d.close}>Esc</button>
+        </div>
+        <h2>{da.name}</h2>
+        <div class="meta muted">
+          {s.in} <button class="linkbtn" onClick={() => setDetail(`${dp.id}/plugin/${dp.id}`)}>{dp.id}</button> · <span class="ver">v{dp.version}</span>
+          {dp.tag ? <> · <a href={gh(dp.tag)} target="_blank" rel="noopener noreferrer">{dp.tag}</a></> : <> · {s.d.untagged}</>}
+        </div>
+        <p class="detail-desc">{da.description}</p>
+        {da.tags.length > 0 && <div class="tags">{da.tags.map((t) => <span class="tag tag-outline" key={t}>{t}</span>)}</div>}
+
+        {facts.length > 0 && (
+          <section>
+            <div class="label-s muted">{s.d.details}</div>
+            {facts.map(([k, v]) => <div class="brow" key={k}><span class="muted">{k}</span><span class="brow-v">{v}</span></div>)}
+          </section>
+        )}
+
+        <section>
+          <div class="label-s muted">{s.d.plugin} · {dp.id}</div>
+          <div class="brow"><span class="muted">{s.rows.version}</span><span class="brow-v">v{dp.version}</span></div>
+          <div class="brow"><span class="muted">{s.d.dependencies}</span><span class="brow-v">{dp.dependencies?.length ? dp.dependencies.join(', ') : s.d.none}</span></div>
+          <div class="brow"><span class="muted">{s.d.contents}</span><span class="brow-v">{[['skills', dp.counts.skills], ['agents', dp.counts.agents], ['hooks', dp.counts.hooks], ['MCP', dp.counts.mcp]].filter(([, n]) => n).map(([k, n]) => `${n} ${k}`).join(' · ')}</span></div>
+          <div class="brow"><span class="muted">{s.rows.runs}</span><span class="brow-v">{yn(dp.trust.runsCommands)}</span></div>
+          <div class="brow"><span class="muted">{s.rows.net}</span><span class="brow-v">{yn(dp.trust.usesNetwork)}</span></div>
+          {dp.trust.hooks?.map((h) => <div class="brow" key={h.summary}><span class="muted">Hook</span><span class="brow-v mono">{h.summary}</span></div>)}
+        </section>
+
+        <section>
+          <div class="label-s muted">{s.d.releases}</div>
+          {dp.releases?.length ? dp.releases.map((r) => (
+            <div class="release" key={r.version}>
+              <div class="release-head"><span class="ver">v{r.version}</span>{r.date && <span class="muted"> · {r.date}</span>}{r.version === dp.version && <span class="tag tag-accent">{s.d.current}</span>}</div>
+              {r.sections.map((sec) => (
+                <div key={sec.title}>
+                  {sec.title && <div class="release-sec">{sec.title}</div>}
+                  <ul>{sec.items.map((it, i) => <li key={i}>{inline(it)}</li>)}</ul>
+                </div>
+              ))}
+            </div>
+          )) : <p class="muted">{s.d.noReleases}</p>}
+        </section>
+
+        <section>
+          <div class="label-s muted">{s.rows.install}</div>
+          <pre class="script">{installSnippet(cat, dp.id)}</pre>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn btn-primary" style="flex:1" onClick={() => clip(installSnippet(cat, dp.id), `d${da.id}`)}>{copied === `d${da.id}` ? s.copied : s.copy}</button>
+            <button class="btn btn-secondary" style="flex:1" onClick={() => addPlugin(dp.id)}>{basket.includes(dp.id) ? s.added : s.add}</button>
+            {da.path && <a class="btn btn-ghost" href={gh(dp.tag ?? 'main', da.path)} target="_blank" rel="noopener noreferrer">{s.d.source} ↗</a>}
+          </div>
+        </section>
+
+        {siblings.length > 0 && (
+          <section>
+            <div class="label-s muted">{s.d.alsoIn}</div>
+            <div class="tags">{siblings.map((a) => <button class="chip" key={a.id} onClick={() => setDetail(a.id)}>{a.type} · {a.name}</button>)}</div>
+          </section>
+        )}
+      </aside>
+    </>
+  );
+
   return chrome(
     <>
       {view === 'browse' ? browse : view === 'compare' ? compare : wizard}
@@ -300,7 +401,8 @@ export default function App({ base }: { base: string }) {
           <button class="btn btn-ghost" onClick={() => setCmp([])}>{s.clear}</button>
         </div>
       )}
-      {drawer && (
+      {details}
+      {drawer && !details && (
         <>
           <div class="scrim" onClick={() => setDrawer(false)} />
           <aside class="drawer" role="dialog" aria-label={s.basket}>

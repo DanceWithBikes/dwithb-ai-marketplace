@@ -106,6 +106,33 @@ function tagsFor(name, keywords, text = "") {
   return [...new Set([...(DERIVED[name] ?? []), ...relevant, ...words].map((t) => t.toLowerCase()))].sort();
 }
 
+// "## [1.0.0] - 2026-10-20" + "### Added" + "- item" → [{ version, date, sections: [{ title, items }] }]
+function releases(file) {
+  if (!existsSync(file)) return [];
+  const out = [];
+  let rel = null, sec = null;
+  for (const line of readFileSync(file, "utf8").split(/\r?\n/)) {
+    const h2 = line.match(/^##\s+\[?([^\]\s]+)\]?(?:\s+-\s+(\S+))?/);
+    if (h2) { rel = { version: h2[1], date: h2[2] ?? null, sections: [] }; out.push(rel); sec = null; continue; }
+    const h3 = line.match(/^###\s+(.+)/);
+    if (h3 && rel) { sec = { title: h3[1].trim(), items: [] }; rel.sections.push(sec); continue; }
+    const li = line.match(/^\s*[-*]\s+(.+)/);
+    if (li && rel) {
+      if (!sec) { sec = { title: "", items: [] }; rel.sections.push(sec); }
+      sec.items.push(li[1].trim());
+    }
+  }
+  return out;
+}
+
+const tags = (() => {
+  try {
+    return new Set(execFileSync("git", ["tag", "-l"], { cwd: ROOT, encoding: "utf8" }).split("\n").filter(Boolean));
+  } catch {
+    return new Set();
+  }
+})();
+
 function lastCommit(path) {
   try {
     return execFileSync("git", ["log", "-1", "--format=%cs", "--", path], { cwd: ROOT, encoding: "utf8" }).trim() || null;
@@ -154,7 +181,7 @@ for (const entry of mp.plugins ?? []) {
     if (!existsSync(file)) continue;
     const { data, body } = frontmatter(file);
     requireFields(file, data, ["name", "description"]);
-    found.skill.push({ name: data.name ?? name, description: data.description ?? "", file, body, scripts: existsSync(join(skillsDir, name, "scripts")) });
+    found.skill.push({ name: data.name ?? name, description: data.description ?? "", file, body, scripts: existsSync(join(skillsDir, name, "scripts")), meta: { allowedTools: data["allowed-tools"] || undefined, bundledScripts: existsSync(join(skillsDir, name, "scripts")) || undefined } });
   }
 
   const agentsDir = join(dir, "agents");
@@ -163,7 +190,7 @@ for (const entry of mp.plugins ?? []) {
     const { data, body } = frontmatter(file);
     requireFields(file, data, ["name", "description"]);
     const tools = String(data.tools ?? "").split(",").map((t) => t.trim()).filter(Boolean);
-    found.agent.push({ name: data.name ?? f.replace(/\.md$/, ""), description: data.description ?? "", file, body, tools });
+    found.agent.push({ name: data.name ?? f.replace(/\.md$/, ""), description: data.description ?? "", file, body, tools, meta: { model: data.model || undefined, tools, disallowedTools: data.disallowedTools ? String(data.disallowedTools).split(",").map((t) => t.trim()) : undefined, skills: Array.isArray(data.skills) && data.skills.length ? data.skills : undefined } });
   }
 
   const hooksFile = join(dir, "hooks/hooks.json");
@@ -176,7 +203,7 @@ for (const entry of mp.plugins ?? []) {
           const script = String(h.command ?? "").match(/([\w.-]+\.(?:mjs|js|sh|py))/)?.[1] ?? h.type;
           const summary = `${event}${g.matcher ? ` on ${g.matcher}` : ""}: ${script}`;
           hookSummaries.push({ event, summary });
-          found.hook.push({ name: script.replace(/\.\w+$/, ""), description: `${event} hook${g.matcher ? ` on ${g.matcher.split("|").join(", ")}` : ""} that runs ${script}.`, file: hooksFile, body: "" });
+          found.hook.push({ name: script.replace(/\.\w+$/, ""), description: `${event} hook${g.matcher ? ` on ${g.matcher.split("|").join(", ")}` : ""} that runs ${script}.`, file: hooksFile, body: "", meta: { event, matcher: g.matcher || undefined } });
         }
       }
     }
@@ -188,7 +215,7 @@ for (const entry of mp.plugins ?? []) {
     for (const [name, cfg] of Object.entries(readJson(mcpFile)?.mcpServers ?? {})) {
       const transport = cfg.url ? cfg.type ?? "http" : "stdio";
       mcpServers.push({ name, transport });
-      found.mcp.push({ name, description: `MCP server (${transport}).`, file: mcpFile, body: "" });
+      found.mcp.push({ name, description: `MCP server (${transport}).`, file: mcpFile, body: "", meta: { transport } });
     }
   }
 
@@ -211,6 +238,8 @@ for (const entry of mp.plugins ?? []) {
     },
     trust: { hooks: hookSummaries, mcpServers, runsCommands, usesNetwork },
     path: pluginPath,
+    tag: tags.has(`${id}--v${manifest.version}`) ? `${id}--v${manifest.version}` : null,
+    releases: releases(join(dir, "CHANGELOG.md")),
   });
 
   artifacts.push({
@@ -221,6 +250,7 @@ for (const entry of mp.plugins ?? []) {
     description: manifest.description ?? "",
     tags: [...new Set([...keywords, ...Object.entries(found).filter(([, l]) => l.length).map(([t]) => `${t}s`)])].sort(),
     path: relative(ROOT, manifestFile),
+    meta: {},
     body: plainText(existsSync(join(dir, "README.md")) ? readFileSync(join(dir, "README.md"), "utf8") : ""),
   });
 
@@ -234,6 +264,7 @@ for (const entry of mp.plugins ?? []) {
         description: a.description,
         tags: tagsFor(a.name, keywords, a.description),
         path: relative(ROOT, a.file),
+        meta: a.meta ?? {},
         body: plainText(a.body),
       });
     }

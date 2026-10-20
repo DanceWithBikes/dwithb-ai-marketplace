@@ -65,3 +65,22 @@ pre.script { margin: 0; padding: 14px; border: 1px solid var(--color-divider); b
 .ftr a:first-of-type { margin-left: auto; }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 @media (max-width: 640px) { .hdr, .main, .ftr { padding-left: 20px; padding-right: 20px; } .h-hero { font-size: 40px; } }
+
+/* Clickable cards and the details panel */
+.rcard.clickable { cursor: pointer; transition: border-color .15s, box-shadow .15s; }
+.rcard.clickable:hover { border-color: var(--color-accent); box-shadow: var(--shadow-sm); }
+.rcard-title { font: inherit; color: inherit; background: none; border: 0; padding: 0; text-align: left; cursor: pointer; }
+.rcard-title:hover { color: var(--color-accent-700); }
+.ver { font-family: monospace; font-size: .95em; color: var(--color-accent-700); }
+.drawer.detail { width: min(560px, 100vw); gap: 18px; }
+.drawer.detail h2 { line-height: 1.05; }
+.drawer.detail section { display: flex; flex-direction: column; gap: 6px; }
+.detail-desc { font-size: 15px; line-height: 1.6; margin: 0; }
+.brow-v { text-align: right; max-width: 65%; word-break: break-word; }
+.mono { font-family: monospace; font-size: 12.5px; }
+.release { border: 1px solid var(--color-divider); border-radius: 4px; padding: 12px 14px; }
+.release-head { display: flex; gap: 8px; align-items: baseline; margin-bottom: 6px; }
+.release-head .tag { margin-left: auto; }
+.release-sec { font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--color-neutral-600); margin-top: 8px; }
+.release ul { margin: 4px 0 0; padding-left: 18px; font-size: 14px; line-height: 1.55; }
+code { font-family: monospace; font-size: .9em; padding: 1px 4px; border-radius: 3px; background: var(--color-neutral-200); }
