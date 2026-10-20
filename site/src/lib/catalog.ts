@@ -18,7 +18,7 @@ export interface ArtifactMeta {
 }
 export interface Artifact {
   id: string; type: ArtifactType; plugin: string; name: string; description: string; tags: string[];
-  path?: string; meta?: ArtifactMeta;
+  path?: string; meta?: ArtifactMeta; files?: string[];
 }
 export interface Catalog {
   marketplace: { name: string; repo: string; description: string };

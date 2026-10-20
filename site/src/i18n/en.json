@@ -99,7 +99,13 @@
     "untagged": "not tagged yet",
     "source": "View source",
     "alsoIn": "Also in this plugin",
-    "close": "Close"
+    "close": "Close",
+    "backToDetails": "Details",
+    "files": "Files",
+    "github": "Open on GitHub",
+    "fileError": "Could not load this file.",
+    "file1": "file",
+    "fileN": "files"
   },
   "types": {
     "plugin": "Plugin",

@@ -5,7 +5,7 @@
 //   node scripts/build-catalog.mjs [--out site/public/catalog.json]
 
 import { execFileSync } from "node:child_process";
-import { existsSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
+import { copyFileSync, existsSync, mkdirSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -13,6 +13,25 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const outArg = process.argv.indexOf("--out");
 const OUT = resolve(ROOT, outArg > -1 ? process.argv[outArg + 1] : "site/public/catalog.json");
 const BODY_LIMIT = 5000;
+// Source files shown in the site's viewer are mirrored here (repo-relative paths), loaded on demand.
+const SOURCE_DIR = join(dirname(OUT), "source");
+const SOURCE_MAX_BYTES = 300_000;
+const sourceFiles = new Set();
+
+// Repo-relative paths of the files that make up an artifact, main file first.
+function walk(dir) {
+  return readdirSync(dir, { withFileTypes: true })
+    .sort((a, b) => a.name.localeCompare(b.name))
+    .flatMap((e) => (e.isDirectory() ? walk(join(dir, e.name)) : [join(dir, e.name)]));
+}
+function filesOf(main, extra = []) {
+  const list = [main, ...extra.filter((f) => f !== main)].filter((f) => existsSync(f) && statSync(f).size <= SOURCE_MAX_BYTES);
+  return list.map((f) => {
+    const path = relative(ROOT, f).split("\\").join("/");
+    sourceFiles.add(path);
+    return path;
+  });
+}
 
 // Extra search terms per skill, so "frontend" or "database" finds the right skill.
 const DERIVED = {
@@ -181,7 +200,7 @@ for (const entry of mp.plugins ?? []) {
     if (!existsSync(file)) continue;
     const { data, body } = frontmatter(file);
     requireFields(file, data, ["name", "description"]);
-    found.skill.push({ name: data.name ?? name, description: data.description ?? "", file, body, scripts: existsSync(join(skillsDir, name, "scripts")), meta: { allowedTools: data["allowed-tools"] || undefined, bundledScripts: existsSync(join(skillsDir, name, "scripts")) || undefined } });
+    found.skill.push({ name: data.name ?? name, description: data.description ?? "", file, body, files: filesOf(file, walk(join(skillsDir, name))), scripts: existsSync(join(skillsDir, name, "scripts")), meta: { allowedTools: data["allowed-tools"] || undefined, bundledScripts: existsSync(join(skillsDir, name, "scripts")) || undefined } });
   }
 
   const agentsDir = join(dir, "agents");
@@ -190,7 +209,7 @@ for (const entry of mp.plugins ?? []) {
     const { data, body } = frontmatter(file);
     requireFields(file, data, ["name", "description"]);
     const tools = String(data.tools ?? "").split(",").map((t) => t.trim()).filter(Boolean);
-    found.agent.push({ name: data.name ?? f.replace(/\.md$/, ""), description: data.description ?? "", file, body, tools, meta: { model: data.model || undefined, tools, disallowedTools: data.disallowedTools ? String(data.disallowedTools).split(",").map((t) => t.trim()) : undefined, skills: Array.isArray(data.skills) && data.skills.length ? data.skills : undefined } });
+    found.agent.push({ name: data.name ?? f.replace(/\.md$/, ""), description: data.description ?? "", file, body, files: filesOf(file), tools, meta: { model: data.model || undefined, tools, disallowedTools: data.disallowedTools ? String(data.disallowedTools).split(",").map((t) => t.trim()) : undefined, skills: Array.isArray(data.skills) && data.skills.length ? data.skills : undefined } });
   }
 
   const hooksFile = join(dir, "hooks/hooks.json");
@@ -203,7 +222,7 @@ for (const entry of mp.plugins ?? []) {
           const script = String(h.command ?? "").match(/([\w.-]+\.(?:mjs|js|sh|py))/)?.[1] ?? h.type;
           const summary = `${event}${g.matcher ? ` on ${g.matcher}` : ""}: ${script}`;
           hookSummaries.push({ event, summary });
-          found.hook.push({ name: script.replace(/\.\w+$/, ""), description: `${event} hook${g.matcher ? ` on ${g.matcher.split("|").join(", ")}` : ""} that runs ${script}.`, file: hooksFile, body: "", meta: { event, matcher: g.matcher || undefined } });
+          found.hook.push({ name: script.replace(/\.\w+$/, ""), description: `${event} hook${g.matcher ? ` on ${g.matcher.split("|").join(", ")}` : ""} that runs ${script}.`, file: hooksFile, body: "", files: filesOf(hooksFile, [join(dir, "hooks", script)]), meta: { event, matcher: g.matcher || undefined } });
         }
       }
     }
@@ -215,7 +234,7 @@ for (const entry of mp.plugins ?? []) {
     for (const [name, cfg] of Object.entries(readJson(mcpFile)?.mcpServers ?? {})) {
       const transport = cfg.url ? cfg.type ?? "http" : "stdio";
       mcpServers.push({ name, transport });
-      found.mcp.push({ name, description: `MCP server (${transport}).`, file: mcpFile, body: "", meta: { transport } });
+      found.mcp.push({ name, description: `MCP server (${transport}).`, file: mcpFile, body: "", files: filesOf(mcpFile), meta: { transport } });
     }
   }
 
@@ -251,6 +270,7 @@ for (const entry of mp.plugins ?? []) {
     tags: [...new Set([...keywords, ...Object.entries(found).filter(([, l]) => l.length).map(([t]) => `${t}s`)])].sort(),
     path: relative(ROOT, manifestFile),
     meta: {},
+    files: filesOf(join(dir, "README.md"), [join(dir, "CHANGELOG.md"), manifestFile]),
     body: plainText(existsSync(join(dir, "README.md")) ? readFileSync(join(dir, "README.md"), "utf8") : ""),
   });
 
@@ -265,6 +285,7 @@ for (const entry of mp.plugins ?? []) {
         tags: tagsFor(a.name, keywords, a.description),
         path: relative(ROOT, a.file),
         meta: a.meta ?? {},
+        files: a.files ?? [],
         body: plainText(a.body),
       });
     }
@@ -285,4 +306,9 @@ const catalog = {
   artifacts,
 };
 writeFileSync(OUT, JSON.stringify(catalog, null, 2) + "\n");
+rmSync(SOURCE_DIR, { recursive: true, force: true });
+for (const p of sourceFiles) {
+  mkdirSync(dirname(join(SOURCE_DIR, p)), { recursive: true });
+  copyFileSync(join(ROOT, p), join(SOURCE_DIR, p));
+}
 console.log(`build-catalog: ${plugins.length} plugins, ${artifacts.length} artifacts → ${relative(ROOT, OUT)}`);

@@ -6,6 +6,7 @@ import {
   type Catalog, type WizardStep, type WizardAnswers, type Plugin, type Artifact,
 } from '../lib/catalog';
 import { TypeBadge, TypeIcon } from './TypeBadge';
+import { SourceViewer } from './SourceViewer';
 
 type Strings = typeof en;
 const STR: Record<string, Strings> = { en, uk };
@@ -55,6 +56,8 @@ export default function App({ base }: { base: string }) {
   const [cmp, setCmp] = useState<string[]>([]);
   const [drawer, setDrawer] = useState(false);
   const [detail, setDetail] = useState<string | null>(init.item);
+  const [srcOpen, setSrcOpen] = useState(false);
+  useEffect(() => setSrcOpen(false), [detail]);
   const [copied, setCopied] = useState('');
   const [step, setStep] = useState(0);
   const [ans, setAns] = useState<WizardAnswers>({});
@@ -97,14 +100,15 @@ export default function App({ base }: { base: string }) {
       const t = (e.target as HTMLElement).tagName;
       if (e.key === '/' && t !== 'INPUT' && t !== 'SELECT') { e.preventDefault(); qRef.current?.focus(); }
       if (e.key === 'Escape') {
-        if (detail) setDetail(null);
+        if (srcOpen) setSrcOpen(false);
+        else if (detail) setDetail(null);
         else if (drawer) setDrawer(false);
         else if (t === 'INPUT') { setQ(''); (e.target as HTMLElement).blur(); }
       }
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [drawer, detail]);
+  }, [drawer, detail, srcOpen]);
 
   const results = useMemo(() => (cat ? search(cat, { q, type, hooksOnly, sort }) : []), [cat, q, type, hooksOnly, sort]);
 
@@ -335,7 +339,7 @@ export default function App({ base }: { base: string }) {
   const details = da && dp && (
     <>
       <div class="scrim" onClick={() => setDetail(null)} />
-      <aside class="drawer detail" role="dialog" aria-modal="true" aria-label={da.name}>
+      <aside class={`drawer detail${srcOpen ? ' wide' : ''}`} role="dialog" aria-modal="true" aria-label={da.name}>
         <div class="drawer-head">
           <TypeBadge type={da.type} label={typeLabel(da.type)} />
           <button class="btn btn-ghost" onClick={() => setDetail(null)} aria-label={s.d.close}>Esc</button>
@@ -345,6 +349,17 @@ export default function App({ base }: { base: string }) {
           {s.in} <button class="linkbtn" onClick={() => setDetail(`${dp.id}/plugin/${dp.id}`)}>{dp.id}</button> · <span class="ver">v{dp.version}</span>
           {dp.tag ? <> · <a href={gh(dp.tag)} target="_blank" rel="noopener noreferrer">{dp.tag}</a></> : <> · {s.d.untagged}</>}
         </div>
+        {srcOpen ? (
+          <>
+            <div><button class="btn btn-ghost" onClick={() => setSrcOpen(false)}>← {s.d.backToDetails}</button></div>
+            <SourceViewer files={da.files ?? []} base={base} githubUrl={(p) => gh(dp.tag ?? 'main', p)}
+              labels={{ files: s.d.files, github: s.d.github, loading: s.loading, error: s.d.fileError }} />
+          </>
+        ) : (
+        <>
+        {(da.files?.length ?? 0) > 0 && (
+          <div><button class="btn btn-primary" onClick={() => setSrcOpen(true)}>{s.d.source} · {da.files!.length} {da.files!.length === 1 ? s.d.file1 : s.d.fileN}</button></div>
+        )}
         <p class="detail-desc">{da.description}</p>
         {da.tags.length > 0 && <div class="tags">{da.tags.map((t) => <span class="tag tag-outline" key={t}>{t}</span>)}</div>}
 
@@ -386,7 +401,7 @@ export default function App({ base }: { base: string }) {
           <div style="display:flex;gap:8px;flex-wrap:wrap">
             <button class="btn btn-primary" style="flex:1" onClick={() => clip(installSnippet(cat, dp.id), `d${da.id}`)}>{copied === `d${da.id}` ? s.copied : s.copy}</button>
             <button class="btn btn-secondary" style="flex:1" onClick={() => addPlugin(dp.id)}>{basket.includes(dp.id) ? s.added : s.add}</button>
-            {da.path && <a class="btn btn-ghost" href={gh(dp.tag ?? 'main', da.path)} target="_blank" rel="noopener noreferrer">{s.d.source} ↗</a>}
+
           </div>
         </section>
 
@@ -395,6 +410,8 @@ export default function App({ base }: { base: string }) {
             <div class="label-s muted">{s.d.alsoIn}</div>
             <div class="tags">{siblings.map((a) => <button class={`chip sib t-${a.type}`} key={a.id} onClick={() => setDetail(a.id)} title={typeLabel(a.type)}><TypeIcon type={a.type} />{a.name}</button>)}</div>
           </section>
+        )}
+        </>
         )}
       </aside>
     </>
