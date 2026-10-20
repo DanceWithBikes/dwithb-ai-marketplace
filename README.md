@@ -23,7 +23,25 @@ Private repository? Claude Code uses your own git credentials. Without a GitHub 
 
 ## Plugins
 
-_None yet._
+| Plugin | What it gives you | Depends on |
+|---|---|---|
+| [`sdd-engineering`](plugins/sdd-engineering/README.md) | Spec-Driven Development pipeline: `spec-creator`, `implementation-planner`, `implementer`, `plan-verifier` agents and the `workflow-retro` skill | all three below |
+| [`engineering-paved-path`](plugins/engineering-paved-path/README.md) | React, Fastify, architecture, testing, security, Zod, Drizzle and PostgreSQL skills | — |
+| [`research-tools`](plugins/research-tools/README.md) | Read-only `researcher` agent | — |
+| [`architecture-review`](plugins/architecture-review/README.md) | Read-only `architecture-reviewer` agent | `engineering-paved-path` |
+
+Installing a plugin installs its dependencies automatically. For the full SDD set:
+
+```bash
+claude plugin install sdd-engineering@dwithb-ai-marketplace
+```
+
+```
+engineering-paved-path ◀── architecture-review ◀──┐
+        ▲                                         │
+        └──────────────────────────────── sdd-engineering
+research-tools ◀──────────────────────────────────┘
+```
 
 ## Contributing a plugin
 

@@ -1,0 +1,12 @@
+[
+  { "q": "q1", "options": [
+    { "label": "spec", "tags": ["spec", "planning", "sdd"] },
+    { "label": "review", "tags": ["review", "architecture", "security"] },
+    { "label": "frontend", "tags": ["frontend", "react", "testing"] },
+    { "label": "backend", "tags": ["backend", "database", "fastify"] } ] },
+  { "q": "q2", "options": [
+    { "label": "skill", "type": "skill" }, { "label": "agent", "type": "agent" },
+    { "label": "hook", "type": "hook" }, { "label": "mcp", "type": "mcp" } ] },
+  { "q": "q3", "options": [
+    { "label": "yes", "allowHooksMcp": true }, { "label": "no", "allowHooksMcp": false } ] }
+]

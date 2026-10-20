@@ -1,0 +1,34 @@
+{
+  "name": "sdd-engineering",
+  "version": "1.0.0",
+  "description": "Spec-Driven Development pipeline: spec-creator, implementation-planner, implementer and plan-verifier agents plus a workflow-retro skill. Use when building a feature from spec to verified code with subagents.",
+  "author": { "name": "DanceWithBikes" },
+  "repository": "https://github.com/DanceWithBikes/dwithb-ai-marketplace",
+  "license": "MIT",
+  "keywords": ["sdd", "spec-driven-development", "planning", "agents", "workflow", "retro"],
+  "dependencies": [
+    { "name": "engineering-paved-path", "version": "^1.0.0" },
+    { "name": "research-tools", "version": "^1.0.0" },
+    { "name": "architecture-review", "version": "^1.0.0" }
+  ],
+  "userConfig": {
+    "specs_dir": {
+      "type": "string",
+      "title": "Specs directory",
+      "description": "Where spec-creator writes specs, relative to the project root",
+      "default": "docs/specs"
+    },
+    "plans_dir": {
+      "type": "string",
+      "title": "Plans directory",
+      "description": "Where plans and verification reports are saved, one folder per feature",
+      "default": "docs/plans"
+    },
+    "retro_ledger": {
+      "type": "string",
+      "title": "Retro ledger file",
+      "description": "File workflow-retro appends one row per run to",
+      "default": "docs/retros/ledger.md"
+    }
+  }
+}

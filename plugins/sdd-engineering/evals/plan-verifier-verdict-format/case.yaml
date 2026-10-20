@@ -1,0 +1,9 @@
+schema_version: "1.1"
+name: plan-verifier-verdict-format
+description: >
+  A two-step plan where step 1 is implemented and step 2 is not. plan-verifier must use
+  its fixed report format: Verdict with mode and counts, a Checklist row per item, the
+  closed status vocabulary, and no generic advice.
+tags: [plan-verifier, format]
+context:
+  scaffold_script: fixture.sh

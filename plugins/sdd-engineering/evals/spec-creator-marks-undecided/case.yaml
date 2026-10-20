@@ -1,0 +1,9 @@
+schema_version: "1.1"
+name: spec-creator-marks-undecided
+description: >
+  The caller forces pass 2 ("draft it now") while leaving key behaviour undecided.
+  The draft must carry inline [NEEDS CLARIFICATION: ... — OQ-N] markers and Status: draft
+  instead of guessing. Needs --scaffold and --allow-tools Write Edit.
+tags: [spec-creator, clarification, write]
+context:
+  scaffold_script: fixture.sh
