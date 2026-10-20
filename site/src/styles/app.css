@@ -84,3 +84,30 @@ pre.script { margin: 0; padding: 14px; border: 1px solid var(--color-divider); b
 .release-sec { font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--color-neutral-600); margin-top: 8px; }
 .release ul { margin: 4px 0 0; padding-left: 18px; font-size: 14px; line-height: 1.55; }
 code { font-family: monospace; font-size: .9em; padding: 1px 4px; border-radius: 3px; background: var(--color-neutral-200); }
+
+/* Artifact types: colour + icon (TypeBadge.tsx). Hues are distinct from the gold accent. */
+:root { --t-plugin: #6b4fbb; --t-skill: #1f7a6e; --t-agent: #2f5fb3; --t-hook: #b23a4f; --t-mcp: #4c7d1c; }
+:root[data-theme='dark'] { --t-plugin: #b9a3f0; --t-skill: #5fcfbf; --t-agent: #84aef5; --t-hook: #f28d9e; --t-mcp: #a5d873; }
+.t-plugin { --t: var(--t-plugin); } .t-skill { --t: var(--t-skill); } .t-agent { --t: var(--t-agent); }
+.t-hook { --t: var(--t-hook); } .t-mcp { --t: var(--t-mcp); }
+.ticon { flex: none; }
+.tbadge {
+  display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600;
+  letter-spacing: .03em; padding: 3px 10px 3px 8px; border-radius: 999px; color: var(--t);
+  background: color-mix(in srgb, var(--t) 14%, transparent);
+  border: 1px solid color-mix(in srgb, var(--t) 45%, transparent);
+}
+/* Cards carry their type as a coloured left edge and a faint wash. */
+.rcard[class*=' t-'] { border-left: 3px solid var(--t); background: linear-gradient(90deg, color-mix(in srgb, var(--t) 7%, transparent), transparent 45%); }
+.rcard[class*=' t-'].clickable:hover { border-color: var(--t); border-left-width: 3px; }
+.rcard.in-basket { box-shadow: inset 0 0 0 1px var(--color-accent); }
+/* Type filter chips */
+.chip { display: inline-flex; align-items: center; gap: 6px; }
+.chip[class*=' t-'] .ticon { color: var(--t); }
+.chip[class*=' t-'][aria-pressed='true'] { border-color: var(--t); color: var(--t); background: color-mix(in srgb, var(--t) 14%, transparent); }
+.chip[class*=' t-']:hover { border-color: color-mix(in srgb, var(--t) 60%, transparent); }
+.chip .n { font-size: 11px; opacity: .7; }
+/* Sibling chips in the details panel */
+.sib { color: var(--color-text); }
+.sib .ticon { color: var(--t); }
+.cmp-head .tbadge { margin-bottom: 8px; }

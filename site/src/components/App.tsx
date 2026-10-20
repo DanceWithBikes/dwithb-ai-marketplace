@@ -5,6 +5,7 @@ import {
   search, installScript, installSnippet, wizardRank,
   type Catalog, type WizardStep, type WizardAnswers, type Plugin, type Artifact,
 } from '../lib/catalog';
+import { TypeBadge, TypeIcon } from './TypeBadge';
 
 type Strings = typeof en;
 const STR: Record<string, Strings> = { en, uk };
@@ -115,7 +116,7 @@ export default function App({ base }: { base: string }) {
   const addPlugin = (id: string) => { setBasket((b) => (b.includes(id) ? b : [...b, id])); setDetail(null); setDrawer(true); };
   const clearAll = () => { setQ(''); setType('all'); setHooksOnly(false); };
   const toggleCmp = (id: string) => setCmp((c) => (c.includes(id) ? c.filter((i) => i !== id) : c.length < 3 ? [...c, id] : c));
-  const typeLabel = (t: string) => (t === 'all' ? s.all : t);
+  const typeLabel = (t: string) => (t === 'all' ? s.all : (s.types as Record<string, string>)[t] ?? t);
 
   const script = cat ? installScript(cat, basket) : '';
   const downloadScript = () => {
@@ -163,7 +164,14 @@ export default function App({ base }: { base: string }) {
         <kbd>/</kbd>
       </div>
       <div class="filters">
-        {TYPES.map((t) => <button class="chip" aria-pressed={type === t} onClick={() => setType(t)}>{typeLabel(t)}</button>)}
+        {TYPES.map((t) => {
+          const n = t === 'all' ? cat.artifacts.length : cat.artifacts.filter((a) => a.type === t).length;
+          return (
+            <button class={`chip${t === 'all' ? '' : ` t-${t}`}`} aria-pressed={type === t} onClick={() => setType(t)}>
+              {t !== 'all' && <TypeIcon type={t} />}{typeLabel(t)} <span class="n">{n}</span>
+            </button>
+          );
+        })}
         <label class="check" style="margin-left:12px"><input type="checkbox" checked={hooksOnly} onChange={() => setHooksOnly(!hooksOnly)} /> {s.hasHooks}</label>
         <select class="select" value={sort} onChange={(e) => setSort((e.target as HTMLSelectElement).value as typeof sort)} aria-label="Sort">
           <option value="rel">{s.relevance}</option><option value="az">A–Z</option><option value="new">{s.recent}</option>
@@ -180,9 +188,9 @@ export default function App({ base }: { base: string }) {
             // The whole card opens the details; its own controls keep their behaviour.
             const open = (e: MouseEvent) => { if (!(e.target as HTMLElement).closest('button, a, input, label, select')) setDetail(a.id); };
             return (
-              <article class={`card rcard clickable${inB ? ' in-basket' : ''}`} key={a.id} onClick={open}>
+              <article class={`card rcard clickable t-${a.type}${inB ? ' in-basket' : ''}`} key={a.id} onClick={open}>
                 <div class="rcard-top">
-                  <span class="tag tag-accent">{a.type}</span>
+                  <TypeBadge type={a.type} label={typeLabel(a.type)} />
                   <label><input type="checkbox" checked={cmp.includes(a.id)} disabled={!cmp.includes(a.id) && cmp.length >= 3} onChange={() => toggleCmp(a.id)} /> {s.compare}</label>
                 </div>
                 <h3><button class="rcard-title" onClick={() => setDetail(a.id)}>{a.name}</button></h3>
@@ -217,7 +225,7 @@ export default function App({ base }: { base: string }) {
   const list = (xs?: string[]) => (xs && xs.length ? xs.join(', ') : '—');
   // [label, value, highlight differences?, monospace?]
   const rows: [string, (a: Artifact) => string, boolean, boolean][] = [
-    [s.d.type, (a) => a.type, true, false],
+    [s.d.type, (a) => typeLabel(a.type), true, false],
     [s.d.plugin, (a) => a.plugin, true, false],
     [s.rows.version, (a) => `v${plugin(a.plugin).version}`, true, false],
     [s.rows.description, (a) => a.description, false, false],
@@ -243,6 +251,7 @@ export default function App({ base }: { base: string }) {
               <div class="cmp-label" />
               {ca.map((a) => (
                 <div class="cmp-head" key={a.id}>
+                  <div><TypeBadge type={a.type} label={typeLabel(a.type)} /></div>
                   <button class="rcard-title" onClick={() => setDetail(a.id)}>{a.name}</button>
                   <div><button class="linkbtn" onClick={() => toggleCmp(a.id)}>{s.remove}</button></div>
                 </div>
@@ -288,7 +297,7 @@ export default function App({ base }: { base: string }) {
         <div style="display:flex;flex-direction:column;gap:18px">
           {rank.map((r) => (
             <div class="card" style="padding:20px;gap:6px" key={r.x.id}>
-              <div style="display:flex;gap:10px;align-items:baseline"><span class="tag tag-accent">{r.x.type}</span><span style="font-family:var(--font-heading);font-size:26px">{r.x.name}</span></div>
+              <div style="display:flex;gap:10px;align-items:baseline"><TypeBadge type={r.x.type} label={typeLabel(r.x.type)} /><span style="font-family:var(--font-heading);font-size:26px">{r.x.name}</span></div>
               <div style="font-size:14px;line-height:1.5">{r.x.description}</div>
               <div class="why">{s.why}: {r.hit.length ? r.hit.join(', ') : s.matchesType}</div>
               <div><button class="btn btn-primary" onClick={() => addPlugin(r.x.plugin)}>{basket.includes(r.x.plugin) ? s.added : s.add}</button></div>
@@ -328,7 +337,7 @@ export default function App({ base }: { base: string }) {
       <div class="scrim" onClick={() => setDetail(null)} />
       <aside class="drawer detail" role="dialog" aria-modal="true" aria-label={da.name}>
         <div class="drawer-head">
-          <span class="tag tag-accent">{da.type}</span>
+          <TypeBadge type={da.type} label={typeLabel(da.type)} />
           <button class="btn btn-ghost" onClick={() => setDetail(null)} aria-label={s.d.close}>Esc</button>
         </div>
         <h2>{da.name}</h2>
@@ -384,7 +393,7 @@ export default function App({ base }: { base: string }) {
         {siblings.length > 0 && (
           <section>
             <div class="label-s muted">{s.d.alsoIn}</div>
-            <div class="tags">{siblings.map((a) => <button class="chip" key={a.id} onClick={() => setDetail(a.id)}>{a.type} · {a.name}</button>)}</div>
+            <div class="tags">{siblings.map((a) => <button class={`chip sib t-${a.type}`} key={a.id} onClick={() => setDetail(a.id)} title={typeLabel(a.type)}><TypeIcon type={a.type} />{a.name}</button>)}</div>
           </section>
         )}
       </aside>

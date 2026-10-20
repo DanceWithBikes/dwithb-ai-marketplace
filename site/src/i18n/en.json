@@ -100,5 +100,12 @@
     "source": "View source",
     "alsoIn": "Also in this plugin",
     "close": "Close"
+  },
+  "types": {
+    "plugin": "Plugin",
+    "skill": "Skill",
+    "agent": "Agent",
+    "hook": "Hook",
+    "mcp": "MCP"
   }
 }
