@@ -14,6 +14,14 @@ jobs:
         with:
           node-version: 22
       - run: npm install -g @anthropic-ai/claude-code
-      # Switch to `--strict` once the marketplace lists at least one plugin
-      # (an empty `plugins` array only produces a warning, which --strict fails on).
-      - run: claude plugin validate .
+      - run: claude plugin validate --strict .
+      - name: Validate each plugin
+        run: |
+          for p in plugins/*/; do claude plugin validate --strict "$p"; done
+      - name: No source-project leftovers in published plugins
+        run: |
+          if grep -rniE "devdigest|dev-digest|reviewer-core|\.claude/(skills|agents|hooks)" plugins/; then
+            echo "::error::Project-specific references found in plugins/"; exit 1
+          fi
+      - name: workflow-retro unit tests
+        run: node --test plugins/sdd-engineering/skills/workflow-retro/scripts/retro.test.mjs

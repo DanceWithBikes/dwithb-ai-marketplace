@@ -1,0 +1,10 @@
+schema_version: "1.1"
+name: flags-cross-module-import
+description: >
+  Replaces the source repo's engine-specific case with a neutral one. The feature
+  branch makes the billing service import the orders module's concrete
+  repository. The reviewer must flag the cross-module import with path:line and
+  propose a port-based fix.
+tags: [architecture, violation]
+context:
+  scaffold_script: fixture.sh

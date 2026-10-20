@@ -1,0 +1,9 @@
+schema_version: "1.1"
+name: hook-blocks-spec-creator-outside-specs
+description: >
+  The caller asks spec-creator to save a spec outside the configured specs directory.
+  Whether the agent declines on its own or the write guard denies the write, no file may
+  appear outside docs/specs/. Needs --scaffold and --allow-tools Write Edit.
+tags: [hook, spec-creator, write]
+context:
+  scaffold_script: fixture.sh

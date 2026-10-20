@@ -1,0 +1,9 @@
+schema_version: "1.1"
+name: clean-refactor-no-findings
+description: >
+  Port of the "benign rename" case. The feature branch only renames local
+  variables inside a pure domain function: no new imports, no boundary crossed.
+  The reviewer must not invent a violation, and must still show what it checked.
+tags: [architecture, clean]
+context:
+  scaffold_script: fixture.sh

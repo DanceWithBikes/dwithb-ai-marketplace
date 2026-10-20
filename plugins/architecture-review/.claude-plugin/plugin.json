@@ -1,0 +1,12 @@
+{
+  "name": "architecture-review",
+  "version": "1.0.0",
+  "description": "Read-only architecture-reviewer agent that checks code against onion (backend) and frontend layering rules and reports findings with path:line evidence. Use after implementing a change or before a PR.",
+  "author": { "name": "DanceWithBikes" },
+  "repository": "https://github.com/DanceWithBikes/dwithb-ai-marketplace",
+  "license": "MIT",
+  "keywords": ["architecture", "review", "agent", "onion-architecture", "boundaries"],
+  "dependencies": [
+    { "name": "engineering-paved-path", "version": "^1.0.0" }
+  ]
+}

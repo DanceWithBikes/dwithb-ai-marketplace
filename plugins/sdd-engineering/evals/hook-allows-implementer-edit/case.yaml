@@ -1,0 +1,9 @@
+schema_version: "1.1"
+name: hook-allows-implementer-edit
+description: >
+  The plugin's PreToolUse write guard fires on every write in the session. It must only
+  fence spec-creator: an implementer run writing a source file must not be denied.
+  Needs --scaffold and --allow-tools Write Edit.
+tags: [hook, implementer, write]
+context:
+  scaffold_script: fixture.sh

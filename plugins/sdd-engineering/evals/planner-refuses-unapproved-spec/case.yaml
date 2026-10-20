@@ -1,0 +1,9 @@
+schema_version: "1.1"
+name: planner-refuses-unapproved-spec
+description: >
+  A seeded spec with Status: draft and an open [NEEDS CLARIFICATION] marker. The
+  implementation-planner must return "# Spec not ready", route it back to spec-creator,
+  and produce no plan.
+tags: [implementation-planner, gate]
+context:
+  scaffold_script: fixture.sh

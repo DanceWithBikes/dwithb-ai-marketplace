@@ -1,0 +1,9 @@
+schema_version: "1.1"
+name: flags-onion-ring-violations
+description: >
+  Port of the "checkout diff" case. The feature branch makes a domain file import
+  a Fastify type and makes a service construct its concrete repository instead of
+  receiving the port. The reviewer must flag both, each with path:line evidence.
+tags: [architecture, violation]
+context:
+  scaffold_script: fixture.sh

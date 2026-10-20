@@ -1,8 +1,27 @@
 {
   "name": "dwithb-ai-marketplace",
   "description": "AI plugins and skills from DWithB for Claude Code",
-  "owner": {
-    "name": "DanceWithBikes"
-  },
-  "plugins": []
+  "owner": { "name": "DanceWithBikes" },
+  "plugins": [
+    {
+      "name": "engineering-paved-path",
+      "source": "./plugins/engineering-paved-path",
+      "description": "Opinionated engineering skills for TypeScript stacks: React, Fastify, architecture, testing, security, Zod, Drizzle, PostgreSQL."
+    },
+    {
+      "name": "research-tools",
+      "source": "./plugins/research-tools",
+      "description": "Read-only researcher agent for codebase and web questions with cited evidence."
+    },
+    {
+      "name": "architecture-review",
+      "source": "./plugins/architecture-review",
+      "description": "Read-only architecture-reviewer agent: onion and frontend layering findings with path:line evidence."
+    },
+    {
+      "name": "sdd-engineering",
+      "source": "./plugins/sdd-engineering",
+      "description": "Spec-Driven Development pipeline: spec, plan, implement, verify, plus multi-agent run retros."
+    }
+  ]
 }
