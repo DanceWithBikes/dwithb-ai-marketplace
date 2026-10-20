@@ -46,6 +46,45 @@
   --shadow-sm: 0 1px 2px color-mix(in srgb, #2d2b2b 14%, transparent);
   --shadow-md: 0 3px 10px color-mix(in srgb, #2d2b2b 16%, transparent);
   --shadow-lg: 0 12px 32px color-mix(in srgb, #2d2b2b 22%, transparent);
+  --scrim: rgba(32, 31, 29, .35);
+  color-scheme: light;
+}
+
+/* Dark is the default theme (set on <html> in Base.astro); the ramps are mirrored so
+   "-100" stays the subtle tint and "-700/800" stays the readable accent text. */
+:root[data-theme='dark'] {
+  --color-bg: #161513;
+  --color-surface: #1f1d1b;
+  --color-text: #ece8e2;
+  --color-accent: #d6a25a;
+  --color-accent-2: #c9984f;
+  --color-divider: color-mix(in srgb, #ece8e2 16%, transparent);
+
+  --color-neutral-100: #1c1a19;
+  --color-neutral-200: #262423;
+  --color-neutral-300: #3a3736;
+  --color-neutral-400: #55514f;
+  --color-neutral-500: #78736f;
+  --color-neutral-600: #a39e9a;
+  --color-neutral-700: #c0bbb7;
+  --color-neutral-800: #d8d4d0;
+  --color-neutral-900: #efebe8;
+
+  --color-accent-100: #2e2212;
+  --color-accent-200: #46331a;
+  --color-accent-300: #6b4d22;
+  --color-accent-400: #94692c;
+  --color-accent-500: #c28d41;
+  --color-accent-600: #dcae6c;
+  --color-accent-700: #e8c28c;
+  --color-accent-800: #f3d9b3;
+  --color-accent-900: #fbefdc;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, .5);
+  --shadow-md: 0 3px 10px rgba(0, 0, 0, .55);
+  --shadow-lg: 0 12px 32px rgba(0, 0, 0, .6);
+  --scrim: rgba(0, 0, 0, .55);
+  color-scheme: dark;
 }
 
 *, *::before, *::after { box-sizing: border-box; }

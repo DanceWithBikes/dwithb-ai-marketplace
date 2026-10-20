@@ -9,12 +9,16 @@ import '../styles/app.css';
 const { title = 'dwithb marketplace', description = 'Discover plugins, skills, agents, hooks and MCP servers for Claude Code.' } = Astro.props;
 ---
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
     <title>{title}</title>
+    <!-- Dark by default; restore a saved choice before first paint so the page never flashes. -->
+    <script is:inline>
+      try { if (localStorage.getItem('theme') === 'light') document.documentElement.dataset.theme = 'light'; } catch {}
+    </script>
   </head>
   <body>
     <slot />

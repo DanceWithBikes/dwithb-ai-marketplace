@@ -30,12 +30,18 @@ function loadLang(): string {
   return 'en';
 }
 
+function loadTheme(): 'dark' | 'light' {
+  try { if (localStorage.getItem('theme') === 'light') return 'light'; } catch { /* storage unavailable */ }
+  return 'dark';
+}
+
 export default function App({ base }: { base: string }) {
   const init = useMemo(readUrl, []);
   const [cat, setCat] = useState<Catalog | null>(null);
   const [wiz, setWiz] = useState<WizardStep[]>([]);
   const [error, setError] = useState(false);
   const [lang, setLang] = useState(loadLang);
+  const [theme, setTheme] = useState(loadTheme);
   const [view, setView] = useState<View>('browse');
   const [q, setQ] = useState(init.q);
   const [type, setType] = useState(init.type);
@@ -67,6 +73,7 @@ export default function App({ base }: { base: string }) {
   useEffect(load, []);
 
   useEffect(() => { document.documentElement.lang = lang; try { localStorage.setItem('lang', lang); } catch { /* ignore */ } }, [lang]);
+  useEffect(() => { document.documentElement.dataset.theme = theme; try { localStorage.setItem('theme', theme); } catch { /* ignore */ } }, [theme]);
 
   // URL state: shareable ?q=&type=&sort=&basket=
   useEffect(() => {
@@ -121,6 +128,9 @@ export default function App({ base }: { base: string }) {
         </nav>
         <div class="seg2" role="group" aria-label="Language">
           {['en', 'uk'].map((c) => <button aria-pressed={lang === c} onClick={() => setLang(c)}>{c.toUpperCase()}</button>)}
+        </div>
+        <div class="seg2" role="group" aria-label={s.theme.label}>
+          {(['dark', 'light'] as const).map((t) => <button aria-pressed={theme === t} onClick={() => setTheme(t)}>{s.theme[t]}</button>)}
         </div>
         <button class="btn btn-secondary" onClick={() => setDrawer(true)}>{s.basket} · {basket.length}</button>
       </header>

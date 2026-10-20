@@ -70,5 +70,10 @@
     "spec": "Plan a feature from a spec",
     "frontend": "Build React frontends",
     "backend": "Build backends and databases"
+  },
+  "theme": {
+    "label": "Theme",
+    "dark": "Dark",
+    "light": "Light"
   }
 }
