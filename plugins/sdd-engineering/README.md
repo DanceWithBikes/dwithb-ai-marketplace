@@ -106,8 +106,11 @@ claude plugin install sdd-engineering@dwithb-ai-marketplace
 
 ## Configuration
 
-When you enable the plugin, Claude Code shows a short configuration dialog. Every field has a default,
-so you can just accept it. Change the values later with `/config`.
+When you enable the plugin, Claude Code asks for three settings. Every field has a default, so you can
+just accept it — but do save it: a default is not substituted into the agents until it is stored. If
+you installed from the shell and skipped the dialog, run `/plugin configure sdd-engineering@dwithb-ai-marketplace`
+in a session, or install with `--config specs_dir=docs/specs` (and so on). Change the values later
+with `/config`.
 
 | Setting | Default | Used for |
 |---|---|---|

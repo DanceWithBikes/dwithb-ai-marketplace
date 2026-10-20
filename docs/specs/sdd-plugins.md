@@ -347,6 +347,11 @@ MIT цього репо.
   мають явний запасний варіант: якщо видно сирий плейсхолдер, беруть типові
   шляхи (`docs/specs`, `docs/plans`, `docs/retros/ledger.md`). Хук має той
   самий fallback через `CLAUDE_PLUGIN_OPTION_SPECS_DIR`.
+- Встановлення з локального marketplace (`plugin install sdd-engineering`)
+  автоматично ставить і вмикає 3 залежності. `default` у `userConfig` **не**
+  підставляється, поки значення не збережені. Після `/plugin configure
+  sdd-engineering@dwithb-ai-marketplace` (або `--config KEY=VALUE` при
+  install) підстановка працює.
 - У проєкті без specs-папки перша специфікація створює кореневу
   `<specs_dir>/`. Папки модулів мають уже існувати.
 
@@ -354,5 +359,3 @@ MIT цього репо.
 
 - Evals ще не запускалися (`claude plugin eval ... --scaffold`). Для них
   потрібні реальні виклики моделі.
-- Чи підставляються типові значення `userConfig`, якщо плагін встановлено з
-  marketplace, а не через `--plugin-dir`.
