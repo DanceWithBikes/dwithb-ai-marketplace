@@ -1,0 +1,10 @@
+---
+import Base from '../layouts/Base.astro';
+import App from '../components/App.tsx';
+
+// BASE_URL always ends with "/" for the root and may include a repo path on Pages.
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+---
+<Base>
+  <App client:only="preact" base={base} />
+</Base>

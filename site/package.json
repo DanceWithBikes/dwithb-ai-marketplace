@@ -1,0 +1,21 @@
+{
+  "name": "dwithb-marketplace-site",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "catalog": "node ../scripts/build-catalog.mjs",
+    "predev": "npm run catalog",
+    "dev": "astro dev",
+    "prebuild": "npm run catalog",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check"
+  },
+  "dependencies": {
+    "@astrojs/preact": "^4.0.0",
+    "@fontsource/cormorant-garamond": "^5.1.0",
+    "@fontsource/lora": "^5.1.0",
+    "astro": "^5.0.0",
+    "preact": "^10.24.0"
+  }
+}
