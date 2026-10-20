@@ -1,0 +1,8 @@
+{
+  "name": "dwithb-ai-marketplace",
+  "description": "AI plugins and skills from DWithB for Claude Code",
+  "owner": {
+    "name": "DanceWithBikes"
+  },
+  "plugins": []
+}

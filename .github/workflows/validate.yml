@@ -1,0 +1,19 @@
+name: Validate marketplace
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install -g @anthropic-ai/claude-code
+      # Switch to `--strict` once the marketplace lists at least one plugin
+      # (an empty `plugins` array only produces a warning, which --strict fails on).
+      - run: claude plugin validate .
