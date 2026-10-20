@@ -1,13 +1,24 @@
 export type ArtifactType = 'plugin' | 'skill' | 'agent' | 'hook' | 'mcp';
 
+export interface Release {
+  version: string; date: string | null;
+  sections: { title: string; items: string[] }[];
+}
 export interface Plugin {
   id: string; version: string; updatedAt: string;
   counts: { skills: number; agents: number; hooks: number; mcp: number };
-  trust: { runsCommands: boolean; usesNetwork: boolean };
+  trust: { runsCommands: boolean; usesNetwork: boolean; hooks?: { event: string; summary: string }[] };
   keywords: string[];
+  description?: string; dependencies?: string[]; path?: string;
+  tag?: string | null; releases?: Release[];
+}
+export interface ArtifactMeta {
+  model?: string; tools?: string[]; disallowedTools?: string[]; skills?: string[];
+  allowedTools?: string; bundledScripts?: boolean; event?: string; matcher?: string; transport?: string;
 }
 export interface Artifact {
   id: string; type: ArtifactType; plugin: string; name: string; description: string; tags: string[];
+  path?: string; meta?: ArtifactMeta; files?: string[];
 }
 export interface Catalog {
   marketplace: { name: string; repo: string; description: string };

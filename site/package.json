@@ -16,6 +16,7 @@
     "@fontsource/cormorant-garamond": "^5.1.0",
     "@fontsource/lora": "^5.1.0",
     "astro": "^5.0.0",
+    "marked": "^16.4.2",
     "preact": "^10.24.0"
   }
 }
