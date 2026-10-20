@@ -401,6 +401,7 @@ export default function App({ base }: { base: string }) {
           <div style="display:flex;gap:8px;flex-wrap:wrap">
             <button class="btn btn-primary" style="flex:1" onClick={() => clip(installSnippet(cat, dp.id), `d${da.id}`)}>{copied === `d${da.id}` ? s.copied : s.copy}</button>
             <button class="btn btn-secondary" style="flex:1" onClick={() => addPlugin(dp.id)}>{basket.includes(dp.id) ? s.added : s.add}</button>
+            {(da.files?.length ?? 0) > 0 && <button class="btn btn-secondary" style="flex:1" onClick={() => { setSrcOpen(true); document.querySelector('.drawer.detail')?.scrollTo(0, 0); }}>{s.d.source}</button>}
 
           </div>
         </section>
