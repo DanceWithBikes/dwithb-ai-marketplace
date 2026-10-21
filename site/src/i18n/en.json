@@ -152,6 +152,24 @@
     "agent": "Agent",
     "untagged": "not tagged yet",
     "sources": "Sources: docs/evidence/*.json (claude plugin eval --json, claude plugin list --json), the stable branch's marketplace.json, and agent frontmatter at each release tag. Refresh: run the evals, then node scripts/build-quality.mjs.",
-    "noData": "No quality data published yet."
+    "noData": "No quality data published yet.",
+    "runsPerCase": "runs/case",
+    "perRun": "per run",
+    "median": "median",
+    "passTitle": "Pass rate with 95% confidence",
+    "ci95": "95% CI",
+    "passNote": "Wilson score interval over all pooled runs. Overlapping intervals mean the difference is not proven yet; more runs narrow them.",
+    "sessionsWord": "sessions",
+    "historyTitle": "Cost per successful run over time",
+    "historyNote": "One point per eval session, in run order, measured on the cases every session ran. Hover for the source file.",
+    "pipelineTitle": "Full SDD pipeline runs",
+    "pipelineLead": "The whole spec → plan → implement → verify pipeline on a fixture project (scripts/pipeline), measured with workflow-retro. A run succeeds when plan-verifier says COMPLETE.",
+    "noPipeline": "No pipeline benchmark yet: run scripts/pipeline/run.sh <tree>.",
+    "ofRun": "of the run",
+    "noVerdict": "no verdict",
+    "version": "Version",
+    "okRuns": "Succeeded",
+    "pipeCost": "Cost per run (tokens, wall)",
+    "costPerSuccessfulPipe": "$ / successful pipeline"
   }
 }

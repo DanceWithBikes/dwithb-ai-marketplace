@@ -152,6 +152,24 @@
     "agent": "Агент",
     "untagged": "ще без тегу",
     "sources": "Джерела: docs/evidence/*.json (claude plugin eval --json, claude plugin list --json), marketplace.json гілки stable і frontmatter агентів на кожному тегу релізу. Оновити: прогнати евали, потім node scripts/build-quality.mjs.",
-    "noData": "Дані про якість ще не опубліковано."
+    "noData": "Дані про якість ще не опубліковано.",
+    "runsPerCase": "прогонів/кейс",
+    "perRun": "за прогін",
+    "median": "медіана",
+    "passTitle": "Pass rate з 95% довірчим інтервалом",
+    "ci95": "95% ДІ",
+    "passNote": "Інтервал Wilson по всіх об'єднаних прогонах. Якщо інтервали перекриваються, різницю ще не доведено; більше прогонів звужують їх.",
+    "sessionsWord": "сесій",
+    "historyTitle": "Вартість успішного запуску в часі",
+    "historyNote": "Одна точка на сесію евалів, у порядку запуску, на кейсах, які були в кожній сесії. Наведіть, щоб побачити файл-джерело.",
+    "pipelineTitle": "Повні запуски SDD-пайплайну",
+    "pipelineLead": "Увесь пайплайн spec → plan → implement → verify на фікстурі (scripts/pipeline), виміряний workflow-retro. Запуск успішний, коли plan-verifier каже COMPLETE.",
+    "noPipeline": "Бенчмарку пайплайну ще немає: запустіть scripts/pipeline/run.sh <tree>.",
+    "ofRun": "від запуску",
+    "noVerdict": "без вердикту",
+    "version": "Версія",
+    "okRuns": "Успішних",
+    "pipeCost": "Вартість запуску (токени, час)",
+    "costPerSuccessfulPipe": "$ / успішний пайплайн"
   }
 }

@@ -6,6 +6,8 @@ Per-plugin release notes live in each plugin's `CHANGELOG.md`; this file lists m
 
 - `sdd-engineering` 1.1.0: version-trace hook, cost per successful run in workflow-retro, cheaper agent models, eval cases that load their dependencies (see the plugin's CHANGELOG).
 - `stable` branch: the `dwithb-stable` marketplace, pinned to verified versions (`sdd-engineering` 1.0.0). Add it with `claude plugin marketplace add DanceWithBikes/dwithb-ai-marketplace#stable`.
+- `scripts/pipeline/`: full SDD pipeline benchmark (spec → plan → implement → verify on a fixture project) with a budget cap; each run is measured by workflow-retro and appended to `docs/retros/ledger.md` (label `sdd-pipeline`).
+- Quality view: eval runs pooled per version with a 95% Wilson interval on the pass rate and per-run cost spread, cost per successful run over time (one point per eval session), and full pipeline runs with cost per agent.
 - `scripts/eval-cost.mjs`: cost per successful eval run, recorded in `docs/retros/eval-cost.md`; install and eval evidence in `docs/evidence/`.
 - Catalog: plugin contents count `commands/`; new **Quality** view (`?view=quality`) built by `scripts/build-quality.mjs` from `docs/evidence`: channels (latest vs stable, pinned tag, install proof), cost per successful run per case before/after, eval matrix with failed graders, agent models per release.
 

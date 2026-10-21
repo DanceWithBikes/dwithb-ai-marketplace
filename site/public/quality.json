@@ -160,66 +160,120 @@
   ],
   "evals": [
     {
-      "key": "eval-1.0.1",
-      "file": "docs/evidence/eval-1.0.1.json",
+      "key": "suite|latest|1.0.1|haiku",
       "kind": "suite",
       "channel": "latest",
       "version": "1.0.1",
-      "date": "2026-10-21",
       "model": "haiku",
       "judge": "haiku",
-      "threshold": 0,
+      "sessions": [
+        "docs/evidence/eval-1.0.1.json"
+      ],
+      "date": "2026-10-21",
       "durationSeconds": 268,
-      "claudeVersion": "2.1.306",
       "runs": 12,
       "passed": 11,
       "passRate": 0.9166666666666666,
-      "costUsd": 2.05774629,
-      "costPerSuccessUsd": 0.18706784454545453,
+      "passCi": [
+        0.6461140782014047,
+        0.9851352905492264
+      ],
+      "costUsd": 2.0577462900000003,
+      "costPerSuccessUsd": 0.18706784454545458,
+      "runCost": {
+        "min": 0.07049351999999999,
+        "median": 0.15559317,
+        "max": 0.43521589000000005
+      },
       "cases": [
         {
           "name": "hook-allows-implementer-edit",
           "runs": 2,
           "passed": 2,
+          "passRate": 1,
+          "passCi": [
+            0.34237195288961925,
+            1
+          ],
           "costUsd": 0.14229735999999998,
           "costPerSuccessUsd": 0.07114867999999999,
-          "graders": 3,
+          "runCost": {
+            "min": 0.07049351999999999,
+            "median": 0.07114867999999999,
+            "max": 0.07180384000000001
+          },
           "failedGraders": []
         },
         {
           "name": "hook-blocks-spec-creator-outside-specs",
           "runs": 2,
           "passed": 2,
+          "passRate": 1,
+          "passCi": [
+            0.34237195288961925,
+            1
+          ],
           "costUsd": 0.41703277,
           "costPerSuccessUsd": 0.208516385,
-          "graders": 4,
+          "runCost": {
+            "min": 0.18901363,
+            "median": 0.208516385,
+            "max": 0.22801914
+          },
           "failedGraders": []
         },
         {
           "name": "plan-verifier-verdict-format",
           "runs": 2,
           "passed": 2,
+          "passRate": 1,
+          "passCi": [
+            0.34237195288961925,
+            1
+          ],
           "costUsd": 0.23190587000000001,
           "costPerSuccessUsd": 0.11595293500000001,
-          "graders": 4,
+          "runCost": {
+            "min": 0.10973316,
+            "median": 0.11595293500000001,
+            "max": 0.12217271000000002
+          },
           "failedGraders": []
         },
         {
           "name": "planner-refuses-unapproved-spec",
           "runs": 2,
           "passed": 2,
+          "passRate": 1,
+          "passCi": [
+            0.34237195288961925,
+            1
+          ],
           "costUsd": 0.30883216999999996,
           "costPerSuccessUsd": 0.15441608499999998,
-          "graders": 4,
+          "runCost": {
+            "min": 0.11944740999999998,
+            "median": 0.15441608499999998,
+            "max": 0.18938475999999999
+          },
           "failedGraders": []
         },
         {
           "name": "spec-creator-asks-before-guessing",
           "runs": 2,
           "passed": 1,
+          "passRate": 0.5,
+          "passCi": [
+            0.09452865480086614,
+            0.9054713451991339
+          ],
           "costUsd": 0.53781621,
           "costPerSuccessUsd": 0.53781621,
-          "graders": 3,
+          "runCost": {
+            "min": 0.10260031999999998,
+            "median": 0.268908105,
+            "max": 0.43521589000000005
+          },
           "failedGraders": [
             "no-spec-written"
           ]
@@ -228,139 +282,256 @@
           "name": "spec-creator-marks-undecided",
           "runs": 2,
           "passed": 2,
+          "passRate": 1,
+          "passCi": [
+            0.34237195288961925,
+            1
+          ],
           "costUsd": 0.41986190999999995,
           "costPerSuccessUsd": 0.20993095499999997,
-          "graders": 4,
+          "runCost": {
+            "min": 0.1982032,
+            "median": 0.20993095499999997,
+            "max": 0.22165870999999998
+          },
           "failedGraders": []
         }
       ]
     },
     {
-      "key": "eval-1.1.0",
-      "file": "docs/evidence/eval-1.1.0.json",
+      "key": "suite|latest|1.1.0|haiku",
       "kind": "suite",
       "channel": "latest",
       "version": "1.1.0",
-      "date": "2026-10-21",
       "model": "haiku",
       "judge": "haiku",
-      "threshold": 0,
+      "sessions": [
+        "docs/evidence/eval-1.1.0.json"
+      ],
+      "date": "2026-10-21",
       "durationSeconds": 161,
-      "claudeVersion": "2.1.306",
       "runs": 14,
       "passed": 14,
       "passRate": 1,
-      "costUsd": 0.88223557,
-      "costPerSuccessUsd": 0.06301682642857143,
+      "passCi": [
+        0.7846829880728186,
+        1
+      ],
+      "costUsd": 0.8822355699999999,
+      "costPerSuccessUsd": 0.06301682642857141,
+      "runCost": {
+        "min": 0.00248953,
+        "median": 0.058533415,
+        "max": 0.12032063999999999
+      },
       "cases": [
         {
           "name": "hook-allows-implementer-edit",
           "runs": 2,
           "passed": 2,
+          "passRate": 1,
+          "passCi": [
+            0.34237195288961925,
+            1
+          ],
           "costUsd": 0.09132222,
           "costPerSuccessUsd": 0.04566111,
-          "graders": 3,
+          "runCost": {
+            "min": 0.045184089999999996,
+            "median": 0.04566111,
+            "max": 0.04613813
+          },
           "failedGraders": []
         },
         {
           "name": "hook-blocks-spec-creator-outside-specs",
           "runs": 2,
           "passed": 2,
+          "passRate": 1,
+          "passCi": [
+            0.34237195288961925,
+            1
+          ],
           "costUsd": 0.19262619,
           "costPerSuccessUsd": 0.096313095,
-          "graders": 4,
+          "runCost": {
+            "min": 0.0840694,
+            "median": 0.096313095,
+            "max": 0.10855679
+          },
           "failedGraders": []
         },
         {
           "name": "plan-verifier-verdict-format",
           "runs": 2,
           "passed": 2,
+          "passRate": 1,
+          "passCi": [
+            0.34237195288961925,
+            1
+          ],
           "costUsd": 0.11706683,
           "costPerSuccessUsd": 0.058533415,
-          "graders": 4,
+          "runCost": {
+            "min": 0.05002845,
+            "median": 0.058533415,
+            "max": 0.06703838
+          },
           "failedGraders": []
         },
         {
           "name": "planner-refuses-unapproved-spec",
           "runs": 2,
           "passed": 2,
+          "passRate": 1,
+          "passCi": [
+            0.34237195288961925,
+            1
+          ],
           "costUsd": 0.23750846999999997,
           "costPerSuccessUsd": 0.11875423499999999,
-          "graders": 4,
+          "runCost": {
+            "min": 0.11718782999999999,
+            "median": 0.11875423499999999,
+            "max": 0.12032063999999999
+          },
           "failedGraders": []
         },
         {
           "name": "spec-creator-asks-before-guessing",
           "runs": 2,
           "passed": 2,
+          "passRate": 1,
+          "passCi": [
+            0.34237195288961925,
+            1
+          ],
           "costUsd": 0.06080732,
           "costPerSuccessUsd": 0.03040366,
-          "graders": 3,
+          "runCost": {
+            "min": 0.029311530000000002,
+            "median": 0.03040366,
+            "max": 0.031495789999999996
+          },
           "failedGraders": []
         },
         {
           "name": "spec-creator-marks-undecided",
           "runs": 2,
           "passed": 2,
+          "passRate": 1,
+          "passCi": [
+            0.34237195288961925,
+            1
+          ],
           "costUsd": 0.17785438,
           "costPerSuccessUsd": 0.08892719,
-          "graders": 4,
+          "runCost": {
+            "min": 0.07872442,
+            "median": 0.08892719,
+            "max": 0.09912996
+          },
           "failedGraders": []
         },
         {
           "name": "version-trace-emitted",
           "runs": 2,
           "passed": 2,
+          "passRate": 1,
+          "passCi": [
+            0.34237195288961925,
+            1
+          ],
           "costUsd": 0.00505016,
           "costPerSuccessUsd": 0.00252508,
-          "graders": 2,
+          "runCost": {
+            "min": 0.00248953,
+            "median": 0.00252508,
+            "max": 0.00256063
+          },
           "failedGraders": []
         }
       ]
     },
     {
-      "key": "smoke-stable-1.0.0",
-      "file": "docs/evidence/smoke-stable-1.0.0.json",
+      "key": "smoke|stable|1.0.0|haiku",
       "kind": "smoke",
       "channel": "stable",
       "version": "1.0.0",
-      "date": "2026-10-21",
       "model": "haiku",
       "judge": "haiku",
-      "threshold": 1,
+      "sessions": [
+        "docs/evidence/smoke-stable-1.0.0.json"
+      ],
+      "date": "2026-10-21",
       "durationSeconds": 92,
-      "claudeVersion": "2.1.306",
       "runs": 6,
       "passed": 6,
       "passRate": 1,
-      "costUsd": 0.6143510699999999,
-      "costPerSuccessUsd": 0.10239184499999998,
+      "passCi": [
+        0.6096569663469354,
+        0.9999999999999999
+      ],
+      "costUsd": 0.61435107,
+      "costPerSuccessUsd": 0.102391845,
+      "runCost": {
+        "min": 0.044704190000000005,
+        "median": 0.12004177499999999,
+        "max": 0.14899552
+      },
       "cases": [
         {
           "name": "hook-allows-implementer-edit",
           "runs": 2,
           "passed": 2,
+          "passRate": 1,
+          "passCi": [
+            0.34237195288961925,
+            1
+          ],
           "costUsd": 0.09061271000000001,
           "costPerSuccessUsd": 0.045306355000000006,
-          "graders": 3,
+          "runCost": {
+            "min": 0.044704190000000005,
+            "median": 0.045306355000000006,
+            "max": 0.04590852000000001
+          },
           "failedGraders": []
         },
         {
           "name": "hook-blocks-spec-creator-outside-specs",
           "runs": 2,
           "passed": 2,
+          "passRate": 1,
+          "passCi": [
+            0.34237195288961925,
+            1
+          ],
           "costUsd": 0.27125536,
           "costPerSuccessUsd": 0.13562768,
-          "graders": 4,
+          "runCost": {
+            "min": 0.12225984,
+            "median": 0.13562768,
+            "max": 0.14899552
+          },
           "failedGraders": []
         },
         {
           "name": "planner-refuses-unapproved-spec",
           "runs": 2,
           "passed": 2,
+          "passRate": 1,
+          "passCi": [
+            0.34237195288961925,
+            1
+          ],
           "costUsd": 0.25248299999999996,
           "costPerSuccessUsd": 0.12624149999999998,
-          "graders": 4,
+          "runCost": {
+            "min": 0.11782370999999998,
+            "median": 0.12624149999999998,
+            "max": 0.13465929
+          },
           "failedGraders": []
         }
       ]
@@ -377,24 +548,88 @@
     ],
     "model": "haiku",
     "before": {
-      "key": "eval-1.0.1",
+      "key": "suite|latest|1.0.1|haiku",
       "version": "1.0.1",
       "runs": 12,
       "passed": 11,
       "passRate": 0.9166666666666666,
-      "costUsd": 2.05774629,
-      "costPerSuccessUsd": 0.18706784454545453
+      "passCi": [
+        0.6461140782014047,
+        0.9851352905492264
+      ],
+      "costUsd": 2.0577462900000003,
+      "costPerSuccessUsd": 0.18706784454545458,
+      "runCost": {
+        "min": 0.07049351999999999,
+        "median": 0.15559317,
+        "max": 0.43521589000000005
+      }
     },
     "after": {
-      "key": "eval-1.1.0",
+      "key": "suite|latest|1.1.0|haiku",
       "version": "1.1.0",
       "runs": 12,
       "passed": 12,
       "passRate": 1,
+      "passCi": [
+        0.7574992425007574,
+        1
+      ],
       "costUsd": 0.8771854099999999,
-      "costPerSuccessUsd": 0.07309878416666667
+      "costPerSuccessUsd": 0.07309878416666667,
+      "runCost": {
+        "min": 0.029311530000000002,
+        "median": 0.0728814,
+        "max": 0.12032063999999999
+      }
     }
   },
+  "history": [
+    {
+      "file": "docs/evidence/eval-1.0.1.json",
+      "startedAt": "2026-10-21T12:51:16.511Z",
+      "version": "1.0.1",
+      "channel": "latest",
+      "model": "haiku",
+      "runs": 12,
+      "passed": 11,
+      "passRate": 0.9166666666666666,
+      "passCi": [
+        0.6461140782014047,
+        0.9851352905492264
+      ],
+      "costUsd": 2.0577462900000003,
+      "costPerSuccessUsd": 0.18706784454545458,
+      "runCost": {
+        "min": 0.07049351999999999,
+        "median": 0.15559317,
+        "max": 0.43521589000000005
+      }
+    },
+    {
+      "file": "docs/evidence/eval-1.1.0.json",
+      "startedAt": "2026-10-21T12:56:01.651Z",
+      "version": "1.1.0",
+      "channel": "latest",
+      "model": "haiku",
+      "runs": 12,
+      "passed": 12,
+      "passRate": 1,
+      "passCi": [
+        0.7574992425007574,
+        1
+      ],
+      "costUsd": 0.8771854099999999,
+      "costPerSuccessUsd": 0.07309878416666667,
+      "runCost": {
+        "min": 0.029311530000000002,
+        "median": 0.0728814,
+        "max": 0.12032063999999999
+      }
+    }
+  ],
+  "pipelines": [],
+  "pipelineAgents": [],
   "models": [
     {
       "version": "1.0.0",
