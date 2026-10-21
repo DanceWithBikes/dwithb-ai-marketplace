@@ -3,7 +3,7 @@ name: workflow-retro
 description: "Retrospective of a multi-agent Claude Code run: tokens, cache hits, tool calls, duration and parallelism per agent (nested subagents included) from local session logs, 1–5 actions, and a ledger trend row. Use after an SDD pipeline or subagent fan-out, or to ask what a run cost."
 allowed-tools: Bash(node ${CLAUDE_SKILL_DIR}/scripts/*), Bash(node "${CLAUDE_SKILL_DIR}/scripts/*)
 metadata:
-  version: "1.1.0"
+  version: "1.1.1"
   updated: "2026-10-21"
 ---
 

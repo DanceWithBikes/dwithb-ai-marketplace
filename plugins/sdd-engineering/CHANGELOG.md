@@ -2,6 +2,14 @@
 
 All notable changes to this plugin are documented here. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versioning: [SemVer](https://semver.org/). Release tags: `sdd-engineering--v<version>`.
 
+## [1.1.1] - 2026-10-21
+
+### Fixed
+- workflow-retro undercounted output tokens of subagents: a streamed message is logged as several records and the first one carries a partial usage snapshot; the last record's usage now wins. On a full pipeline run the reported cost moved from $0.69 to $1.09, within 2% of what Claude Code billed.
+- Cache writes are priced by TTL (1-hour writes at 2x input, 5-minute at 1.25x) from `usage.cache_creation`.
+
+These two fixes first reached `main` under version 1.1.0, so installs of 1.1.0 did not auto-update to them. 1.1.1 ships them under a new version.
+
 ## [1.1.0] - 2026-10-21
 
 ### Added
@@ -14,8 +22,6 @@ All notable changes to this plugin are documented here. Format: [Keep a Changelo
 - The ledger header has new columns; start a new ledger file rather than appending to a 1.0.x one.
 
 ### Fixed
-- workflow-retro undercounted output tokens of subagents: a streamed message is logged as several records and the first one carries a partial usage snapshot; the last record's usage now wins. On a full pipeline run the reported cost moved from $0.69 to $1.09, within 2% of what Claude Code billed.
-- Cache writes are priced by TTL (1-hour writes at 2x input, 5-minute at 1.25x) from `usage.cache_creation`.
 - Eval cases list all four plugins, so the plugin is no longer disabled during `claude plugin eval` with `dependency-unsatisfied` (before, no case could reach an sdd-engineering agent). Run evals from the repository root.
 
 ## [1.0.1] - 2026-10-21
