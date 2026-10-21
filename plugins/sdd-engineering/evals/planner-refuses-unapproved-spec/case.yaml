@@ -4,6 +4,7 @@ description: >
   A seeded spec with Status: draft and an open [NEEDS CLARIFICATION] marker. The
   implementation-planner must return "# Spec not ready", route it back to spec-creator,
   and produce no plan.
-tags: [implementation-planner, gate]
+tags: [implementation-planner, gate, smoke, sdd]
+plugins: ["../..", "../../../engineering-paved-path", "../../../research-tools", "../../../architecture-review"]
 context:
   scaffold_script: fixture.sh

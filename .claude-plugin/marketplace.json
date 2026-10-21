@@ -1,7 +1,9 @@
 {
-  "name": "dwithb-ai-marketplace",
-  "description": "AI plugins and skills from DWithB for Claude Code",
-  "owner": { "name": "DanceWithBikes" },
+  "name": "dwithb-stable",
+  "description": "Stable channel of the DWithB marketplace: plugin versions verified by evals, pinned to release tags",
+  "owner": {
+    "name": "DanceWithBikes"
+  },
   "plugins": [
     {
       "name": "engineering-paved-path",
@@ -20,8 +22,14 @@
     },
     {
       "name": "sdd-engineering",
-      "source": "./plugins/sdd-engineering",
-      "description": "Spec-Driven Development pipeline: spec, plan, implement, verify, plus multi-agent run retros."
+      "source": {
+        "source": "git-subdir",
+        "url": "DanceWithBikes/dwithb-ai-marketplace",
+        "path": "plugins/sdd-engineering",
+        "ref": "sdd-engineering--v1.0.0"
+      },
+      "description": "Spec-Driven Development pipeline: spec, plan, implement, verify, plus multi-agent run retros.",
+      "version": "1.0.0"
     }
   ]
 }

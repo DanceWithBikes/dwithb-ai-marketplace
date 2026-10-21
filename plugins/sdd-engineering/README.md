@@ -298,19 +298,6 @@ claude plugin eval plugins/sdd-engineering --scaffold --allow-tools Write Edit "
 
 The workflow-retro scripts have unit tests: `node --test plugins/sdd-engineering/skills/workflow-retro/scripts/retro.test.mjs`.
 
-## Updating
-
-Auto-update is off by default for this marketplace. To pick up a new release:
-
-```sh
-claude plugin marketplace update dwithb-ai-marketplace
-claude plugin update sdd-engineering@dwithb-ai-marketplace
-```
-
-Then restart the session or run `/reload-plugins`. Dependencies follow their `^1.0.0` ranges, so patch and
-minor releases of `engineering-paved-path`, `research-tools` and `architecture-review` arrive the same way.
-Or turn on auto-update: `/plugin` → **Marketplaces** → `dwithb-ai-marketplace` → **Enable auto-update**.
-
 ## Versioning
 
 Semantic versioning; the version lives only in `.claude-plugin/plugin.json`. See
