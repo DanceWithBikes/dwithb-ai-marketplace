@@ -126,6 +126,38 @@
       ]
     },
     {
+      "file": "docs/evidence/plugin-list-1.1.0.json",
+      "label": "1.1.0",
+      "marketplace": "dwithb-ai-marketplace",
+      "version": "1.1.0",
+      "plugins": [
+        {
+          "id": "architecture-review",
+          "version": "1.0.0-86807824ccac",
+          "enabled": true,
+          "errors": 0
+        },
+        {
+          "id": "engineering-paved-path",
+          "version": "1.0.1-a788d43b45ec",
+          "enabled": true,
+          "errors": 0
+        },
+        {
+          "id": "research-tools",
+          "version": "1.0.1-a788d43b45ec",
+          "enabled": true,
+          "errors": 0
+        },
+        {
+          "id": "sdd-engineering",
+          "version": "1.1.0",
+          "enabled": true,
+          "errors": 0
+        }
+      ]
+    },
+    {
       "file": "docs/evidence/plugin-list-stable.json",
       "label": "stable",
       "marketplace": "dwithb-stable",
@@ -827,7 +859,7 @@
     },
     {
       "version": "1.1.0",
-      "tag": null,
+      "tag": "sdd-engineering--v1.1.0",
       "agents": [
         {
           "agent": "implementation-planner",
