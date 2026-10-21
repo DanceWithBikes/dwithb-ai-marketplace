@@ -35,11 +35,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: 22
       - run: npm install -g @anthropic-ai/claude-code
       - run: claude plugin validate --strict .
+      - name: Changed plugins have a new version
+        if: github.event_name != 'workflow_dispatch'
+        run: |
+          if [ "${{ github.event_name }}" = pull_request ]; then
+            git fetch --no-tags origin "${{ github.base_ref }}"
+            base=$(git merge-base FETCH_HEAD HEAD)
+          else
+            base="${{ github.event.before }}"
+          fi
+          node scripts/check-version-bump.mjs "$base"
       - name: Validate each plugin
         run: |
           for p in plugins/*/; do claude plugin validate --strict "$p"; done

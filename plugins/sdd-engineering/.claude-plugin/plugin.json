@@ -1,6 +1,6 @@
 {
   "name": "sdd-engineering",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Spec-Driven Development pipeline: spec-creator, implementation-planner, implementer and plan-verifier agents plus a workflow-retro skill. Use when building a feature from spec to verified code with subagents.",
   "author": { "name": "DanceWithBikes" },
   "repository": "https://github.com/DanceWithBikes/dwithb-ai-marketplace",
