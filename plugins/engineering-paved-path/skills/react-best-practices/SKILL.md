@@ -5,7 +5,7 @@ description: "Modern React best practices and anti-pattern catalog (2025-26). Us
 
 # React Best Practices & Anti-Patterns
 
-Modern React conventions (2025-26). Covers what to do and what to avoid. For code examples, see [examples.md](examples.md).
+Modern React conventions (2025-26). Covers what to do and what to avoid. For code examples, see [examples.md](examples.md). For where files live and how components are split, pair it with `engineering-paved-path:frontend-ui-architecture`.
 
 ## Severity Levels
 

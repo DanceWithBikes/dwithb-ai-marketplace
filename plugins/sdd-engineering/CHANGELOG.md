@@ -2,6 +2,11 @@
 
 All notable changes to this plugin are documented here. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versioning: [SemVer](https://semver.org/). Release tags: `sdd-engineering--v<version>`.
 
+## [1.0.1] - 2026-10-21
+
+### Changed
+- README: new **Updating** section with the commands to pick up a release and how dependencies follow.
+
 ## [1.0.0] - 2026-10-20
 
 ### Added

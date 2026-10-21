@@ -1,6 +1,6 @@
 {
   "name": "engineering-paved-path",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Opinionated engineering skills for TypeScript stacks: React, Fastify, onion and frontend architecture, testing, security, Zod, Drizzle, PostgreSQL. Use when writing or reviewing code in these technologies.",
   "author": { "name": "DanceWithBikes" },
   "repository": "https://github.com/DanceWithBikes/dwithb-ai-marketplace",

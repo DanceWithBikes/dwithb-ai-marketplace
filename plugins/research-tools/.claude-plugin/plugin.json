@@ -1,6 +1,6 @@
 {
   "name": "research-tools",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Read-only researcher agent that answers questions about the codebase and the web with cited evidence. Use when you need facts before deciding, planning or specifying.",
   "author": { "name": "DanceWithBikes" },
   "repository": "https://github.com/DanceWithBikes/dwithb-ai-marketplace",

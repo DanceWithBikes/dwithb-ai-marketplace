@@ -2,6 +2,11 @@
 
 All notable changes to this plugin are documented here. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versioning: [SemVer](https://semver.org/). Release tags: `engineering-paved-path--v<version>`.
 
+## [1.0.1] - 2026-10-21
+
+### Changed
+- `react-best-practices`: points to `engineering-paved-path:frontend-ui-architecture` for file placement and component splitting.
+
 ## [1.0.0] - 2026-10-20
 
 ### Added
