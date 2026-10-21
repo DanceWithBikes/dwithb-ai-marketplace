@@ -33,8 +33,9 @@ SESSION="$(node -e 'const L=require("fs").readFileSync(process.argv[1],"utf8").s
 RESULT="$(node -e 'const L=require("fs").readFileSync(process.argv[1],"utf8").trim().split("\n");for(const l of L.reverse()){try{const j=JSON.parse(l);if(j.type==="result"){console.log(JSON.stringify({cost:j.total_cost_usd,subtype:j.subtype,is_error:j.is_error,result:(j.result||"").slice(0,400)}));break}}catch{}}' "$LOG")"
 echo "version=$VERSION work=$WORK session=$SESSION exit=$STATUS result=$RESULT"
 
+# Only the final result event counts: agent output may mention "rate limit" in a spec.
 MONEY=0
-grep -qiE "credit balance|billing|insufficient|quota exceeded|usage limit" "$LOG" && MONEY=1
+echo "$RESULT" | grep -q '"is_error":true' && echo "$RESULT" | grep -qiE "credit|billing|balance|quota|usage limit|rate.?limit|overloaded" && MONEY=1
 
 RETRO="$HERE/../../plugins/sdd-engineering/skills/workflow-retro/scripts"
 [ -n "$SESSION" ] || { echo "no session id"; exit 2; }

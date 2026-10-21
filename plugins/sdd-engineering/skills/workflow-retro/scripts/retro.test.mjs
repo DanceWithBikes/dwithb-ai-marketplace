@@ -201,3 +201,20 @@ test("cost per successful run sums every run of the label and version, divides b
   assert.equal(before.costPerSuccessUsd, 6);
   assert.equal(costPerSuccess(readFileSync(ledger, "utf8"), "sdd-pipeline").runs, 3);
 });
+
+test("1-hour cache writes are priced at 2x input, 5-minute ones at 1.25x", () => {
+  const u = sumUsage([
+    { type: "assistant", timestamp: ts(0), message: { id: "w1", model: "claude-sonnet-5-5", content: [],
+      usage: { input_tokens: 0, output_tokens: 0, cache_read_input_tokens: 0, cache_creation_input_tokens: 2_000_000,
+        cache_creation: { ephemeral_1h_input_tokens: 1_000_000, ephemeral_5m_input_tokens: 1_000_000 } } } },
+  ]);
+  assert.equal(Math.round(u.costUsd * 100) / 100, 4 + 2.5);
+});
+
+test("a message's usage comes from its last streamed record, not the first", () => {
+  const rec = (out, block) => ({ type: "assistant", timestamp: ts(0), message: { id: "s1", model: "claude-opus-5-5", usage: usage(1, 0, 0, out), content: [block] } });
+  const u = sumUsage([rec(12, { type: "thinking" }), rec(40, { type: "text" }), rec(900, { type: "tool_use", name: "Write", input: {} })]);
+  assert.equal(u.turns, 1);
+  assert.equal(u.output, 900);
+});
+

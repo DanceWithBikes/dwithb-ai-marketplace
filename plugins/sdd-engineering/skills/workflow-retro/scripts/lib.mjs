@@ -72,8 +72,9 @@ export function readJson(path) {
   }
 }
 
-// One API response is written as one record PER CONTENT BLOCK, each repeating the same
-// usage - so usage must be counted once per message.id or tokens are inflated 2-3x.
+// One API response is written as one record PER CONTENT BLOCK, so usage must be counted once
+// per message.id or tokens are inflated 2-3x. The records are streaming snapshots: an early
+// block's output_tokens can be a fraction of the final count, so the last record's usage wins.
 export function assistantMessages(records) {
   const byId = new Map();
   for (const r of records) {
@@ -81,19 +82,30 @@ export function assistantMessages(records) {
     const id = r.message.id ?? r.requestId ?? r.uuid;
     const prev = byId.get(id);
     if (!prev) byId.set(id, { id, ts: r.timestamp, usage: r.message.usage, model: r.message.model, blocks: [...(r.message.content ?? [])] });
-    else prev.blocks.push(...(r.message.content ?? []));
+    else {
+      prev.blocks.push(...(r.message.content ?? []));
+      prev.usage = r.message.usage;
+    }
   }
   return [...byId.values()];
 }
 
 // USD per million tokens, first-party API list prices of the current model families (2026-10).
-// Cache writes are the 5-minute rate (1.25x input). A model that matches no family is not
+// Cache writes cost 1.25x input for the 5-minute TTL and 2x for the 1-hour TTL Claude Code
+// mostly uses; usage.cache_creation splits them. A model that matches no family is not
 // priced: its turns are counted in `unpricedTurns` and its cost is left out.
 export const PRICES = {
-  opus: { input: 4, output: 20, cacheRead: 0.2, cacheWrite: 5 },
-  sonnet: { input: 2, output: 10, cacheRead: 0.2, cacheWrite: 2.5 },
-  haiku: { input: 0.1, output: 0.5, cacheRead: 0.01, cacheWrite: 0.125 },
+  opus: { input: 4, output: 20, cacheRead: 0.2, cacheWrite5m: 5, cacheWrite1h: 8 },
+  sonnet: { input: 2, output: 10, cacheRead: 0.2, cacheWrite5m: 2.5, cacheWrite1h: 4 },
+  haiku: { input: 0.1, output: 0.5, cacheRead: 0.01, cacheWrite5m: 0.125, cacheWrite1h: 0.2 },
 };
+
+// Without a TTL split, the whole cache write is priced at the 5-minute rate.
+function cacheWriteCost(x, p) {
+  const total = x.cache_creation_input_tokens ?? 0;
+  const oneHour = x.cache_creation?.ephemeral_1h_input_tokens ?? 0;
+  return (oneHour * p.cacheWrite1h + Math.max(total - oneHour, 0) * p.cacheWrite5m) / 1e6;
+}
 
 export function priceFor(model) {
   const family = Object.keys(PRICES).find((f) => typeof model === "string" && model.includes(f));
@@ -119,7 +131,7 @@ export function sumUsage(records) {
     u.turns += 1;
     u.peakContext = Math.max(u.peakContext, input + cacheRead + cacheWrite);
     const p = priceFor(m.model);
-    if (p) u.costUsd += (input * p.input + (x.output_tokens ?? 0) * p.output + cacheRead * p.cacheRead + cacheWrite * p.cacheWrite) / 1e6;
+    if (p) u.costUsd += (input * p.input + (x.output_tokens ?? 0) * p.output + cacheRead * p.cacheRead) / 1e6 + cacheWriteCost(x, p);
     else if (m.model !== "<synthetic>") u.unpricedTurns += 1;
   }
   return u;
