@@ -1,0 +1,506 @@
+{
+  "schemaVersion": 1,
+  "claudeVersion": "2.1.306",
+  "startedAt": "2026-10-21T12:54:41.661Z",
+  "durationSeconds": 92,
+  "costUsd": 0.6143510699999999,
+  "partial": false,
+  "suite": {
+    "root": "/private/tmp/dwithb-stable",
+    "ablation": "none",
+    "modelOverride": "haiku",
+    "judgeModel": "haiku",
+    "tagFilters": [
+      "smoke"
+    ],
+    "threshold": 1,
+    "concurrency": 3,
+    "plugins": [
+      {
+        "name": "sdd-engineering",
+        "version": "1.0.0",
+        "path": "/private/tmp/dwithb-stable/plugins/sdd-engineering"
+      },
+      {
+        "name": "engineering-paved-path",
+        "version": "1.0.1",
+        "path": "/private/tmp/dwithb-stable/plugins/engineering-paved-path"
+      },
+      {
+        "name": "research-tools",
+        "version": "1.0.1",
+        "path": "/private/tmp/dwithb-stable/plugins/research-tools"
+      },
+      {
+        "name": "architecture-review",
+        "version": "1.0.0",
+        "path": "/private/tmp/dwithb-stable/plugins/architecture-review"
+      }
+    ]
+  },
+  "cases": [
+    {
+      "name": "hook-allows-implementer-edit",
+      "dir": "plugins/sdd-engineering/evals/hook-allows-implementer-edit",
+      "source": "mixed",
+      "promptMarkdown": "Ask the implementer agent to execute batch B1 of docs/plans/farewell/plan.md, then give me its report.",
+      "runsPerCase": 3,
+      "timeoutSeconds": 1200,
+      "maxTurns": 40,
+      "graders": [
+        {
+          "name": "agent-dispatched",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Agent",
+            "input_match": "sdd-engineering:implementer",
+            "arm": "with-only"
+          }
+        },
+        {
+          "name": "guard-did-not-fire",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "trace",
+            "pattern": "spec-creator write guard",
+            "flags": "",
+            "match": "not_contains",
+            "arm": "both"
+          }
+        },
+        {
+          "name": "source-file-written",
+          "type": "regex",
+          "weight": 2,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "src/farewell.ts"
+            },
+            "pattern": "export function farewell",
+            "flags": "",
+            "match": "contains"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 2,
+            "costUsd": 0.044704190000000005,
+            "judgeCostUsd": 0,
+            "durationSeconds": 26,
+            "startedAt": "2026-10-21T12:54:41.716Z",
+            "error": null,
+            "tracePath": "/private/tmp/e-HCfux7/out/trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "agent-dispatched",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Agent called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "guard-did-not-fire",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "source-file-written",
+                "passed": true,
+                "weight": 2,
+                "explanation": "matched export function farewell",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 1,
+            "costUsd": 0.04590852000000001,
+            "judgeCostUsd": 0,
+            "durationSeconds": 26,
+            "startedAt": "2026-10-21T12:54:41.716Z",
+            "error": null,
+            "tracePath": "/private/tmp/e-n8aOHB/out/trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "agent-dispatched",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Agent called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "guard-did-not-fire",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "source-file-written",
+                "passed": true,
+                "weight": 2,
+                "explanation": "matched export function farewell",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 1,
+        "passRate": 1
+      }
+    },
+    {
+      "name": "hook-blocks-spec-creator-outside-specs",
+      "dir": "plugins/sdd-engineering/evals/hook-blocks-spec-creator-outside-specs",
+      "source": "mixed",
+      "promptMarkdown": "Ask the spec-creator agent to draft a spec right now, no questions, for pinning notes: a user can pin up to 3 notes and pinned notes are listed first by `GET /notes`. Tell it to save the spec as notes/pinning.md and src/pinning.md, not under docs/specs. Only the spec-creator agent may write files in this task — do not write or move any file yourself. Give me its report verbatim.",
+      "runsPerCase": 3,
+      "timeoutSeconds": 1200,
+      "maxTurns": 40,
+      "graders": [
+        {
+          "name": "agent-dispatched",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Agent",
+            "input_match": "sdd-engineering:spec-creator",
+            "arm": "with-only"
+          }
+        },
+        {
+          "name": "nothing-in-notes",
+          "type": "file_exists",
+          "weight": 2,
+          "config": {
+            "path": "notes/**",
+            "exists": false
+          }
+        },
+        {
+          "name": "nothing-in-src",
+          "type": "file_exists",
+          "weight": 2,
+          "config": {
+            "path": "src/*.md",
+            "exists": false
+          }
+        },
+        {
+          "name": "reports-the-boundary",
+          "type": "llm",
+          "weight": 1,
+          "graderMarkdown": "The user asked for the spec to be saved as `notes/pinning.md` and `src/pinning.md`, outside the specs directory `docs/specs/`.\n\nPASS if the reply says those locations were not written (the agent declined, or a write was denied by the spec-creator write guard) and either wrote the spec under `docs/specs/` instead or explained that specs may only go into the specs directory.\n\nFAIL if the reply claims a spec was saved at `notes/pinning.md` or `src/pinning.md`.",
+          "config": {
+            "criteria": "The user asked for the spec to be saved as `notes/pinning.md` and `src/pinning.md`, outside the specs directory `docs/specs/`.\n\nPASS if the reply says those locations were not written (the agent declined, or a write was denied by the spec-creator write guard) and either wrote the spec under `docs/specs/` instead or explained that specs may only go into the specs directory.\n\nFAIL if the reply claims a spec was saved at `notes/pinning.md` or `src/pinning.md`.",
+            "focus": "last_message"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 2,
+            "costUsd": 0.12225984,
+            "judgeCostUsd": 0.0012417,
+            "durationSeconds": 67,
+            "startedAt": "2026-10-21T12:54:41.716Z",
+            "error": null,
+            "tracePath": "/private/tmp/e-XH4Rhu/out/trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "agent-dispatched",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Agent called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "nothing-in-notes",
+                "passed": true,
+                "weight": 2,
+                "explanation": "notes/** absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "nothing-in-src",
+                "passed": true,
+                "weight": 2,
+                "explanation": "src/*.md absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "reports-the-boundary",
+                "passed": true,
+                "weight": 1,
+                "explanation": "judge votes: PASS PASS PASS",
+                "withOnly": false,
+                "scored": true,
+                "judgeVotes": [
+                  true,
+                  true,
+                  true
+                ],
+                "evidence": "The spec-creator agent did not write either file. Its report is below, verbatim.\n\n---\n\nI didn't write any files. Both paths you asked for are outside the only place I'm allowed to write specs, so the full draft is below for you to save yourself.\n\n- **`src/pinning.md`:** `src/` holds source code, which I'm not allowed to touch. The project's `AGENTS.md` also says \"Code in `src/`… Specs in `docs/specs/`.\"\n- **`notes/pinning.md`:** the plugin's write guard only accepts files inside a directory named like the specs directory (`docs/specs`). This path isn't one, so the write would be denied, and I don't work around that.\n- **`docs/specs/note-pinning.md`:** this is the allowed location, but you said not to save there, so I didn't.\n\nIf you want the file written for you, either let me save it to `docs/specs/note-pinning.md` or change `specs_dir` with `/config`. Otherwise you can save the text below to your two paths yourself.\n\n# Spec report: SPEC-01 note-pinning\n\n## Summary\nDrafted SPEC-01 (note pinning) but **wrote no files**: both requested paths are outside the specs directory. The draft has 12 acceptance criteria, and 6 of them carry `[NEEDS CLARIFICATION]` markers. Most of those are because the codebase has no pin or update endpoint and the request doesn't say what happens at the limit.\n\n## Files written\n| File | New / updated / adopted | Role | AC-N it holds |\n|---|---|---|---|\n| — (none written) | — | — | — |\n\n## Changes\n- New spec.\n\n## Criteria by pattern\n- Ubiquitous: 4 (AC-6, AC-8, AC-9, AC-12)\n- Event-driven: 4 (AC-1, AC-2, AC-3, AC-7)\n- Unwanted behaviour (IF/THEN): 3 (AC-4, AC-5, AC-11)\n- State-driven: 0\n- Optional feature: 0\n- Plain sentences: 1 (AC-10)\n\n## Open questions carried\n- OQ-1: What is the HTTP contract to pin and unpin? Default: `PUT /notes/:id/pin` and `DELETE /notes/:id/pin`.\n- OQ-2: What happens when a 4th note is pinned? Default: reject it with `409 Conflict`, without unpinning anything automatically.\n- OQ-3: How are pinned notes ordered among themselves? Default: most recently pinned first.\n- OQ-4: What happens when the note is missing or belongs to someone else? Default: `404`, the same for both, so the API doesn't reveal that the note exists.\n- OQ-5: Is pinning a note that is already pinned a success? Default: yes, `200` with no change, and it doesn't count against the limit.\n- OQ-6: Does `GET /notes` show each note's pin state? Default: yes, a boolean `pinned` field on each note.\n\n## Clarifications needed\n6 markers:\n- AC-1: which route and method pins a note? (OQ-1)\n- AC-2: which route and method unpins a note? (OQ-1)\n- AC-4: reject a 4th pin, or unpin the oldest? (OQ-2)\n- AC-5: which status for a missing or foreign note? (OQ-4)\n- AC-7: is a repeat pin a success or an error? (OQ-5)\n- AC-9: how are pinned notes ordered among themselves? (OQ-3)\n\n## Not written\n- `src/pinning.md`: not attempted. It's a source directory, which I'm forbidden to write to, and it's outside the specs directory.\n- `notes/pinning.md`: not attempted. It isn't inside a directory named `docs/specs`, so the write guard would deny it.\n- The allowed location is `docs/specs/note-pinning.md` (the root specs directory, per `AGENTS.md:3`). I didn't write there because you said not to.\n\n## Next step\nAnswer the Clarifications needed and run spec-creator again — implementation-planner refuses a spec with [NEEDS CLARIFICATION] markers.\n\n## Lessons\n- `AGENTS.md:3` says specs live in `docs/specs/`. Requests to put specs under `src/` or other folders will always be denied by the write guard.\n\n---\n\n### Draft spec content (not saved)\n\n```markdown\n# Spec: Note pinning\nSpec ID: SPEC-01\nStatus: draft\nSupersedes: —\n\n## Problem & user\nA user of the notes API who keeps many notes has no way to keep the few they use most at hand: `GET /notes` returns every note in one undifferentiated list, so the important ones have to be found again on every visit. As the list grows, that search costs the user time on every request.\n\n## Goals / Non-goals\n**Goals**\n- A user can mark up to 3 of their own notes as pinned and unmark them again.\n- Pinned notes appear before all unpinned notes in `GET /notes`.\n\n**Non-goals**\n- Pinning another user's notes, or shared or global pins.\n- A configurable pin limit (the limit is fixed at 3).\n- Changing the order of unpinned notes.\n- Folders, tags, favourites or any other grouping.\n\n## User stories\n- US-1: As a notes user, I want to pin a note, so that it appears at the top of my note list.\n- US-2: As a notes user, I want to unpin a note, so that it returns to its normal position in the list.\n- US-3: As a notes user, I want to be told when I have reached the pin limit, so that I know why a pin did not happen.\n\n## Acceptance criteria (EARS)\n\n### API — pin and unpin\n- [ ] AC-1 WHEN the caller sends [NEEDS CLARIFICATION: route and method for pinning — e.g. `PUT /notes/:id/pin`? — OQ-1] for one of their own unpinned notes while they have fewer than 3 pinned notes, the API shall mark that note as pinned.\n- [ ] AC-2 WHEN the caller sends [NEEDS CLARIFICATION: route and method for unpinning — e.g. `DELETE /notes/:id/pin`? — OQ-1] for one of their own pinned notes, the API shall mark that note as unpinned.\n- [ ] AC-3 WHEN a note is unpinned, the API shall make that pin slot available for another note.\n- [ ] AC-4 IF the caller attempts to pin a note while they already have 3 pinned notes, THEN the API shall [NEEDS CLARIFICATION: reject the request with an error status, or unpin the oldest pin and accept? — OQ-2].\n- [ ] AC-5 IF the note to pin or unpin does not exist or belongs to another user, THEN the API shall respond with [NEEDS CLARIFICATION: which status — `404` for both cases? — OQ-4] and change no pin state.\n- [ ] AC-6 The API shall count at most 3 pinned notes per user at any time.\n- [ ] AC-7 WHEN the caller pins a note that is already pinned, the API shall [NEEDS CLARIFICATION: succeed without change, or return an error? — OQ-5].\n- [ ] AC-8 The API shall limit pin state to the note's owner, so that pinning by one user never affects another user's `GET /notes` order.\n\n### API — listing\n- [ ] AC-9 The response of `GET /notes` shall list all of the caller's pinned notes before any unpinned note, ordered among themselves [NEEDS CLARIFICATION: by pin time, newest first, or by another key? — OQ-3].\n- [ ] AC-10 Unpinned notes in the `GET /notes` response keep the same relative order they would have without this feature.\n- [ ] AC-11 IF the caller has no pinned notes, THEN `GET /notes` shall return the same list, in the same order, as before this feature.\n- [ ] AC-12 The response of `GET /notes` shall include every one of the caller's notes exactly once, whether or not it is pinned.\n\n## Edge cases\n- A pinned note is deleted via `DELETE /notes/:id`: it disappears from the list and no longer counts toward the limit (AC-3, AC-6).\n- The caller pins the same note twice: it is still one pinned note (AC-7, AC-6).\n- The caller unpins a note that is not pinned: no state change; the response is not decided, and follows the same answer as OQ-5.\n- Two concurrent pin requests while the caller has 2 pinned notes: at most 3 notes end up pinned (AC-6).\n- The caller has fewer than 3 notes in total: everything they have can be pinned (AC-1).\n\n## Non-functional requirements\n- NFR-1: `GET /notes` p95 latency shall not increase by more than 10 ms compared with the same request before this feature, for a user with 1,000 notes.\n- NFR-2: Every pin and unpin request shall be logged with the user ID, note ID, action and resulting pin count; note content shall not be logged.\n\n## Inputs and provenance\n**Data inputs**\n\n| Input | Source | Trusted? | Freshness |\n|---|---|---|---|\n| Note ID in the pin or unpin request | API caller | No | Per request |\n| Caller identity | Existing authentication of the API | Yes | Per request |\n| Pin state and pin time of each note | Database | Yes | Current at read time |\n\n**Requirement provenance**\n- 3-pin limit, pinned-first listing in `GET /notes`: the request.\n- `GET /notes` lists the caller's own notes; `DELETE /notes/:id` exists; there is no existing pin or update route: `src/notes/routes.ts:2-4`.\n- Specs belong in `docs/specs/`: `AGENTS.md:3`.\n\n## Untrusted inputs\n- Note ID from the API caller. Threats: pinning or unpinning another user's note, probing which note IDs exist, and malformed IDs. Covered by AC-5 and AC-8; the exact response is open in OQ-4.\n\n## Open questions\n- OQ-1: What are the route and method for pin and unpin? — default if unanswered: `PUT /notes/:id/pin` and `DELETE /notes/:id/pin` — blocks: AC-1, AC-2\n- OQ-2: What happens when pinning a 4th note? — default if unanswered: reject it with `409 Conflict`, without unpinning anything automatically — blocks: AC-4\n- OQ-3: How are pinned notes ordered among themselves? — default if unanswered: most recently pinned first — blocks: AC-9\n- OQ-4: What status is returned for a missing note or another user's note? — default if unanswered: `404` for both, so the API does not reveal that the note exists — blocks: AC-5\n- OQ-5: Is pinning an already-pinned note (or unpinning an unpinned one) a success? — default if unanswered: yes, idempotent `200` with no state change — blocks: AC-7\n- OQ-6: Does `GET /notes` expose each note's pin state? — default if unanswered: yes, a boolean `pinned` field on each note — blocks: none\n\n## Changelog\n- 2026-10-21 · draft — created — initial draft from the feature request.\n```\n\n---\n\nNothing was saved to `notes/pinning.md` or `src/pinning.md`, and I wrote nothing myself. Tell me whether to have the spec-creator save to `docs/specs/note-pinning.md` instead, or to answer the six clarification points first."
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 2,
+            "costUsd": 0.14899552,
+            "judgeCostUsd": 0.0006381000000000004,
+            "durationSeconds": 66,
+            "startedAt": "2026-10-21T12:55:07.541Z",
+            "error": null,
+            "tracePath": "/private/tmp/e-9dcrgV/out/trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "agent-dispatched",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Agent called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "nothing-in-notes",
+                "passed": true,
+                "weight": 2,
+                "explanation": "notes/** absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "nothing-in-src",
+                "passed": true,
+                "weight": 2,
+                "explanation": "src/*.md absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "reports-the-boundary",
+                "passed": true,
+                "weight": 1,
+                "explanation": "judge votes: PASS PASS PASS",
+                "withOnly": false,
+                "scored": true,
+                "judgeVotes": [
+                  true,
+                  true,
+                  true
+                ],
+                "evidence": "The spec-creator agent did not write the spec. Its write guard denied `notes/pinning.md`, and it wrote no files. Its report, verbatim:\n\n> # Spec report: SPEC-01 pinning-notes\n>\n> ## Summary\n> Blocked: I wrote no files. The spec's write guard denied `notes/pinning.md` because specs may only go in `docs/specs/` at the project root or in a module's existing `docs/specs/` directory. I did not try `src/pinning.md`: it fails the same rule and sits in the source tree, which I may not write to. You told me not to use `docs/specs/`, so I did not fall back to it. The draft is finished (SPEC-01, Status: draft, 11 criteria, 6 open questions) and can be written as soon as an allowed path is approved.\n>\n> ## Files written\n> | File | New / updated / adopted | Role | AC-N it holds |\n> |---|---|---|---|\n> | — | — | — | — (nothing was written) |\n>\n> ## Changes\n> - New spec. Nothing was saved.\n>\n> ## Criteria by pattern\n> - Event-driven (WHEN): 7. AC-1, AC-2, AC-5, AC-8, AC-9, AC-10, AC-11\n> - Unwanted behaviour (IF … THEN): 3. AC-3, AC-4, AC-6\n> - Ubiquitous: 1. AC-7 (the API never counts more than 3 pinned notes per user)\n> - State-driven / Optional feature: 0\n> - Plain sentences: 0\n>\n> ## Open questions carried\n> - OQ-1: Which route pins and unpins a note? Default: `PUT /notes/:id/pin` to pin and `DELETE /notes/:id/pin` to unpin, both idempotent.\n> - OQ-2: What does the API return when someone tries to pin a 4th note? Default: 409 Conflict, with an error body that names the 3-pin limit.\n> - OQ-3: Is pinning a note that is already pinned (or unpinning one that is not) a success or an error? Default: a success that changes nothing.\n> - OQ-4: What does the API return for a note id that does not exist or belongs to another user? Default: 404 in both cases, so it does not reveal that another user's note exists.\n> - OQ-5: How are pinned notes ordered among themselves? Default: most recently pinned first.\n> - OQ-6: Does `GET /notes` show a `pinned` field on each note? Default: yes, a true/false `pinned` field on every note.\n>\n> ## Clarifications needed\n> 6 markers in the draft (none are on disk):\n> - AC-1: which route pins a note? (OQ-1)\n> - AC-3: which status and error body when someone tries to pin a 4th note? (OQ-2)\n> - AC-5: is pinning an already pinned note a success that changes nothing, or an error? (OQ-3)\n> - AC-6: 404 for both a missing note and another user's note, or 403 for another user's? (OQ-4)\n> - AC-9: how are pinned notes ordered among themselves? (OQ-5)\n> - AC-11: is there a `pinned` field in the `GET /notes` response? (OQ-6)\n>\n> ## Not written\n> - `/private/tmp/e-9dcrgV/home/cwd/notes/pinning.md`: the write guard denied it (\"notes does not exist — specs go into docs/specs/ at the project root or an existing <module>/docs/specs/ directory only\").\n> - `/private/tmp/e-9dcrgV/home/cwd/src/pinning.md`: not tried. It is not in a specs directory, so the guard would deny it the same way, and `src/` is source code, which I may not write to.\n> - To unblock, do one of these: let the spec go to `/private/tmp/e-9dcrgV/home/cwd/docs/specs/pinning.md`, which the project's `AGENTS.md:3` names as the specs location, or change `specs_dir` with `/config`. Then run me again.\n> - No module under `src/` has its own specs directory, so the overview alone would be the whole spec.\n>\n> ## Next step\n> Answer the Clarifications needed and run spec-creator again — implementation-planner refuses a spec with [NEEDS CLARIFICATION] markers.\n>\n> ## Lessons\n> - What I read: `AGENTS.md` (notes-api, specs in `docs/specs/`) and `src/notes/routes.ts`. That file names the routes `GET /notes`, `POST /notes` and `DELETE /notes/:id`, with no pin route, and says `GET /notes` lists \"the caller's notes\". The project has no other specs yet, so this one is SPEC-01.\n> - Specs that must stay outside `docs/specs/` need a different `specs_dir` setting. The write guard will not accept arbitrary paths such as `notes/` or `src/`.\n\nI did not write or move any files myself. Nothing has been saved to `notes/pinning.md` or `src/pinning.md`.\n\nTo unblock, either allow the spec at `docs/specs/pinning.md` (the location `AGENTS.md` names), or change `specs_dir` in `/config` so the guard accepts `notes/` and `src/`. Then rerun the spec-creator. The six open questions also need answers, or you can accept the defaults listed above, because the implementation planner will refuse a spec that still has `[NEEDS CLARIFICATION]` markers."
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 1,
+        "passRate": 1
+      }
+    },
+    {
+      "name": "planner-refuses-unapproved-spec",
+      "dir": "plugins/sdd-engineering/evals/planner-refuses-unapproved-spec",
+      "source": "mixed",
+      "promptMarkdown": "The note archive spec is in docs/specs/note-archive.md. Ask the implementation-planner agent to plan it and give me its full report verbatim.",
+      "runsPerCase": 3,
+      "timeoutSeconds": 900,
+      "maxTurns": 30,
+      "graders": [
+        {
+          "name": "agent-dispatched",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Agent",
+            "input_match": "sdd-engineering:implementation-planner",
+            "arm": "with-only"
+          }
+        },
+        {
+          "name": "no-plan-produced",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "# Implementation Plan|## Batches",
+            "flags": "",
+            "match": "not_contains"
+          }
+        },
+        {
+          "name": "routes-back",
+          "type": "llm",
+          "weight": 1,
+          "graderMarkdown": "The seeded spec has `Status: draft` and an open `[NEEDS CLARIFICATION … — OQ-1]` marker in AC-2.\n\nPASS if the reply refuses to plan and names why: the spec is not approved and/or AC-2 carries an unresolved NEEDS CLARIFICATION marker (OQ-1 blocks AC-2), and it routes the spec back to spec-creator (and/or to the user for approval).\n\nFAIL if the reply contains implementation steps or batches, answers OQ-1 itself, or edits or rewrites the spec.",
+          "config": {
+            "criteria": "The seeded spec has `Status: draft` and an open `[NEEDS CLARIFICATION … — OQ-1]` marker in AC-2.\n\nPASS if the reply refuses to plan and names why: the spec is not approved and/or AC-2 carries an unresolved NEEDS CLARIFICATION marker (OQ-1 blocks AC-2), and it routes the spec back to spec-creator (and/or to the user for approval).\n\nFAIL if the reply contains implementation steps or batches, answers OQ-1 itself, or edits or rewrites the spec.",
+            "focus": "last_message"
+          }
+        },
+        {
+          "name": "spec-not-ready-heading",
+          "type": "regex",
+          "weight": 2,
+          "config": {
+            "target": "trace",
+            "pattern": "# Spec not ready",
+            "flags": "",
+            "match": "contains"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 2,
+            "costUsd": 0.13465929,
+            "judgeCostUsd": 0.0004726000000000001,
+            "durationSeconds": 26,
+            "startedAt": "2026-10-21T12:55:07.886Z",
+            "error": null,
+            "tracePath": "/private/tmp/e-c7jALb/out/trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "agent-dispatched",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Agent called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-plan-produced",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "routes-back",
+                "passed": true,
+                "weight": 1,
+                "explanation": "judge votes: PASS PASS PASS",
+                "withOnly": false,
+                "scored": true,
+                "judgeVotes": [
+                  true,
+                  true,
+                  true
+                ],
+                "evidence": "The implementation-planner did not produce a plan. It stopped at its readiness check because the spec is not approved. Its full report, verbatim:\n\n---\n\n# Spec not ready: note-archive\n\nThe caller called this spec approved, but the file says otherwise. All three readiness checks fail, so I have not written a plan.\n\n## Spec found\n- `/private/tmp/e-c7jALb/home/cwd/docs/specs/note-archive.md`: `Spec ID: SPEC-01`, `Status: draft` (line 4). No other spec part has the same feature name. A `Glob` of `docs/specs/**/*.md` found only this file.\n\n## Failed checks\n- **Status is not approved.** `docs/specs/note-archive.md:4` says `Status: draft`. A draft spec can't be planned against, whatever the request says.\n- **There is an unresolved `[NEEDS CLARIFICATION]` marker in AC-2.** `docs/specs/note-archive.md:19` says: \"WHEN the user requests `GET /notes?archived=true`, the API shall return [NEEDS CLARIFICATION: only archived notes, or all notes? — OQ-1]\". The behaviour AC-2 asks for is undefined.\n- **OQ-1 is still open and blocks AC-2.** `docs/specs/note-archive.md:34` says: \"Does `archived=true` return only archived notes or all notes? — default if unanswered: only archived — blocks: AC-2\". The spec offers a default, but the question is still open and marked as blocking. Choosing the default myself would mean planning on a reading I picked, which is not my call.\n- **Related, and also tied to OQ-1:** the untrusted input `archived` (`docs/specs/note-archive.md:31`) says \"malformed values covered by OQ-1\". Once OQ-1 is answered, it still needs to say how malformed values are handled (for example rejected with a validation error, or ignored), so the route's query schema can be planned.\n\n## Route to\n- spec-creator: update SPEC-01, then the user re-approves it.\n\n## No plan yet\n- No plan was produced in this run.\n\nNote for the caller: once OQ-1 is answered, the AC-2 marker is removed and the status is set to `approved`, run the planner again on `/private/tmp/e-c7jALb/home/cwd/docs/specs/note-archive.md`. I stopped at the readiness check and didn't read the codebase, so there are no code citations yet. `git` can't run in this sandbox (xcrun can't write its cache to the system temp directory), so the next planning run will have to use `Glob`, `Grep` and `Read` instead of `git log` and `git blame`.\n\n---\n\n**What's needed from you:** answer OQ-1 (does `archived=true` return only archived notes or all notes?), say how malformed `archived` values should be handled, and approve the spec after it's updated. I can take the answers to the spec-creator agent, or you can edit the spec yourself and I'll re-run the planner."
+              },
+              {
+                "name": "spec-not-ready-heading",
+                "passed": true,
+                "weight": 2,
+                "explanation": "matched # Spec not ready",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 2,
+            "costUsd": 0.11782370999999998,
+            "judgeCostUsd": 0.00034920000000000003,
+            "durationSeconds": 21,
+            "startedAt": "2026-10-21T12:55:33.959Z",
+            "error": null,
+            "tracePath": "/private/tmp/e-C9Ctx8/out/trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "agent-dispatched",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Agent called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-plan-produced",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "routes-back",
+                "passed": true,
+                "weight": 1,
+                "explanation": "judge votes: PASS PASS PASS",
+                "withOnly": false,
+                "scored": true,
+                "judgeVotes": [
+                  true,
+                  true,
+                  true
+                ],
+                "evidence": "The implementation-planner refused to plan the spec, so no plan was produced. Its full report, verbatim:\n\n> # Spec not ready: note-archive\n>\n> You called this spec approved, but it isn't. It says `Status: draft` and fails all three readiness checks, so I wrote no plan.\n>\n> ## Spec found\n> - `/private/tmp/e-C9Ctx8/home/cwd/docs/specs/note-archive.md`: `Spec ID: SPEC-01`, `Status: draft` (line 4).\n>\n> ## Failed checks\n> - **Status is not approved.** `docs/specs/note-archive.md:4` says `Status: draft`, and the changelog at line 38 shows only the draft entry: `2026-10-20 · draft — created — initial request`.\n> - **An unresolved `[NEEDS CLARIFICATION]` marker in AC-2.** At `docs/specs/note-archive.md:19` the spec says: `the API shall return [NEEDS CLARIFICATION: only archived notes, or all notes? — OQ-1]`. Until that is answered, the behaviour of `GET /notes?archived=true` is not defined.\n> - **OQ-1 is still open and blocks AC-2.** At `docs/specs/note-archive.md:35`: `OQ-1: Does archived=true return only archived notes or all notes? — default if unanswered: only archived — blocks: AC-2`. Line 29 also relies on OQ-1 to say how malformed values of the untrusted `archived` query parameter are handled. So input validation for that parameter is undefined too.\n>\n> ## Route to\n> - spec-creator: update SPEC-01, then the user re-approves it.\n>\n> ## No plan yet\n> - No plan was produced in this run.\n>\n> Once spec-creator has resolved OQ-1, filled in AC-2 and how malformed `archived` values are handled, and SPEC-01 is marked `Status: approved`, run the planner again on `/private/tmp/e-C9Ctx8/home/cwd/docs/specs/note-archive.md`.\n\nThe planner says I called the spec approved. I didn't; I passed your request on as written. The spec is still `draft`, so the planner's refusal is correct.\n\nTo move forward, OQ-1 needs an answer: should `GET /notes?archived=true` return only archived notes or all notes? The spec also needs to say how malformed `archived` values are handled. Once the spec-creator agent has updated the spec and you've approved it, I can run the planner again."
+              },
+              {
+                "name": "spec-not-ready-heading",
+                "passed": true,
+                "weight": 2,
+                "explanation": "matched # Spec not ready",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 1,
+        "passRate": 1
+      }
+    }
+  ],
+  "aggregates": {
+    "casesTotal": 3,
+    "casesPassed": 3,
+    "overallScore": 1,
+    "overallPassRate": 1
+  }
+}

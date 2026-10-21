@@ -4,6 +4,7 @@ description: >
   An ambiguous one-line feature request in a tiny project. spec-creator's pass 1 must
   return clarifying questions (each with a default) and write nothing, instead of
   drafting a spec on guessed behaviour.
-tags: [spec-creator, clarification]
+tags: [spec-creator, clarification, sdd]
+plugins: ["../..", "../../../engineering-paved-path", "../../../research-tools", "../../../architecture-review"]
 context:
   scaffold_script: fixture.sh

@@ -5,8 +5,8 @@ tools: Read, Write, Edit, Grep, Glob, Bash, Skill, TodoWrite
 disallowedTools: WebSearch, WebFetch
 model: sonnet
 metadata:
-  version: "1.0.0"
-  updated: "2026-10-20"
+  version: "1.1.0"
+  updated: "2026-10-21"
 ---
 
 # Implementer

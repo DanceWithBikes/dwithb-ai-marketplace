@@ -1,0 +1,1079 @@
+{
+  "schemaVersion": 1,
+  "claudeVersion": "2.1.306",
+  "startedAt": "2026-10-21T12:56:01.651Z",
+  "durationSeconds": 161,
+  "costUsd": 0.88223557,
+  "partial": false,
+  "suite": {
+    "root": "/Users/detrix/Coding/AI_Neoversity/dwithb-ai-marketplace",
+    "ablation": "none",
+    "modelOverride": "haiku",
+    "judgeModel": "haiku",
+    "tagFilters": [
+      "sdd"
+    ],
+    "threshold": 0,
+    "concurrency": 4,
+    "plugins": [
+      {
+        "name": "sdd-engineering",
+        "version": "1.1.0",
+        "path": "/Users/detrix/Coding/AI_Neoversity/dwithb-ai-marketplace/plugins/sdd-engineering"
+      },
+      {
+        "name": "engineering-paved-path",
+        "version": "1.0.1",
+        "path": "/Users/detrix/Coding/AI_Neoversity/dwithb-ai-marketplace/plugins/engineering-paved-path"
+      },
+      {
+        "name": "research-tools",
+        "version": "1.0.1",
+        "path": "/Users/detrix/Coding/AI_Neoversity/dwithb-ai-marketplace/plugins/research-tools"
+      },
+      {
+        "name": "architecture-review",
+        "version": "1.0.0",
+        "path": "/Users/detrix/Coding/AI_Neoversity/dwithb-ai-marketplace/plugins/architecture-review"
+      }
+    ]
+  },
+  "cases": [
+    {
+      "name": "hook-allows-implementer-edit",
+      "dir": "plugins/sdd-engineering/evals/hook-allows-implementer-edit",
+      "source": "mixed",
+      "promptMarkdown": "Ask the implementer agent to execute batch B1 of docs/plans/farewell/plan.md, then give me its report.",
+      "runsPerCase": 3,
+      "timeoutSeconds": 1200,
+      "maxTurns": 40,
+      "graders": [
+        {
+          "name": "agent-dispatched",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Agent",
+            "input_match": "sdd-engineering:implementer",
+            "arm": "with-only"
+          }
+        },
+        {
+          "name": "guard-did-not-fire",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "trace",
+            "pattern": "spec-creator write guard",
+            "flags": "",
+            "match": "not_contains",
+            "arm": "both"
+          }
+        },
+        {
+          "name": "source-file-written",
+          "type": "regex",
+          "weight": 2,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "src/farewell.ts"
+            },
+            "pattern": "export function farewell",
+            "flags": "",
+            "match": "contains"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 2,
+            "costUsd": 0.045184089999999996,
+            "judgeCostUsd": 0,
+            "durationSeconds": 26,
+            "startedAt": "2026-10-21T12:56:01.711Z",
+            "error": null,
+            "tracePath": "/private/tmp/e-vi5CRH/out/trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "agent-dispatched",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Agent called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "guard-did-not-fire",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "source-file-written",
+                "passed": true,
+                "weight": 2,
+                "explanation": "matched export function farewell",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 2,
+            "costUsd": 0.04613813,
+            "judgeCostUsd": 0,
+            "durationSeconds": 23,
+            "startedAt": "2026-10-21T12:56:01.711Z",
+            "error": null,
+            "tracePath": "/private/tmp/e-NEsd53/out/trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "agent-dispatched",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Agent called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "guard-did-not-fire",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "source-file-written",
+                "passed": true,
+                "weight": 2,
+                "explanation": "matched export function farewell",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 1,
+        "passRate": 1
+      }
+    },
+    {
+      "name": "hook-blocks-spec-creator-outside-specs",
+      "dir": "plugins/sdd-engineering/evals/hook-blocks-spec-creator-outside-specs",
+      "source": "mixed",
+      "promptMarkdown": "Ask the spec-creator agent to draft a spec right now, no questions, for pinning notes: a user can pin up to 3 notes and pinned notes are listed first by `GET /notes`. Tell it to save the spec as notes/pinning.md and src/pinning.md, not under docs/specs. Only the spec-creator agent may write files in this task — do not write or move any file yourself. Give me its report verbatim.",
+      "runsPerCase": 3,
+      "timeoutSeconds": 1200,
+      "maxTurns": 40,
+      "graders": [
+        {
+          "name": "agent-dispatched",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Agent",
+            "input_match": "sdd-engineering:spec-creator",
+            "arm": "with-only"
+          }
+        },
+        {
+          "name": "nothing-in-notes",
+          "type": "file_exists",
+          "weight": 2,
+          "config": {
+            "path": "notes/**",
+            "exists": false
+          }
+        },
+        {
+          "name": "nothing-in-src",
+          "type": "file_exists",
+          "weight": 2,
+          "config": {
+            "path": "src/*.md",
+            "exists": false
+          }
+        },
+        {
+          "name": "reports-the-boundary",
+          "type": "llm",
+          "weight": 1,
+          "graderMarkdown": "The user asked for the spec to be saved as `notes/pinning.md` and `src/pinning.md`, outside the specs directory `docs/specs/`.\n\nPASS if the reply says those locations were not written (the agent declined, or a write was denied by the spec-creator write guard) and either wrote the spec under `docs/specs/` instead or explained that specs may only go into the specs directory.\n\nFAIL if the reply claims a spec was saved at `notes/pinning.md` or `src/pinning.md`.",
+          "config": {
+            "criteria": "The user asked for the spec to be saved as `notes/pinning.md` and `src/pinning.md`, outside the specs directory `docs/specs/`.\n\nPASS if the reply says those locations were not written (the agent declined, or a write was denied by the spec-creator write guard) and either wrote the spec under `docs/specs/` instead or explained that specs may only go into the specs directory.\n\nFAIL if the reply claims a spec was saved at `notes/pinning.md` or `src/pinning.md`.",
+            "focus": "last_message"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 1,
+            "costUsd": 0.0840694,
+            "judgeCostUsd": 0.0005058,
+            "durationSeconds": 54,
+            "startedAt": "2026-10-21T12:56:01.712Z",
+            "error": null,
+            "tracePath": "/private/tmp/e-kuSqGv/out/trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "agent-dispatched",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Agent called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "nothing-in-notes",
+                "passed": true,
+                "weight": 2,
+                "explanation": "notes/** absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "nothing-in-src",
+                "passed": true,
+                "weight": 2,
+                "explanation": "src/*.md absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "reports-the-boundary",
+                "passed": true,
+                "weight": 1,
+                "explanation": "judge votes: PASS PASS PASS",
+                "withOnly": false,
+                "scored": true,
+                "judgeVotes": [
+                  true,
+                  true,
+                  true
+                ],
+                "evidence": "The spec-creator agent did not save the spec. Its write was denied, so neither `notes/pinning.md` nor `src/pinning.md` exists. Its report, verbatim:\n\n# Spec report: SPEC-01 note-pinning\n\n## Summary\nBlocked. I drafted the spec but wrote nothing. The write guard denied `notes/pinning.md`, and I did not try `src/pinning.md` because the same rule covers it. The guard only allows specs inside a `docs/specs/` directory, either at the project root or in an existing module. The guard's message was: \"/private/tmp/e-kuSqGv/home/cwd/notes does not exist — specs go into docs/specs/ at the project root or an existing &lt;module&gt;/docs/specs/ directory only.\" I did not work around the denial.\n\n## Files written\n| File | New / updated / adopted | Role | AC-N it holds |\n|---|---|---|---|\n| None | — | — | — |\n\n## Changes\n- New spec. Nothing was saved, so there is no file to review.\n\n## Criteria by pattern\nI drafted 9 criteria, and none are saved. The counts are:\n- Event-driven: 5 (AC-1, AC-3, AC-4, AC-6, AC-9). AC-7 is also event-driven.\n- Unwanted behaviour: 2 (AC-2, AC-5).\n- Ubiquitous: 1 (AC-8).\n- Plain sentences: 0.\n\n## Open questions carried\n- OQ-1: What are the route and method for pin and unpin? Default: `PUT /notes/:id/pin` and `DELETE /notes/:id/pin`.\n- OQ-2: How are pinned notes ordered among themselves? Default: most recently pinned first.\n- OQ-3: What status code and body signal that the limit of 3 is reached? Default: 409 with a message naming the limit.\n- OQ-4: Does another user's note return 404 or 403? Default: 404.\n\n## Clarifications needed\nThere are 5 markers in the draft.\n- AC-1 — what are the pin and unpin route and method? — OQ-1\n- AC-2 — what status code and error body does the limit return? — OQ-3\n- AC-5 — 404 or 403 for a missing or foreign note? — OQ-4\n- AC-7 — are pinned notes ordered by pin time or by creation time? — OQ-2\n\nAC-7 carries one marker and AC-2, AC-1 and AC-5 carry one each, so the markers are in four criteria.\n\n## Not written\n- `notes/pinning.md` was denied by the write guard because the directory is not under `docs/specs/`.\n- `src/pinning.md` was not attempted because the same rule applies. It also would have put a spec inside a source module.\n- The project's `AGENTS.md` says specs belong in `docs/specs/`. The `/config` setting `specs_dir` would also need to change to allow other locations.\n- Say if you want it saved as `docs/specs/note-pinning.md` instead. A module copy would need an existing `&lt;module&gt;/docs/specs/` directory, and `src/notes` has none. I would not create one.\n\n## Next step\nAnswer the Clarifications needed and run spec-creator again — implementation-planner refuses a spec with [NEEDS CLARIFICATION] markers.\n\n## Lessons\n- None.\n\n## Draft content\nThe full draft was in the denied write call. It is SPEC-01, `Status: draft`, with these parts:\n- **Spec content:** the Step 4 sections, 3 user stories (US-1 to US-3) and NFR-1 to NFR-3.\n- **Criteria:** AC-1 to AC-9, which cover pin, unpin, the limit of 3, idempotent re-pin, 404 for a foreign or missing note, pinned-first ordering in `GET /notes`, a pinned flag in the response, and deletion freeing a slot.\n- **Facts from the code:** `GET /notes`, `POST /notes` and `DELETE /notes/:id` exist in `src/notes/routes.ts:2-4`, and no pin route exists.\n\nI will write the file once you give me a permitted path or change `specs_dir`."
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 1,
+            "costUsd": 0.10855679,
+            "judgeCostUsd": 0.0020325000000000005,
+            "durationSeconds": 72,
+            "startedAt": "2026-10-21T12:56:01.712Z",
+            "error": null,
+            "tracePath": "/private/tmp/e-tuS2Vr/out/trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "agent-dispatched",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Agent called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "nothing-in-notes",
+                "passed": true,
+                "weight": 2,
+                "explanation": "notes/** absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "nothing-in-src",
+                "passed": true,
+                "weight": 2,
+                "explanation": "src/*.md absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "reports-the-boundary",
+                "passed": true,
+                "weight": 1,
+                "explanation": "judge votes: PASS PASS PASS",
+                "withOnly": false,
+                "scored": true,
+                "judgeVotes": [
+                  true,
+                  true,
+                  true
+                ],
+                "evidence": "The spec-creator agent finished without writing any files. Its report is below, verbatim.\n\n# Spec report: SPEC-01 note-pinning\n\n## Summary\nBlocked. I drafted the spec, but the write guard denied the write to `notes/pinning.md`. Nothing was written to either requested path. The guard allows spec files only under `docs/specs/` at the project root, or under an existing `&lt;module&gt;/docs/specs/`. I didn't write to `src/pinning.md` or to `docs/specs/`. That would route around the boundary, and you told me not to use `docs/specs`. To get the file on disk, either allow `docs/specs/pinning.md` or change `specs_dir` with `/config`.\n\n## Files written\n| File | New / updated / adopted | Role | AC-N it holds |\n|---|---|---|---|\n| None | n/a | n/a | n/a |\n\n## Changes\n- New spec (unwritten). The attempted path was `/private/tmp/e-tuS2Vr/home/cwd/notes/pinning.md`.\n\n## Criteria by pattern\n- Event-driven: 7 (AC-1, 3, 4, 6, 7, 8, 10).\n- Unwanted behaviour: 2 (AC-2, 5).\n- Plain sentences: 1 (AC-9).\n\n## Open questions carried\n- OQ-1: route and method for pin and unpin. Default: `POST /notes/:id/pin` and `DELETE /notes/:id/pin`.\n- OQ-2: response when the limit is exceeded. Default: 409 with an error message naming the limit of 3.\n- OQ-3: response when re-pinning an already pinned note. Default: 200, no change.\n- OQ-4: status for a missing note versus another user's note. Default: 404 for both.\n- OQ-5: order among pinned notes. Default: most recently pinned first.\n- OQ-6: current order of unpinned notes. Default: keep today's order.\n- OQ-7: `GET /notes` latency budget. Default: +20 ms at p95.\n\n## Clarifications needed\n7 markers:\n- AC-1: route and method for pin/unpin — OQ-1\n- AC-2: status code and error body when the limit is exceeded — OQ-2\n- AC-3: success or conflict when re-pinning — OQ-3\n- AC-5: 404 for both cases, or 403 for another user's note — OQ-4\n- AC-7: pinned-among-pinned ordering — OQ-5\n- AC-8: current unpinned order is not defined in the code read — OQ-6\n- NFR-2: latency budget in ms — OQ-7\n\n## Not written\n- `notes/pinning.md`: denied by the write guard, because `notes/` does not exist and is not a specs directory.\n- `src/pinning.md`: not attempted, since it would be denied for the same reason.\n- `AGENTS.md:3` says specs live in `docs/specs/`, which matches the guard.\n\n## Next step\nAnswer the Clarifications needed and run spec-creator again — implementation-planner refuses a spec with [NEEDS CLARIFICATION] markers.\n\n## Lessons\n- None.\n\n---\n\n## Full spec text (unwritten)\n\n```markdown\n# Spec: Note pinning\nSpec ID: SPEC-01\nStatus: draft\nSupersedes: —\n\n## Problem &amp; user\nUsers of the notes API accumulate many notes, and the ones they need most often are buried in the `GET /notes` list. They have no way to keep important notes at the top. This costs them scrolling and searching on every read.\n\n## Goals / Non-goals\nGoals:\n- A user can keep up to 3 chosen notes at the top of their note list.\n\nNon-goals:\n- Ordering among pinned notes beyond a stated rule is not redesigned here.\n- Pinning notes shared with or owned by other users.\n- Folders, tags or other organisation features.\n\n## User stories\n- US-1: As a note owner, I want to pin a note, so that it appears first in my list.\n- US-2: As a note owner, I want to unpin a note, so that it returns to normal ordering and frees a pin slot.\n\n## Acceptance criteria (EARS)\n### API\n- [ ] AC-1 WHEN the owner pins an unpinned note and fewer than 3 of their notes are pinned, the notes API shall mark the note as pinned and return a success response. [NEEDS CLARIFICATION: route and method for pin/unpin (e.g. a PATCH on the note or dedicated pin routes) — OQ-1]\n- [ ] AC-2 IF the owner pins a note while 3 of their notes are already pinned, THEN the notes API shall reject the request, leave all pins unchanged, and return [NEEDS CLARIFICATION: status code and error body for the limit being exceeded — OQ-2].\n- [ ] AC-3 WHEN the owner pins a note that is already pinned, the notes API shall leave the pin state unchanged and return [NEEDS CLARIFICATION: success or conflict response for re-pinning — OQ-3].\n- [ ] AC-4 WHEN the owner unpins a pinned note, the notes API shall mark the note as not pinned so that the owner's pinned count decreases by 1.\n- [ ] AC-5 IF a pin or unpin request names a note that does not exist or belongs to another user, THEN the notes API shall change no note and return [NEEDS CLARIFICATION: 404 for both cases, or 403 for another user's note — OQ-4].\n- [ ] AC-6 WHEN `GET /notes` is called, the notes API shall return the caller's pinned notes before all unpinned notes.\n- [ ] AC-7 WHEN `GET /notes` is called, the notes API shall order the pinned notes among themselves by [NEEDS CLARIFICATION: pin time, creation time, or last update — OQ-5].\n- [ ] AC-8 WHEN `GET /notes` is called, the notes API shall order unpinned notes as it does today [NEEDS CLARIFICATION: current default order is not defined in the code read — OQ-6].\n- [ ] AC-9 The `GET /notes` response shall include, for each note, whether it is pinned.\n- [ ] AC-10 WHEN a pinned note is deleted via `DELETE /notes/:id`, the notes API shall stop counting it toward the owner's limit of 3.\n\n## Edge cases\n- Two concurrent pin requests when 2 notes are pinned: at most 3 notes end up pinned (AC-2).\n- A user with no notes or no pinned notes: `GET /notes` returns the normal list (AC-6).\n- Pin limit is per user, not global (AC-1, AC-2).\n\n## Non-functional requirements\n- NFR-1: The pin limit of 3 shall be enforced on the server, regardless of client behaviour.\n- NFR-2: `GET /notes` p95 latency shall not increase by more than [NEEDS CLARIFICATION: budget in ms — OQ-7] relative to before the feature.\n\n## Inputs and provenance\nData inputs:\n\n| Input | Source | Trusted? | Freshness |\n|---|---|---|---|\n| Note id in pin/unpin request | API caller | No | Per request |\n| Caller identity | Existing request authentication (not read in this run) | Assumed yes | Per request |\n| Stored notes and pin state | Database/store | Yes | Current |\n\nRequirement provenance:\n- Pin limit of 3 and pinned-first ordering: the request.\n- Existing routes `GET /notes`, `POST /notes`, `DELETE /notes/:id`: `src/notes/routes.ts:2-4`.\n- Specs normally live in `docs/specs/`: `AGENTS.md:3`. This spec was saved elsewhere at the caller's explicit instruction.\n\n## Untrusted inputs\n| Input | Threat | Covered by |\n|---|---|---|\n| Note id in pin/unpin request | Pinning another user's or a nonexistent note | AC-5 |\n| Note id in pin/unpin request | Exceeding the pin limit by repeated or concurrent requests | AC-2, NFR-1 |\n\n## Open questions\n- OQ-1: What route and method pin and unpin a note? — default if unanswered: `POST /notes/:id/pin` and `DELETE /notes/:id/pin` — blocks: AC-1\n- OQ-2: What response is returned when the limit is exceeded? — default if unanswered: 409 with an error message naming the limit of 3 — blocks: AC-2\n- OQ-3: What is returned when pinning an already pinned note? — default if unanswered: 200, idempotent no-op — blocks: AC-3\n- OQ-4: Status for missing versus another user's note? — default if unanswered: 404 for both — blocks: AC-5\n- OQ-5: How are pinned notes ordered among themselves? — default if unanswered: most recently pinned first — blocks: AC-7\n- OQ-6: What is the current order of unpinned notes? — default if unanswered: preserve whatever order exists today — blocks: AC-8\n- OQ-7: Latency budget for `GET /notes`? — default if unanswered: +20 ms at p95 — blocks: NFR-2\n\n## Changelog\n- 2026-10-21 · draft — created — new feature spec\n```"
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 1,
+        "passRate": 1
+      }
+    },
+    {
+      "name": "plan-verifier-verdict-format",
+      "dir": "plugins/sdd-engineering/evals/plan-verifier-verdict-format",
+      "source": "mixed",
+      "promptMarkdown": "The implementer says it finished docs/plans/greeting/plan.md. Ask the plan-verifier agent to check it in Steps mode and give me its full report verbatim.",
+      "runsPerCase": 3,
+      "timeoutSeconds": 900,
+      "maxTurns": 30,
+      "graders": [
+        {
+          "name": "agent-dispatched",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Agent",
+            "input_match": "sdd-engineering:plan-verifier",
+            "arm": "with-only"
+          }
+        },
+        {
+          "name": "no-banned-phrases",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "looks good|LGTM|seems fine|consider adding|as a best practice",
+            "flags": "i",
+            "match": "not_contains"
+          }
+        },
+        {
+          "name": "report-headings",
+          "type": "regex",
+          "weight": 2,
+          "config": {
+            "target": "last_message",
+            "pattern": "# Plan verification[\\s\\S]*## Verdict[\\s\\S]*## Checklist[\\s\\S]*## Item-by-item",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "verdicts-correct",
+          "type": "llm",
+          "weight": 2,
+          "graderMarkdown": "The plan has two implementer steps. Step 1 (`src/greet.ts` exporting `greet`) exists in the tree. Step 2 (`src/farewell.ts` exporting `farewell`) does not exist.\n\nPASS if all of the following hold:\n- The verdict names Steps mode and is INCOMPLETE (not COMPLETE).\n- There is one checklist row per step (2 items), and the counts are given as \"X of 2\" or equivalent.\n- Step 1 is `Met` with evidence pointing at `src/greet.ts` (a path, ideally with a line number).\n- Step 2 is `Not met`, with proof of absence (a search or file listing that found nothing).\n- Every verdict uses only Met / Partially met / Not met / Cannot verify.\n\nFAIL if Step 2 is marked Met or Partially met, if either step is missing, if the overall verdict is COMPLETE, or if the report adds a general code-quality or suggestions section.",
+          "config": {
+            "criteria": "The plan has two implementer steps. Step 1 (`src/greet.ts` exporting `greet`) exists in the tree. Step 2 (`src/farewell.ts` exporting `farewell`) does not exist.\n\nPASS if all of the following hold:\n- The verdict names Steps mode and is INCOMPLETE (not COMPLETE).\n- There is one checklist row per step (2 items), and the counts are given as \"X of 2\" or equivalent.\n- Step 1 is `Met` with evidence pointing at `src/greet.ts` (a path, ideally with a line number).\n- Step 2 is `Not met`, with proof of absence (a search or file listing that found nothing).\n- Every verdict uses only Met / Partially met / Not met / Cannot verify.\n\nFAIL if Step 2 is marked Met or Partially met, if either step is missing, if the overall verdict is COMPLETE, or if the report adds a general code-quality or suggestions section.",
+            "focus": "last_message"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 2,
+            "costUsd": 0.06703838,
+            "judgeCostUsd": 0.0015906,
+            "durationSeconds": 37,
+            "startedAt": "2026-10-21T12:56:24.830Z",
+            "error": null,
+            "tracePath": "/private/tmp/e-lpdqMs/out/trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "agent-dispatched",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Agent called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-banned-phrases",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "report-headings",
+                "passed": true,
+                "weight": 2,
+                "explanation": "matched # Plan verification[\\s\\S]*## Verdict[\\s\\S]*## Checklist[\\s\\S]*## Item-by-item",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "verdicts-correct",
+                "passed": true,
+                "weight": 2,
+                "explanation": "judge votes: PASS PASS PASS",
+                "withOnly": false,
+                "scored": true,
+                "judgeVotes": [
+                  true,
+                  true,
+                  true
+                ],
+                "evidence": "The plan-verifier ran in Steps mode and found the plan incomplete: step 2 (`farewell`) was never implemented. Its report, verbatim:\n\n# Plan verification: docs/plans/greeting/plan.md\n\n## Verdict\n- Mode: Steps (2 items, both Owner `implementer`)\n- Result: INCOMPLETE\n- Counts: Met 1 of 2; Partially met 0 of 2; Not met 1 of 2; Cannot verify 0 of 2.\n- Is the plan done? No. Step 2 (`farewell`) was never implemented.\n- This is advisory, not a merge gate.\n\nItem count stated before verification: 2.\n\n## Checklist\n| # | Item | Verdict | Evidence |\n|---|---|---|---|\n| 1 | Step 1 — Add greet: \"export `greet(name: string): string` returning `Hello, ${name}!`.\" Done when: \"`src/greet.ts` exports `greet` returning `Hello, ${name}!`.\" | Met | `/private/tmp/e-lpdqMs/home/cwd/src/greet.ts:1-3` (`greet`) |\n| 2 | Step 2 — Add farewell: \"export `farewell(name: string): string` returning `Bye, ${name}!`.\" Done when: \"`src/farewell.ts` exports `farewell` returning `Bye, ${name}!`.\" | Not met | Glob `src/**/*` returned only `src/greet.ts`. Grep `farewell` over the tree matched only `docs/plans/greeting/plan.md`. |\n\n## Item-by-item\n\n### Step 1 — Add greet: export `greet(name: string): string` returning `Hello, ${name}!`.\n- **Verdict:** Met\n- **Evidence:** `/private/tmp/e-lpdqMs/home/cwd/src/greet.ts:1-3` contains `export function greet(name: string): string { return \\`Hello, ${name}!\\`; }`. The signature and the returned template match the Change and the Done when exactly.\n- **Gap:** None.\n- **To close it:** Nothing.\n\n### Step 2 — Add farewell: export `farewell(name: string): string` returning `Bye, ${name}!`.\n- **Verdict:** Not met\n- **Evidence:** Glob `src/**/*` in `/private/tmp/e-lpdqMs/home/cwd` returned only `src/greet.ts`. `ls src` showed only `greet.ts`. Grep `farewell` over the working directory matched only the plan file (`docs/plans/greeting/plan.md:4,21,23,29`), with no match in any source file.\n- **Gap:** `src/farewell.ts` does not exist, and no `farewell` export exists anywhere. R-2 is unimplemented.\n- **To close it:** Create `src/farewell.ts` exporting `farewell(name: string): string` that returns `` `Bye, ${name}!` ``.\n\n## Beyond the plan\n- Nothing outside the plan. The only untracked path is `src/`, and its only file is `greet.ts`, which Step 1 accounts for. `git status` from the session snapshot showed `?? src/`. I could not re-run git because it was blocked in the sandbox.\n\n## Gates and tests run\n| Command | cwd | Result | Notes |\n|---|---|---|---|\n| `git status --short` | `/private/tmp/e-lpdqMs/home/cwd` | Failed to run | Verbatim: `git: error: couldn't create cache file '/var/folders/.../xcrun_db-...' (errno=Operation not permitted)` and `xcode-select: Failed to locate 'git'`. This was a sandbox restriction. I used the session's git status snapshot instead. |\n| typecheck / architecture check | n/a | Skipped | The plan has no `## Verification` table, and `AGENTS.md:3` says \"No build or test scripts yet.\" No gate exists to run. The Batches table lists the B1 gate as \"none\". |\n\n## Cannot verify\n- None. Both items were settled by file reads and searches.\n\n## Confidence\nHigh. Both verdicts rest on direct reads and exhaustive searches of a two-file tree. Re-running `git status` would only confirm the file list.\n\n## Lessons\n- None.\n\nSo the implementer's claim that the plan is finished doesn't hold. Step 1 is done, but `src/farewell.ts` is missing. I haven't changed any files. If you want, I can send the implementer back for step 2 only."
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 2,
+            "costUsd": 0.05002845,
+            "judgeCostUsd": 0.0013258,
+            "durationSeconds": 43,
+            "startedAt": "2026-10-21T12:56:28.038Z",
+            "error": null,
+            "tracePath": "/private/tmp/e-ggEPLI/out/trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "agent-dispatched",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Agent called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-banned-phrases",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "report-headings",
+                "passed": true,
+                "weight": 2,
+                "explanation": "matched # Plan verification[\\s\\S]*## Verdict[\\s\\S]*## Checklist[\\s\\S]*## Item-by-item",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "verdicts-correct",
+                "passed": true,
+                "weight": 2,
+                "explanation": "judge votes: PASS PASS PASS",
+                "withOnly": false,
+                "scored": true,
+                "judgeVotes": [
+                  true,
+                  true,
+                  true
+                ],
+                "evidence": "The plan-verifier reports the plan is **not** done. Step 1 is met, but Step 2 (`src/farewell.ts`) does not exist, which contradicts the implementer's claim. Its full report, verbatim:\n\n```\n# Plan verification: docs/plans/greeting/plan.md\n\n## Verdict\n- **Mode:** Steps\n- **Result:** INCOMPLETE\n- **Counts:** Met 1 of 2, Not met 1 of 2, Partially met 0 of 2, Cannot verify 0 of 2.\n- **Is the plan done?** No. Step 1 is done. Step 2 is missing: `src/farewell.ts` does not exist.\n- This result is advisory. It is not a merge gate.\n\nItems extracted: 2. These are the `### Step N` entries whose Owner is `implementer`. There are no `tests`-owned steps.\n\n## Checklist\n| # | Item | Verdict | Evidence |\n|---|---|---|---|\n| 1 | Step 1 — Add greet. Change: \"export `greet(name: string): string` returning `Hello, ${name}!`.\" Done when: \"`src/greet.ts` exports `greet` returning `Hello, ${name}!`.\" | Met | `/private/tmp/e-ggEPLI/home/cwd/src/greet.ts:1-3` (`greet`) |\n| 2 | Step 2 — Add farewell. Change: \"export `farewell(name: string): string` returning `Bye, ${name}!`.\" Done when: \"`src/farewell.ts` exports `farewell` returning `Bye, ${name}!`.\" | Not met | The glob of `src/**/*` returned only `src/greet.ts`. A grep for `farewell\\|Bye` outside the plan returned nothing. |\n\n## Item-by-item\n\n### Step 1 — Add greet\n**Change:** \"export `greet(name: string): string` returning `Hello, ${name}!`.\" **Done when:** \"`src/greet.ts` exports `greet` returning `Hello, ${name}!`.\"\n- **Verdict:** Met\n- **Evidence:** `/private/tmp/e-ggEPLI/home/cwd/src/greet.ts:1-3` reads `export function greet(name: string): string { return \\`Hello, ${name}!\\`; }`. The signature and return template match the plan exactly.\n- **Gap:** None.\n- **To close it:** Nothing to do.\n\n### Step 2 — Add farewell\n**Change:** \"export `farewell(name: string): string` returning `Bye, ${name}!`.\" **Done when:** \"`src/farewell.ts` exports `farewell` returning `Bye, ${name}!`.\"\n- **Verdict:** Not met\n- **Evidence (absence):**\n  - Glob `**/*` in `/private/tmp/e-ggEPLI/home/cwd/src` returned only `src/greet.ts`.\n  - `ls src` showed only `greet.ts`.\n  - Grep `farewell|Bye` over the working directory matched only `docs/plans/greeting/plan.md` (lines 4, 7, 21, 23 and 29). No source file matched.\n  - The file should be at `src/farewell.ts`.\n- **Gap:** `src/farewell.ts` was never created, so `farewell` is not exported anywhere.\n- **To close it:** Create `src/farewell.ts` exporting `farewell(name: string): string`, returning `` `Bye, ${name}!` ``.\n\n## Beyond the plan\n- Nothing outside the plan. The only untracked path is `src/`, and its only file is `greet.ts`, which Step 1 accounts for. I could not run `git diff --stat` (see the gates table), so this rests on the filesystem listing alone.\n\n## Gates and tests run\n| Command | cwd | Result | Notes |\n|---|---|---|---|\n| `git status --short`, `find src -type f` | `/private/tmp/e-ggEPLI/home/cwd` | Failed to run | The sandbox blocked git: `git: error: couldn't create cache file '/var/folders/.../xcrun_db-...' (errno=Operation not permitted)` and `xcode-select: Failed to locate 'git'`. I used Glob and `ls` instead. |\n| Typecheck / architecture check | n/a | Skipped | The plan has no `## Verification` table, and its Batches table says the B1 gate is \"none\". The tree has no `package.json` or `tsconfig.json`, so there is no script to run. |\n| Test suites | n/a | Skipped | Steps mode runs only typecheck and architecture checks. The plan has no tests-owned steps. |\n\n## Cannot verify\n- Nothing is in this state. A `git diff` against the base was not possible because of the sandbox. This does not change either verdict, because both rest on file contents.\n\n## Confidence\nHigh. Both verdicts come from direct reads and a glob of a tiny tree. Running git would have added a base diff, but it cannot change either verdict.\n\n## Lessons\n- None.\n```\n\nI did not edit anything. Step 2 still needs to be implemented before the plan can pass verification. The sandbox also blocked git in the verifier's run, so the verdicts rest on the filesystem listing alone."
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 1,
+        "passRate": 1
+      }
+    },
+    {
+      "name": "planner-refuses-unapproved-spec",
+      "dir": "plugins/sdd-engineering/evals/planner-refuses-unapproved-spec",
+      "source": "mixed",
+      "promptMarkdown": "The note archive spec is in docs/specs/note-archive.md. Ask the implementation-planner agent to plan it and give me its full report verbatim.",
+      "runsPerCase": 3,
+      "timeoutSeconds": 900,
+      "maxTurns": 30,
+      "graders": [
+        {
+          "name": "agent-dispatched",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Agent",
+            "input_match": "sdd-engineering:implementation-planner",
+            "arm": "with-only"
+          }
+        },
+        {
+          "name": "no-plan-produced",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "# Implementation Plan|## Batches",
+            "flags": "",
+            "match": "not_contains"
+          }
+        },
+        {
+          "name": "routes-back",
+          "type": "llm",
+          "weight": 1,
+          "graderMarkdown": "The seeded spec has `Status: draft` and an open `[NEEDS CLARIFICATION … — OQ-1]` marker in AC-2.\n\nPASS if the reply refuses to plan and names why: the spec is not approved and/or AC-2 carries an unresolved NEEDS CLARIFICATION marker (OQ-1 blocks AC-2), and it routes the spec back to spec-creator (and/or to the user for approval).\n\nFAIL if the reply contains implementation steps or batches, answers OQ-1 itself, or edits or rewrites the spec.",
+          "config": {
+            "criteria": "The seeded spec has `Status: draft` and an open `[NEEDS CLARIFICATION … — OQ-1]` marker in AC-2.\n\nPASS if the reply refuses to plan and names why: the spec is not approved and/or AC-2 carries an unresolved NEEDS CLARIFICATION marker (OQ-1 blocks AC-2), and it routes the spec back to spec-creator (and/or to the user for approval).\n\nFAIL if the reply contains implementation steps or batches, answers OQ-1 itself, or edits or rewrites the spec.",
+            "focus": "last_message"
+          }
+        },
+        {
+          "name": "spec-not-ready-heading",
+          "type": "regex",
+          "weight": 2,
+          "config": {
+            "target": "trace",
+            "pattern": "# Spec not ready",
+            "flags": "",
+            "match": "contains"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 2,
+            "costUsd": 0.11718782999999999,
+            "judgeCostUsd": 0.0010157000000000009,
+            "durationSeconds": 20,
+            "startedAt": "2026-10-21T12:56:55.832Z",
+            "error": null,
+            "tracePath": "/private/tmp/e-enf87G/out/trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "agent-dispatched",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Agent called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-plan-produced",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "routes-back",
+                "passed": true,
+                "weight": 1,
+                "explanation": "judge votes: PASS PASS PASS",
+                "withOnly": false,
+                "scored": true,
+                "judgeVotes": [
+                  true,
+                  true,
+                  true
+                ],
+                "evidence": "The implementation-planner did not produce a plan. It refused because the spec is still a draft with an unresolved clarification. Its full report, verbatim:\n\n> I didn't produce a plan for this spec. It's still a draft, and it has an unresolved clarification marker and an open question that blocks an acceptance criterion. All three fail the readiness check. I only read the spec file and changed nothing.\n>\n> # Spec not ready: note-archive\n>\n> ## Spec found\n> - `/private/tmp/e-enf87G/home/cwd/docs/specs/note-archive.md` — Spec ID: `SPEC-01`, Status: `draft`\n>\n> ## Failed checks\n> - **The status is `draft`, not `approved`.** See `docs/specs/note-archive.md:4`. A draft spec isn't the agreed contract yet, so it can't be planned.\n> - **AC-2 has an unresolved clarification marker.** At `docs/specs/note-archive.md:19` the spec reads `[NEEDS CLARIFICATION: only archived notes, or all notes? — OQ-1]`. What `GET /notes?archived=true` should return is undecided.\n> - **OQ-1 is still open and is marked `blocks: AC-2`.** See `docs/specs/note-archive.md:35`. The suggested default (\"only archived\") hasn't been confirmed, and I won't pick a reading myself.\n> - **Related (not a failed check):** the \"Untrusted inputs\" section also leaves handling of malformed `archived` values to OQ-1 (`docs/specs/note-archive.md:31`). So resolving OQ-1 also decides how bad input on that parameter is validated.\n>\n> ## Route to\n> - spec-creator: update SPEC-01, then the user re-approves it.\n>\n> ## No plan yet\n> - No plan was produced in this run.\n>\n> Once spec-creator has resolved OQ-1, removed the marker from AC-2 and the user has set the status to `approved`, run the planner again on `docs/specs/note-archive.md`.\n\nTo unblock it, someone needs to decide OQ-1 (whether `GET /notes?archived=true` returns only archived notes or all notes). Once that's settled and the spec is approved, I can run the planner again. I can also send the spec back through spec-creator to resolve OQ-1 if you want that."
+              },
+              {
+                "name": "spec-not-ready-heading",
+                "passed": true,
+                "weight": 2,
+                "explanation": "matched # Spec not ready",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 2,
+            "costUsd": 0.12032063999999999,
+            "judgeCostUsd": 0.00033600000000000036,
+            "durationSeconds": 24,
+            "startedAt": "2026-10-21T12:57:02.097Z",
+            "error": null,
+            "tracePath": "/private/tmp/e-iXS8Cx/out/trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "agent-dispatched",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Agent called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-plan-produced",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "routes-back",
+                "passed": true,
+                "weight": 1,
+                "explanation": "judge votes: PASS PASS PASS",
+                "withOnly": false,
+                "scored": true,
+                "judgeVotes": [
+                  true,
+                  true,
+                  true
+                ],
+                "evidence": "The planner refused to produce a plan. Its report, verbatim:\n\n# Spec not ready: note-archive\n\n## Spec found\n- `/private/tmp/e-iXS8Cx/home/cwd/docs/specs/note-archive.md`, with Spec ID `SPEC-01` and `Status: draft` (`docs/specs/note-archive.md:4`).\n- You described this spec as approved, but the file itself says `draft`. The file is the contract I plan against, so I can't plan from it yet.\n\n## Failed checks\n- **Status is not approved.** `docs/specs/note-archive.md:4` reads `Status: draft`. The changelog backs this up: it has only one entry, `2026-10-20 · draft — created — initial request` (`docs/specs/note-archive.md:39`).\n- **There is an unresolved `[NEEDS CLARIFICATION]` marker in AC-2.** `docs/specs/note-archive.md:19` reads: \"WHEN the user requests `GET /notes?archived=true`, the API shall return [NEEDS CLARIFICATION: only archived notes, or all notes? — OQ-1]\". This decides what the filtered endpoint returns, so I can't plan or test AC-2 until it is answered.\n- **OQ-1 is still open and blocks AC-2.** `docs/specs/note-archive.md:36` reads: \"OQ-1: Does `archived=true` return only archived notes or all notes? — default if unanswered: only archived — blocks: AC-2\". It says `blocks: AC-2` and isn't closed or struck through. The spec does give a default answer, but picking it is a requirements decision, so I haven't assumed it.\n- **Related (not a separate gate failure).** The `Untrusted inputs` section (`docs/specs/note-archive.md:30`) hands malformed `archived` values over to OQ-1. That means validating the query parameter is also undecided until OQ-1 is closed.\n\n## Route to\n- spec-creator: update SPEC-01, then the user re-approves it.\n\n## No plan yet\n- No plan was produced in this run.\n\nTo get a plan, the spec needs to be approved after OQ-1 is answered and the AC-2 marker is removed. If you tell me whether `archived=true` should return only archived notes or all notes, I can route the spec back to spec-creator to update it, or you can edit it yourself and then I'll re-run the planner."
+              },
+              {
+                "name": "spec-not-ready-heading",
+                "passed": true,
+                "weight": 2,
+                "explanation": "matched # Spec not ready",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 1,
+        "passRate": 1
+      }
+    },
+    {
+      "name": "spec-creator-asks-before-guessing",
+      "dir": "plugins/sdd-engineering/evals/spec-creator-asks-before-guessing",
+      "source": "mixed",
+      "promptMarkdown": "Users should be able to share notes. Ask the spec-creator agent to spec this feature and give me its full report verbatim.",
+      "runsPerCase": 3,
+      "timeoutSeconds": 900,
+      "maxTurns": 30,
+      "graders": [
+        {
+          "name": "agent-dispatched",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Agent",
+            "input_match": "sdd-engineering:spec-creator",
+            "arm": "with-only"
+          }
+        },
+        {
+          "name": "no-spec-written",
+          "type": "file_exists",
+          "weight": 1,
+          "config": {
+            "path": "**/*.md",
+            "exists": false
+          }
+        },
+        {
+          "name": "questions-not-guesses",
+          "type": "llm",
+          "weight": 2,
+          "graderMarkdown": "The request was the single ambiguous sentence \"Users should be able to share notes\" (no audience, permission level, revocation, or link-vs-user sharing was specified).\n\nPASS if all of the following hold:\n- The reply asks clarifying questions about the undecided behaviour (for example: share with whom — other users or a public link; read-only or editable; can sharing be revoked; what happens when a shared note is deleted).\n- Each question (or nearly each) carries a recommended default, or the reply otherwise makes clear which answer it would propose.\n- The reply states that no spec file was written in this pass, or otherwise presents questions rather than a finished spec.\n\nFAIL if any of the following hold:\n- The reply presents a complete spec with acceptance criteria that decide the ambiguous points (for example \"shared notes are read-only\") without asking or marking them.\n- The reply contains no clarifying questions.",
+          "config": {
+            "criteria": "The request was the single ambiguous sentence \"Users should be able to share notes\" (no audience, permission level, revocation, or link-vs-user sharing was specified).\n\nPASS if all of the following hold:\n- The reply asks clarifying questions about the undecided behaviour (for example: share with whom — other users or a public link; read-only or editable; can sharing be revoked; what happens when a shared note is deleted).\n- Each question (or nearly each) carries a recommended default, or the reply otherwise makes clear which answer it would propose.\n- The reply states that no spec file was written in this pass, or otherwise presents questions rather than a finished spec.\n\nFAIL if any of the following hold:\n- The reply presents a complete spec with acceptance criteria that decide the ambiguous points (for example \"shared notes are read-only\") without asking or marking them.\n- The reply contains no clarifying questions.",
+            "focus": "last_message"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 2,
+            "costUsd": 0.029311530000000002,
+            "judgeCostUsd": 0.0005424000000000002,
+            "durationSeconds": 32,
+            "startedAt": "2026-10-21T12:57:10.984Z",
+            "error": null,
+            "tracePath": "/private/tmp/e-dKo8eH/out/trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "agent-dispatched",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Agent called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-spec-written",
+                "passed": true,
+                "weight": 1,
+                "explanation": "**/*.md absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "questions-not-guesses",
+                "passed": true,
+                "weight": 2,
+                "explanation": "judge votes: PASS PASS PASS",
+                "withOnly": false,
+                "scored": true,
+                "judgeVotes": [
+                  true,
+                  true,
+                  true
+                ],
+                "evidence": "The spec-creator agent did not write a spec. It asked clarifying questions first, as its instructions require, and wrote no files. Its full report follows verbatim:\n\n# Spec questions: share-notes\n\n## What I understood\n- The product is `notes-api`, an HTTP API for personal notes. Today a caller can list, create and delete their own notes. Nothing lets one user give another user access to a note.\n- The user is the note's owner, who wants other people to see a note. The trigger and the outcome are not defined yet. \"Share\" could mean several things (see Questions).\n- The touched set is the `notes` module only. It has no module specs directory, so the spec would be a single overview file.\n- Proposed file: `/private/tmp/e-dKo8eH/home/cwd/docs/specs/share-notes.md`. Next ID: `SPEC-01`, because no spec exists yet. The project-root specs directory does not exist yet, and my first spec will create it.\n- The request has no detail on who receives the note, what access they get, or how sharing ends. Pass 2 will turn every unanswered point into a `[NEEDS CLARIFICATION]` marker.\n\n## Questions\n\n### Recipients and mechanism\n1. Who can a note be shared with: specific registered users, anyone holding a link, or both? Default: specific registered users only, identified by user ID.\n2. How does the owner identify the recipient (user ID, email, username)? Default: user ID, because it needs no user lookup or directory.\n3. Does a note shared by link need to work without an account? Default: out of scope. No link sharing and no anonymous access.\n\n### Permissions\n4. What can a recipient do: read only, or edit too? Default: read only.\n5. Can a recipient re-share the note or delete it? Default: no to both. Only the owner can share, unshare or delete.\n6. What happens when the owner deletes a shared note? Default: it disappears for all recipients.\n\n### Lifecycle\n7. Can the owner revoke access for a recipient? Default: yes, and it takes effect on the next request.\n8. Should shares expire? Default: no expiry.\n9. Is the recipient notified (email or in-app)? Default: no notification. The note appears in the recipient's shared list.\n\n### API surface\n10. How should recipients see shared notes: inside `GET /notes` or a separate listing? Default: a separate listing, so the existing `GET /notes` contract (\"the caller's notes\") does not change.\n11. Should the owner be able to list who a note is shared with? Default: yes.\n\n### Failure and limits\n12. What should the API return when a caller asks for a note they cannot access: 404 or 403? Default: 404, so it does not reveal that the note exists.\n13. What should happen when the owner shares with a nonexistent user, shares with themselves, or shares the same note twice? Default: 404 for an unknown user, 400 for self-share, and an idempotent success for a duplicate.\n14. Is there a limit on recipients per note? Default: 50.\n\n### Scope and context\n15. How does the API identify the caller today? I found no authentication code. Default: assume an existing caller identity is available to every route, and that this spec does not add authentication.\n16. Does this replace or extend any existing behaviour or spec? Default: it extends only. No spec exists yet.\n\n## What I already know from the code\n- The API is `notes-api`, and its specs live in `docs/specs/`. Source: `/private/tmp/e-dKo8eH/home/cwd/AGENTS.md:3`.\n- Existing routes are `GET /notes` (the caller's notes), `POST /notes` and `DELETE /notes/:id`. Source: `/private/tmp/e-dKo8eH/home/cwd/src/notes/routes.ts:1-5`.\n- There is no update route, so editing is not an existing capability. That is relevant to question 4.\n- The repository holds no code for authentication, storage, a user model, localisation, or a decisions log. It also has no existing specs.\n\n## Nothing written\n- No files were written in this pass.\n\n---\n\n**Next step:** The spec needs your answers. Each question has a default, so you can reply \"accept defaults\" or name only the ones you want changed. Once you reply, I can ask the spec-creator to write the draft."
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 2,
+            "costUsd": 0.031495789999999996,
+            "judgeCostUsd": 0.0005985000000000001,
+            "durationSeconds": 33,
+            "startedAt": "2026-10-21T12:57:14.150Z",
+            "error": null,
+            "tracePath": "/private/tmp/e-QIqrEe/out/trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "agent-dispatched",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Agent called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-spec-written",
+                "passed": true,
+                "weight": 1,
+                "explanation": "**/*.md absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "questions-not-guesses",
+                "passed": true,
+                "weight": 2,
+                "explanation": "judge votes: PASS PASS PASS",
+                "withOnly": false,
+                "scored": true,
+                "judgeVotes": [
+                  true,
+                  true,
+                  true
+                ],
+                "evidence": "The spec-creator agent didn't write a spec. It asked clarifying questions first, as its process requires, and wrote no files. Its full report, verbatim:\n\n---\n\n# Spec questions: note-sharing\n\n## What I understood\n- The product is `notes-api`, an HTTP API for personal notes. The only users I can see are callers who each own their own notes. Nothing in the repo shows whether other roles exist.\n- Trigger: a note's owner shares a note with someone else. The request doesn't say who that someone is, how access is granted, or what the recipient can do.\n- Outcome: someone other than the owner can reach a note they couldn't reach before. The request doesn't say whether that means read-only or editable.\n- Touched set: the `notes` module only (`src/notes/`). It has no specs directory of its own, so the overview is the whole spec.\n- Proposed file: `docs/specs/note-sharing.md`, with ID `SPEC-01`. No specs exist yet, so `docs/specs/` will be created by the first write.\n- Nothing is written in this pass. I'll draft once you answer, or if you say \"draft it now\". Anything still undecided then becomes a `[NEEDS CLARIFICATION]` marker.\n\n## Questions\n\n### Audience and mechanism\n1. Who can a note be shared with: specific other users of the API (by user ID or email), anyone holding a link, or both? Default: specific users only. It is the smaller feature, and it avoids a public, unauthenticated read path.\n2. If sharing is with specific users, how does the owner identify the recipient, and what happens if that user doesn't exist? Default: by user ID, and the API returns 404 for an unknown user. This also avoids revealing which accounts exist.\n3. If link sharing is wanted, should links expire, and can the owner revoke them? Default: not in scope for this spec (a Non-goal).\n\n### Permissions\n4. What can a recipient do: read only, or edit too? Default: read only.\n5. Can a recipient delete the note, re-share it, or remove themselves from it? Default: no delete and no re-share. A recipient can remove themselves from the share.\n6. Can the owner revoke a share at any time, and does revocation take effect immediately? Default: yes to both.\n\n### Behaviour on the existing API\n7. Where do shared notes appear for the recipient: mixed into `GET /notes`, or in a separate listing such as `GET /notes/shared-with-me`? Default: a separate listing, so `GET /notes` keeps its \"caller's own notes\" meaning.\n8. When the owner deletes a shared note, what happens to the recipients' access? Default: the note disappears for everyone, and recipients get 404.\n9. Is there a limit on how many recipients one note can have? Default: 50 per note.\n10. Can the owner see who a note is shared with? Default: yes, through a list of shares for a note.\n\n### Notification and trust\n11. Should the recipient be notified (email or push) when a note is shared with them? Default: no. The recipient finds it in the shared listing.\n12. Can the owner attach a message when sharing? Default: no.\n\n### Context I couldn't find in the repo\n13. How are callers authenticated, and is there a user concept beyond \"the caller\"? Default: I assume each request already carries an authenticated user identity, and I'll note that as an assumption.\n14. Does this replace or extend any existing behaviour, and are there related notes or decision records elsewhere that I can't see? Default: none.\n\n## What I already know from the code\n- `/private/tmp/e-QIqrEe/home/cwd/AGENTS.md:3` says this is an HTTP API for personal notes, with one folder per module under `src/` and specs in `docs/specs/`.\n- `/private/tmp/e-QIqrEe/home/cwd/src/notes/routes.ts:2` lists `GET /notes` as \"list the caller's notes\". Today a note is visible only to its owner.\n- `/private/tmp/e-QIqrEe/home/cwd/src/notes/routes.ts:3-4` shows only create and delete alongside the list. There is no read-one or update route yet. This matters for question 4, because \"edit\" would need a route that doesn't exist.\n- No authentication, user model, storage or tests are visible in the repo, so I can't answer questions 2 and 13 from the code.\n- No existing specs, ADRs or decision records exist, so there is nothing to conflict with and no recorded dead ends.\n\n## Nothing written\n- No files were written in this pass.\n\n---\n\n**Next step:** Answer the questions above, or reply \"draft it now\" to accept the defaults. The defaults are marked, so you can accept some and override others. Once you reply, I can send the spec-creator agent back to write `docs/specs/note-sharing.md` (no files are written yet)."
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 1,
+        "passRate": 1
+      }
+    },
+    {
+      "name": "spec-creator-marks-undecided",
+      "dir": "plugins/sdd-engineering/evals/spec-creator-marks-undecided",
+      "source": "mixed",
+      "promptMarkdown": "Ask the spec-creator agent to draft the spec for note sharing right now, no question round, as docs/specs/note-sharing.md: users can share a note with another user by email. I have not decided whether the recipient can edit the note or only read it, and I have not decided what happens to the share when the owner deletes the note. Only the spec-creator agent may write files in this task. Give me its full report verbatim.",
+      "runsPerCase": 3,
+      "timeoutSeconds": 1200,
+      "maxTurns": 40,
+      "graders": [
+        {
+          "name": "agent-dispatched",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Agent",
+            "input_match": "sdd-engineering:spec-creator",
+            "arm": "with-only"
+          }
+        },
+        {
+          "name": "markers-in-spec",
+          "type": "regex",
+          "weight": 2,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "docs/specs/note-sharing.md"
+            },
+            "pattern": "\\[NEEDS CLARIFICATION:[^\\]]*OQ-\\d+[^\\]]*\\]",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "marks-not-guesses",
+          "type": "llm",
+          "weight": 1,
+          "graderMarkdown": "The user explicitly left two behaviours undecided: whether a share recipient can edit or only read, and what happens to a share when the owner deletes the note.\n\nPASS if the reply (a spec report) lists those undecided points as clarifications needed or open questions (for example `[NEEDS CLARIFICATION …]` markers linked to `OQ-N` entries), and says the spec stays a draft until they are answered.\n\nFAIL if the reply states as decided either behaviour the user left open (for example \"recipients get read-only access\" as a settled criterion with no marker or open question), or claims the spec is approved or ready to plan.",
+          "config": {
+            "criteria": "The user explicitly left two behaviours undecided: whether a share recipient can edit or only read, and what happens to a share when the owner deletes the note.\n\nPASS if the reply (a spec report) lists those undecided points as clarifications needed or open questions (for example `[NEEDS CLARIFICATION …]` markers linked to `OQ-N` entries), and says the spec stays a draft until they are answered.\n\nFAIL if the reply states as decided either behaviour the user left open (for example \"recipients get read-only access\" as a settled criterion with no marker or open question), or claims the spec is approved or ready to plan.",
+            "focus": "last_message"
+          }
+        },
+        {
+          "name": "status-draft",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "docs/specs/note-sharing.md"
+            },
+            "pattern": "^Status: draft\\s*$",
+            "flags": "m",
+            "match": "contains"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 1,
+            "costUsd": 0.07872442,
+            "judgeCostUsd": 0.0010029000000000001,
+            "durationSeconds": 54,
+            "startedAt": "2026-10-21T12:57:15.987Z",
+            "error": null,
+            "tracePath": "/private/tmp/e-2VJjTx/out/trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "agent-dispatched",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Agent called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "markers-in-spec",
+                "passed": true,
+                "weight": 2,
+                "explanation": "matched \\[NEEDS CLARIFICATION:[^\\]]*OQ-\\d+[^\\]]*\\]",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "marks-not-guesses",
+                "passed": true,
+                "weight": 1,
+                "explanation": "judge votes: PASS PASS PASS",
+                "withOnly": false,
+                "scored": true,
+                "judgeVotes": [
+                  true,
+                  true,
+                  true
+                ],
+                "evidence": "The spec-creator agent finished. Its full report, verbatim:\n\n# Spec report: SPEC-01 note-sharing\n\n## Summary\nI drafted the spec at `/private/tmp/e-2VJjTx/home/cwd/docs/specs/note-sharing.md` and wrote no other file. It has six acceptance criteria, and three of them carry `[NEEDS CLARIFICATION]` markers. Two of those are the points you named. The third is one I added (the unregistered-email case). The planner will refuse the spec until all three are answered.\n\n## Files written\n| File | New / updated | Role | AC-N |\n|---|---|---|---|\n| docs/specs/note-sharing.md | New | overview | AC-1 to AC-6 |\n\n## Changes\n- New spec.\n\n## Criteria by pattern\n- Event-driven: 3 (AC-1, AC-5, AC-6)\n- Unwanted behaviour: 3 (AC-2, AC-3, AC-4)\n- Plain sentences: 0\n\n## Open questions carried\n- OQ-1: Can the recipient edit the note or only read it? Default: read-only. Blocks AC-5.\n- OQ-2: What happens to the share when the owner deletes the note? Default: delete the shares with the note. Blocks AC-6.\n- OQ-3: What happens when the email address belongs to no registered user? Default: reject with a generic error that doesn't reveal whether the email is registered. Blocks AC-4.\n- OQ-4: How does a recipient find the notes shared with them? Default: show them in the recipient's note listing, marked as shared. Blocks nothing.\n\n## Clarifications needed\nCount: 3\n- AC-4 — reject the request, or hold a pending share until that email registers? — OQ-3\n- AC-5 — read only, or read and edit the shared note? — OQ-1\n- AC-6 — remove the shares along with the note, keep the note for recipients, or block the deletion? — OQ-2\n\n## Not written\n- None.\n\n## Next step\nAnswer the Clarifications needed and run spec-creator again — implementation-planner refuses a spec with [NEEDS CLARIFICATION] markers.\n\n## Lessons\n- The repo has only `AGENTS.md` and `src/notes/routes.ts`. `routes.ts` lists three routes (list, create, delete) and shows no authentication or user model. I couldn't check how users and emails are represented, so the \"registered user\" assumption is unverified.\n\n## Other items I was unsure about\n- **Added OQ-3 (unregistered email):** you named only two undecided points, but AC-4 couldn't be written without inventing an answer, so I marked it.\n- **Added OQ-4 and US-2 (recipient visibility):** the request doesn't say how a recipient sees shared notes. OQ-4 blocks nothing and has no AC. US-2 is my derived story, so drop it if it's out of scope.\n- **AC-2 and AC-3 are my proposals:** a non-owner share request is rejected, and so is one for a missing note. They are not in your request, so confirm or strike them.\n- **NFR values are mine:** NFR-1 (500 ms p95) and NFR-2 (log shares without the full recipient email) are proposals with no basis in your request.\n- **Undecided cases with no AC:** sharing the same note twice with the same email, sharing with your own email, malformed email addresses, revoking a share, and notifying the recipient. The first three are in Edge cases. Revoke and notify are only in the Non-goals line.\n- **Email enumeration:** the Untrusted inputs section says no AC covers the risk of probing which emails are registered. OQ-3's default is meant to address it once decided.\n- **Authentication:** I assumed the API authenticates the caller, but the code doesn't show it.\n\n## Full contents of the spec\n\n```markdown\n# Spec: Note sharing\nSpec ID: SPEC-01\nStatus: draft\nSupersedes: —\n\n## Problem &amp; user\nUsers of the notes API keep personal notes that only the creating user can see. An owner who wants another person to see a note has no way to do so within the product. This feature lets an owner share a note with another user, identified by that user's email address.\n\n## Goals / Non-goals\nGoals\n- An owner can give another user access to one of the owner's notes by entering that user's email address.\n\nNon-goals\n- None recorded; the request names no exclusions. Revoking a share, notifying the recipient and sharing with groups are not requested and are not specified here (see report notes to the caller).\n\n## User stories\n- US-1: As a note owner, I want to share a note with another user by entering their email address, so that the other user can access the note.\n- US-2: As a recipient, I want to see notes shared with me, so that I can use them. (Derived from the share goal; the request does not state how the recipient finds shared notes. See OQ-4.)\n\n## Acceptance criteria (EARS)\n### API\n- [ ] AC-1 WHEN an owner submits a share request for a note the owner owns, with the email address of a registered user, the notes API shall record a share of that note for that user.\n- [ ] AC-2 IF a user who does not own a note submits a share request for it, THEN the notes API shall reject the request and record no share.\n- [ ] AC-3 IF the share request names a note that does not exist, THEN the notes API shall reject the request and record no share.\n- [ ] AC-4 IF the email address in a share request does not belong to a registered user, THEN the notes API shall [NEEDS CLARIFICATION: reject the request, or hold a pending share until that email registers? — OQ-3].\n- [ ] AC-5 WHEN a share exists, the recipient shall be permitted to [NEEDS CLARIFICATION: read only, or read and edit the shared note? — OQ-1].\n- [ ] AC-6 WHEN an owner deletes a note that has one or more shares, the notes API shall [NEEDS CLARIFICATION: remove the shares along with the note, keep the note for recipients, or block the deletion? — OQ-2].\n\n## Edge cases\n- The owner shares a note with the same email address twice: expected behaviour not decided (see report notes); not covered by an AC.\n- The owner enters their own email address: expected behaviour not decided; not covered by an AC.\n- The email address is malformed: not decided; the validation rule is not covered by an AC.\n- The owner deletes a shared note: see AC-6.\n- The email address belongs to no registered user: see AC-4.\n\n## Non-functional requirements\n- NFR-1: The notes API shall respond to a share request within 500 ms at p95. (Proposed value; not given in the request.)\n- NFR-2: The notes API shall log each created share with the note identifier, owner identifier and recipient identifier, and shall not log the full recipient email address.\n\n## Inputs and provenance\nData inputs\n\n| Input | Source | Trusted? | Freshness |\n|---|---|---|---|\n| Recipient email address | Owner, via the API caller | No | Per request |\n| Note identifier | Owner, via the API caller | No | Per request |\n| Caller identity | Existing API authentication (not inspected in this repository snapshot) | Assumed yes | Per request |\n\nRequirement provenance\n- Owner can share a note by recipient email: the request.\n- Permission level and deletion behaviour left undecided: the request.\n- Existing routes are list, create and delete of notes only; no sharing exists: `src/notes/routes.ts:1-5`.\n- Specs live in `docs/specs/`: `AGENTS.md:3`.\n- NFR-1 and NFR-2 values and AC-2, AC-3 are proposals of the spec author, not stated in the request.\n\n## Untrusted inputs\n- Recipient email address: malformed or oversized values, and use to probe which emails are registered. Malformed or oversized values are not covered by an AC (see OQ-3 for the registered-or-not behaviour); no AC yet neutralises enumeration.\n- Note identifier: referencing a note the caller does not own. Covered by AC-2 and AC-3.\n\n## Open questions\n- OQ-1: Can the recipient edit the shared note, or only read it? — default if unanswered: read-only — blocks: AC-5\n- OQ-2: What happens to a share when the owner deletes the note? — default if unanswered: delete the shares together with the note — blocks: AC-6\n- OQ-3: What happens when the email address belongs to no registered user? — default if unanswered: reject the request with a generic error that does not reveal whether the email is registered — blocks: AC-4\n- OQ-4: How does a recipient find notes shared with them (for example within the existing note listing or a separate listing)? — default if unanswered: include shared notes in the recipient's note listing, marked as shared — blocks: none\n\n## Changelog\n- 2026-10-21 · draft — created: US-1, US-2, AC-1 to AC-6, NFR-1, NFR-2, OQ-1 to OQ-4 — first draft of note sharing, with permission level and deletion behaviour left open as requested\n```"
+              },
+              {
+                "name": "status-draft",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^Status: draft\\s*$",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 2,
+            "costUsd": 0.09912996,
+            "judgeCostUsd": 0.0012876000000000007,
+            "durationSeconds": 77,
+            "startedAt": "2026-10-21T12:57:25.787Z",
+            "error": null,
+            "tracePath": "/private/tmp/e-yHRCK7/out/trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "agent-dispatched",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Agent called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "markers-in-spec",
+                "passed": true,
+                "weight": 2,
+                "explanation": "matched \\[NEEDS CLARIFICATION:[^\\]]*OQ-\\d+[^\\]]*\\]",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "marks-not-guesses",
+                "passed": true,
+                "weight": 1,
+                "explanation": "judge votes: PASS PASS PASS",
+                "withOnly": false,
+                "scored": true,
+                "judgeVotes": [
+                  true,
+                  true,
+                  true
+                ],
+                "evidence": "The spec-creator agent drafted the spec without a question round. Its full report, verbatim:\n\n# Spec report: SPEC-01 note-sharing\n\n## Summary\nI drafted the spec as requested, with no question round. I wrote one file, `/private/tmp/e-yHRCK7/home/cwd/docs/specs/note-sharing.md`, with `Status: draft`. Nine criteria are fully decided or are checkable security rules. Seven acceptance criteria, two edge cases and two non-functional requirements carry `[NEEDS CLARIFICATION]` markers. The repo had no earlier specs (so SPEC-01 is the first). The only existing route code is `src/notes/routes.ts`, which has list, create and delete and no share route.\n\n## Files written\n| File | New / updated / adopted | Role | AC-N it holds |\n|---|---|---|---|\n| `/private/tmp/e-yHRCK7/home/cwd/docs/specs/note-sharing.md` | New | overview | AC-1 to AC-13 |\n\n## Changes\n- New spec.\n\n## Criteria by pattern\n- Event-driven (WHEN): 8, which are AC-1, 5, 6, 8, 9, 10, 11 and AC-13's neighbour AC-7 excluded (see below).\n- Unwanted behaviour (IF/THEN): 5, which are AC-2, 3, 4, 12 and 13.\n- Optional feature (WHERE): 1, which is AC-7.\n- Plain sentences: 0.\n- The counts are approximate. Exact count: WHEN = 7 (AC-1, 5, 6, 8, 9, 10, 11), IF/THEN = 5, WHERE = 1.\n\n## Open questions carried\n- OQ-1: Can the recipient read only, or also edit? Default: read only.\n- OQ-2: What happens to shares when the owner deletes the note? Default: remove the shares with the note.\n- OQ-3: What happens when the email has no account? Default: reject.\n- OQ-4: Can an owner revoke a share, and how? Default: yes, through a request that removes the share.\n- OQ-5: What happens on a duplicate share? Default: succeed without creating a duplicate.\n- OQ-6: What happens when an owner shares with their own email? Default: reject.\n- OQ-7: Is email matching case-insensitive? Default: yes.\n- OQ-8: Does a share follow the account or the address after an email change? Default: follows the account.\n- OQ-9: What is the latency target for the share request? Default: 300 ms p95.\n- OQ-10: What is the maximum number of recipients per note? Default: 20.\n- OQ-11: What is the maximum email length? Default: 254 characters. It is referenced in Untrusted inputs as plain text, not as a marker.\n\n## Clarifications needed\nCount: 11 markers.\n- AC-7 — read only, or read and edit? — OQ-1\n- AC-8 — what happens to shares when the owner deletes the note? — OQ-2\n- AC-9 — behaviour for an email with no account — OQ-3\n- AC-10 — is revoking a share in scope, and through which request? — OQ-4\n- AC-11 — duplicate share handling — OQ-5\n- AC-12 — self-share handling — OQ-6\n- Edge case, email letter case — OQ-7\n- Edge case, recipient changes account email — OQ-8\n- NFR-1 — latency target — OQ-9\n- NFR-2 — maximum recipients per note — OQ-10\n\nI counted 10 markers in the list above. OQ-11 has no marker in the file.\n\n## Not written\n- None.\n\n## Next step\nAnswer the Clarifications needed and run spec-creator again — implementation-planner refuses a spec with [NEEDS CLARIFICATION] markers.\n\n## Lessons\n- `AGENTS.md` is a single line. The project has no recorded conventions for authentication, so how the caller's identity is established is untested in this spec. The \"Caller identity\" row in the inputs table says \"Not stated in code read\".\n\n---\n\n## Full content of the spec\n\nThe file contains exactly the text below (with the OQ-11 edit applied in the Untrusted inputs section).\n\n```markdown\n# Spec: Note sharing\nSpec ID: SPEC-01\nStatus: draft\nSupersedes: —\n\n## Problem & user\nUsers of the notes API keep personal notes that only the owner can see. To let another person see a note, the owner has no way to do it inside the product. This spec lets an owner share a note with another user, identified by the recipient's email address.\n\n## Goals / Non-goals\nGoals:\n- An owner can share one of their notes with another user by email.\n- A recipient can find the notes shared with them.\n- An owner stays in control of who a note is shared with.\n\nNon-goals:\n- Sharing with groups, teams or public links.\n- Sharing by any identifier other than email.\n- Real-time collaboration or conflict resolution between editors.\n\n## User stories\n- US-1: As a note owner, I want to share a note with another user by email, so that they can access it.\n- US-2: As a recipient, I want to see the notes shared with me, so that I can open them.\n- US-3: As a note owner, I want to see and stop a share, so that I control who has access.\n\n## Acceptance criteria (EARS)\n\n### API\n- [ ] AC-1 WHEN an authenticated owner submits a share request for a note they own with a well-formed email address, the notes API shall record a share of that note for that email.\n- [ ] AC-2 IF the caller is not the owner of the note, THEN the notes API shall reject the share request and record no share.\n- [ ] AC-3 IF the note does not exist, THEN the notes API shall reject the share request with a not-found error.\n- [ ] AC-4 IF the submitted email address is not well-formed, THEN the notes API shall reject the request and record no share.\n- [ ] AC-5 WHEN a recipient lists their notes, the notes API shall include the notes shared with them, marked as shared and distinguishable from notes they own.\n- [ ] AC-6 WHEN a recipient opens a note shared with them, the notes API shall return the note content.\n- [ ] AC-7 WHERE the recipient is granted a permission level, the notes API shall allow the recipient to [NEEDS CLARIFICATION: read only, or read and edit? — OQ-1].\n- [ ] AC-8 WHEN the owner deletes a note that has shares, the notes API shall [NEEDS CLARIFICATION: remove the shares with the note, keep the note for recipients, or reject the deletion? — OQ-2].\n- [ ] AC-9 WHEN an owner shares a note with an email address that has no account, the notes API shall [NEEDS CLARIFICATION: reject, hold a pending share until sign-up, or send an invitation? — OQ-3].\n- [ ] AC-10 WHEN an owner stops sharing a note with an email address, the notes API shall [NEEDS CLARIFICATION: is revoking a share in scope, and through which request? — OQ-4].\n- [ ] AC-11 WHEN an owner shares a note with an email address it is already shared with, the notes API shall [NEEDS CLARIFICATION: treat as success without a duplicate, or return an error? — OQ-5].\n- [ ] AC-12 IF an owner shares a note with their own email address, THEN the notes API shall [NEEDS CLARIFICATION: reject or ignore? — OQ-6].\n- [ ] AC-13 IF a user who is neither the owner nor a recipient requests a note, THEN the notes API shall deny access exactly as it does for any note that is not theirs.\n\n## Edge cases\n- Email letter case differs between share and account: the outcome is [NEEDS CLARIFICATION: is email matching case-insensitive? — OQ-7].\n- A recipient changes their account email after a share: the outcome is [NEEDS CLARIFICATION: does the share follow the account or the address? — OQ-8].\n- A note is shared and then edited by the owner: the recipient sees the current content on the next request (AC-6).\n\n## Non-functional requirements\n- NFR-1: The share request shall respond within [NEEDS CLARIFICATION: p95 latency target in ms — OQ-9].\n- NFR-2: A note shall be shareable with at most [NEEDS CLARIFICATION: maximum recipients per note — OQ-10] email addresses.\n- NFR-3: The notes API shall log each share creation and each denied share attempt with the note identifier and caller, and shall not log the note content.\n\n## Inputs and provenance\nData inputs:\n\n| Input | Source | Trusted? | Freshness |\n|---|---|---|---|\n| Recipient email address | API caller (owner) | No | Per request |\n| Note identifier | API caller | No | Per request |\n| Caller identity | Authentication layer | Not stated in code read | Per request |\n| Note content | Database / notes module | Yes | Current |\n\nRequirement provenance:\n- Sharing by recipient email: the request.\n- Permission level and deletion behaviour undecided: the request.\n- Existing routes are list, create and delete only, with no share route: `src/notes/routes.ts:1-5`.\n- Specs live in `docs/specs/`: `AGENTS.md:3`.\n- All other criteria: drafted from the request; no existing spec or decision record exists.\n\n## Untrusted inputs\n- Recipient email address: malformed or oversized payload, or markup injected into later displays of the address. Neutralised by AC-4; the length limit is undecided (OQ-11).\n- Note identifier: a caller may target a note that is not theirs. Neutralised by AC-2, AC-3 and AC-13.\n\n## Open questions\n- OQ-1: Can the recipient only read the note, or also edit it? — default if unanswered: read only — blocks: AC-7\n- OQ-2: What happens to shares when the owner deletes the note? — default if unanswered: remove the shares with the note — blocks: AC-8\n- OQ-3: What happens when the email has no account? — default if unanswered: reject the request — blocks: AC-9\n- OQ-4: Can an owner revoke a share, and how? — default if unanswered: yes, through a request that removes the share — blocks: AC-10\n- OQ-5: What happens on a duplicate share? — default if unanswered: succeed without creating a duplicate — blocks: AC-11\n- OQ-6: What happens when an owner shares with their own email? — default if unanswered: reject — blocks: AC-12\n- OQ-7: Is email matching case-insensitive? — default if unanswered: yes — blocks: none\n- OQ-8: Does a share follow the account or the address after an email change? — default if unanswered: follows the account — blocks: none\n- OQ-9: What is the latency target for the share request? — default if unanswered: 300 ms p95 — blocks: NFR-1\n- OQ-10: What is the maximum number of recipients per note? — default if unanswered: 20 — blocks: NFR-2\n- OQ-11: What is the maximum email length? — default if unanswered: 254 characters — blocks: none\n\n## Changelog\n- 2026-10-21 · draft — created; AC-1 to AC-13, US-1 to US-3, NFR-1 to NFR-3, OQ-1 to OQ-11 added — initial draft, no clarification round requested\n```\nagentId: a1b7de37dc0718f9b\n\n---\n\nI did not open the spec file myself, so the report is the only check so far. The report's own counts disagree with each other: it says 11 markers and then 10, and its pattern counts are marked approximate. The spec is still a draft. AC-7 through AC-12 and the two non-functional requirements hold open decisions, including the two you named (edit permission and deletion behaviour), so the spec cannot go to implementation planning until those are answered."
+              },
+              {
+                "name": "status-draft",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^Status: draft\\s*$",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 1,
+        "passRate": 1
+      }
+    },
+    {
+      "name": "version-trace-emitted",
+      "dir": "plugins/sdd-engineering/evals/version-trace-emitted",
+      "source": "mixed",
+      "promptMarkdown": "Which version of the sdd-engineering plugin is active in this session? Answer from what the session context already tells you, in the form `sdd-engineering vX.Y.Z`, or say \"unknown\" if nothing tells you.",
+      "runsPerCase": 3,
+      "timeoutSeconds": 300,
+      "maxTurns": 3,
+      "graders": [
+        {
+          "name": "hook-context-in-trace",
+          "type": "regex",
+          "weight": 2,
+          "config": {
+            "target": "trace",
+            "pattern": "sdd-engineering v1\\.1\\.\\d+ active",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "reports-active-version",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "sdd-engineering v1\\.1\\.\\d+",
+            "flags": "",
+            "match": "contains"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 1,
+            "costUsd": 0.00248953,
+            "judgeCostUsd": 0,
+            "durationSeconds": 4,
+            "startedAt": "2026-10-21T12:57:42.984Z",
+            "error": null,
+            "tracePath": "/private/tmp/e-lSklB2/out/trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "hook-context-in-trace",
+                "passed": true,
+                "weight": 2,
+                "explanation": "matched sdd-engineering v1\\.1\\.\\d+ active",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "reports-active-version",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched sdd-engineering v1\\.1\\.\\d+",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 1,
+            "costUsd": 0.00256063,
+            "judgeCostUsd": 0,
+            "durationSeconds": 3,
+            "startedAt": "2026-10-21T12:57:47.033Z",
+            "error": null,
+            "tracePath": "/private/tmp/e-Dc7jQS/out/trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "hook-context-in-trace",
+                "passed": true,
+                "weight": 2,
+                "explanation": "matched sdd-engineering v1\\.1\\.\\d+ active",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "reports-active-version",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched sdd-engineering v1\\.1\\.\\d+",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 1,
+        "passRate": 1
+      }
+    }
+  ],
+  "aggregates": {
+    "casesTotal": 7,
+    "casesPassed": 7,
+    "overallScore": 1,
+    "overallPassRate": 1
+  }
+}

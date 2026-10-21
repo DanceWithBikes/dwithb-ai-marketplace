@@ -6,7 +6,7 @@ export interface Release {
 }
 export interface Plugin {
   id: string; version: string; updatedAt: string;
-  counts: { skills: number; agents: number; hooks: number; mcp: number };
+  counts: { skills: number; agents: number; commands?: number; hooks: number; mcp: number };
   trust: { runsCommands: boolean; usesNetwork: boolean; hooks?: { event: string; summary: string }[] };
   keywords: string[];
   description?: string; dependencies?: string[]; path?: string;

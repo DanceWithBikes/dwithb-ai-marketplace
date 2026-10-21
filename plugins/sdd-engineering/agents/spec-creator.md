@@ -3,10 +3,10 @@ name: spec-creator
 description: "Writes a Spec-Driven-Development spec (SPEC-NN, EARS acceptance criteria AC-N, open questions) before any code exists: clarifying questions first, then a draft that marks undecided points [NEEDS CLARIFICATION] instead of guessing. Use when a feature or behaviour change needs a spec."
 tools: Read, Write, Edit, Grep, Glob, TodoWrite
 disallowedTools: Bash, WebSearch, WebFetch, NotebookEdit, Skill
-model: opus
+model: sonnet
 metadata:
-  version: "1.0.0"
-  updated: "2026-10-20"
+  version: "1.1.0"
+  updated: "2026-10-21"
 ---
 
 # Spec creator

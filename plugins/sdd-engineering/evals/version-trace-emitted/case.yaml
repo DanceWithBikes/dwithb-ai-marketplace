@@ -1,0 +1,8 @@
+schema_version: "1.1"
+name: version-trace-emitted
+description: >
+  The plugin's SessionStart hook (hooks/version-trace.mjs) must put
+  "sdd-engineering v<version> active" into the session, so a run can be traced to the release
+  that produced it. The session reports the active version back from its own context.
+tags: [hook, telemetry, smoke, sdd]
+plugins: ["../..", "../../../engineering-paved-path", "../../../research-tools", "../../../architecture-review"]

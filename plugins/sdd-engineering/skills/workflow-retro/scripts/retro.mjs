@@ -17,6 +17,7 @@ import {
   firstPrompt,
   fmtMs,
   fmtTokens,
+  fmtUsd,
   interval,
   median,
   parseArgs,
@@ -111,6 +112,39 @@ function notifications(records) {
     }
   }
   return out;
+}
+
+// The plugin's SessionStart hook (hooks/version-trace.mjs) puts "sdd-engineering vX.Y.Z active"
+// into the session context; it is near the top of the transcript.
+const VERSION_MARK = /sdd-engineering v(\d+\.\d+\.\d+[\w.+-]*) active/;
+
+export function pluginVersion(records) {
+  for (const r of records.slice(0, 50)) {
+    const m = JSON.stringify(r).match(VERSION_MARK);
+    if (m) return m[1];
+  }
+  return null;
+}
+
+// A run succeeded when the last plan-verifier report says COMPLETE (not INCOMPLETE or
+// UNVERIFIABLE). Runs without a plan-verifier have no verdict: success stays null.
+export function verifierOutcome(records) {
+  const verifierCalls = new Set();
+  for (const m of assistantMessages(records)) {
+    for (const b of m.blocks) {
+      if (b.type === "tool_use" && b.name === "Agent" && /(^|:)plan-verifier$/.test(b.input?.subagent_type ?? "")) verifierCalls.add(b.id);
+    }
+  }
+  let verdict = null;
+  for (const r of records) {
+    if (r.type !== "user" || !Array.isArray(r.message?.content)) continue;
+    for (const c of r.message.content) {
+      if (c.type !== "tool_result" || !verifierCalls.has(c.tool_use_id)) continue;
+      const text = typeof c.content === "string" ? c.content : (c.content ?? []).map((b) => b.text ?? "").join("\n");
+      verdict = text.match(/\b(INCOMPLETE|UNVERIFIABLE|COMPLETE)\b/)?.[1] ?? verdict;
+    }
+  }
+  return { verdict, success: verdict == null ? null : verdict === "COMPLETE" };
 }
 
 function errorsIn(records) {
@@ -273,6 +307,8 @@ export function retro({ logDir, sessionId, deep = false, label = null }) {
     label,
     mode: deep ? "deep" : "quick",
     branch: parentRecords.find((r) => r.gitBranch)?.gitBranch ?? null,
+    pluginVersion: pluginVersion(parentRecords),
+    outcome: verifierOutcome(parentRecords),
     startedAt: parent.interval ? new Date(parent.interval.start).toISOString() : null,
     wallMs: parent.interval?.ms ?? null,
     parent: { ...parent.usage, cacheHit: cacheHit(parent.usage), toolCalls: parent.tools.total, toolsByName: parent.tools.byName, model: parent.model },
@@ -402,6 +438,7 @@ export function toMarkdown(r) {
   const lines = [
     `## Retro ${r.sessionId.slice(0, 8)}${r.label ? ` - ${r.label}` : ""} (${r.mode})`,
     "",
+    `sdd-engineering ${r.pluginVersion ? `v${r.pluginVersion}` : "version unknown"} · cost **${fmtUsd(t.costUsd)}**${t.unpricedTurns ? ` (+${t.unpricedTurns} unpriced turns)` : ""} · outcome ${r.outcome?.verdict ?? "no plan-verifier verdict"}`,
     `Tokens **${fmtTokens(t.totalTokens)}** (in ${fmtTokens(t.input)} · out ${fmtTokens(t.output)} · cache read ${fmtTokens(t.cacheRead)} · cache write ${fmtTokens(t.cacheWrite)}) · cache hit ${t.cacheHit ?? "-"}% · tool calls ${t.toolCalls} · agents ${t.agents} (max depth ${t.maxDepth}) · wall ${fmtMs(r.wallMs)}`,
   ];
   if (r.parallelism) {

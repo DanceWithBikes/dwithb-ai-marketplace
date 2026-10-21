@@ -3,8 +3,8 @@ name: workflow-retro
 description: "Retrospective of a multi-agent Claude Code run: tokens, cache hits, tool calls, duration and parallelism per agent (nested subagents included) from local session logs, 1–5 actions, and a ledger trend row. Use after an SDD pipeline or subagent fan-out, or to ask what a run cost."
 allowed-tools: Bash(node ${CLAUDE_SKILL_DIR}/scripts/*), Bash(node "${CLAUDE_SKILL_DIR}/scripts/*)
 metadata:
-  version: "1.0.0"
-  updated: "2026-10-20"
+  version: "1.1.0"
+  updated: "2026-10-21"
 ---
 
 # Workflow retro
@@ -44,7 +44,9 @@ The scripts live in `${CLAUDE_SKILL_DIR}/scripts/` (plain Node ≥ 18, no depend
 ## Gotchas
 
 - Only compare **deep with deep**. A quick row is missing the child spend.
-- Cost is in tokens. The logs carry no prices; add USD only if the user asks, using the current pricing for the model in `agents[].model`.
+- `totals.costUsd` is priced per message at the list prices in `scripts/lib.mjs` (`PRICES`, by model family). Turns of a model it doesn't know are counted in `unpricedTurns` and left out of the cost — say so when it's non-zero.
+- `pluginVersion` comes from the plugin's SessionStart hook (`sdd-engineering vX.Y.Z active`); it is null for runs on 1.0.x, which had no hook. `outcome.success` is true only when the last plan-verifier report said `COMPLETE`; for a run without plan-verifier pass `--success yes|no` to `append-ledger.mjs`.
+- Report the **cost per successful run** that `append-ledger.mjs` prints (`trend`) next to the previous version's figure for the same label — that is the number an optimisation has to move.
 - A session that is still running gives partial numbers. Say so if its last record is recent.
 - `filesRead` covers `Read` plus plain `cat|head|tail|sed -n` in Bash. Reads hidden inside scripts or pipelines are missed.
 - The scripts read `~/.claude/projects/` (override with `CLAUDE_PROJECTS_DIR`) and write only the ledger file.

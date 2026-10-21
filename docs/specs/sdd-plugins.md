@@ -1,6 +1,6 @@
 # Spec: SDD Engineering та reusable-плагіни
 
-Status: Implemented v1.0.0 (untagged) · Scope: 4 плагіни, v1.0.0 · Date: 2026-10-20 · Source: `dev-digest/.claude/`
+Status: Implemented — sdd-engineering 1.1.0 (tag sdd-engineering--v1.1.0), stable channel 1.0.0 · Scope: 4 плагіни, v1.0.0 · Date: 2026-10-20 · Source: `dev-digest/.claude/`
 
 ## 1. Мета
 

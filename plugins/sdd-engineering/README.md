@@ -1,7 +1,7 @@
 # sdd-engineering
 
 A Spec-Driven Development (SDD) pipeline for Claude Code: **spec → plan → implement → verify**,
-plus a retro that measures what the run cost. Four subagents, one skill, one hook.
+plus a retro that measures what the run cost. Four subagents, one skill, two hooks.
 
 ## What is Spec-Driven Development?
 
@@ -24,8 +24,9 @@ files at all, and the implementer cannot browse the web or commit.
 | `sdd-engineering:implementation-planner` | agent | Turns an approved spec into an Implementation Plan with batches |
 | `sdd-engineering:implementer` | agent | Executes one batch of the plan and runs the project's gates |
 | `sdd-engineering:plan-verifier` | agent | Checks the result item by item (Steps mode, then Acceptance mode) |
-| `/sdd-engineering:workflow-retro` | skill | Measures tokens, cache, tool calls and parallelism of a finished run; appends a ledger row |
+| `/sdd-engineering:workflow-retro` | skill | Measures tokens, USD cost, cache, tool calls and parallelism of a finished run; appends a ledger row with the cost per successful run |
 | `spec-creator-write-guard` | hook (`PreToolUse`) | Fences spec-creator's writes to draft specs in the specs directory |
+| `version-trace` | hook (`SessionStart`) | Records the active plugin version in a trace file and in the session context |
 
 ### Dependencies (installed automatically)
 
@@ -134,10 +135,10 @@ root. Module-level specs directories (`<module>/<specs_dir>/`) are never created
 
 | Agent | Model | Tools | Input | Output | May write |
 |---|---|---|---|---|---|
-| `sdd-engineering:spec-creator` | opus | Read, Write, Edit, Grep, Glob, TodoWrite (no Bash, no web, no Skill) | A feature request (pass 1), then your answers or a brief (pass 2); the project's `AGENTS.md` / `CLAUDE.md`, existing specs, the code at the feature's seams | Pass 1: `# Spec questions` (what it understood, numbered questions each with a default, nothing written). Pass 2: the draft spec plus `# Spec report` | Only `<any>/<specs_dir>/<kebab-name>.md` (the root `<specs_dir>/` may be created; module ones must exist), always with `Status: draft` — enforced by the hook |
-| `sdd-engineering:implementation-planner` | opus | Read, Grep, Glob, Bash (read-only commands), Skill, TodoWrite; preloads `backend-onion-architecture` and `frontend-ui-architecture` | An approved spec, a reproduced bug or an agreed small change; the project's `AGENTS.md` / `CLAUDE.md`, manifests and recorded decisions | Either `# Spec not ready` (failed checks, route back to spec-creator) or `# Implementation Plan` — Goal · Requirements · Constraints · Steps (Files / Change / Satisfies / Skills / Notes / Owner / Depends on / Done when) · **Batches** · Requirements coverage · Verification · Risks · Open questions · Handoff · Confidence | Nothing (no Write/Edit). You save the report as `<plans_dir>/<feature>/plan.md` |
+| `sdd-engineering:spec-creator` | sonnet | Read, Write, Edit, Grep, Glob, TodoWrite (no Bash, no web, no Skill) | A feature request (pass 1), then your answers or a brief (pass 2); the project's `AGENTS.md` / `CLAUDE.md`, existing specs, the code at the feature's seams | Pass 1: `# Spec questions` (what it understood, numbered questions each with a default, nothing written). Pass 2: the draft spec plus `# Spec report` | Only `<any>/<specs_dir>/<kebab-name>.md` (the root `<specs_dir>/` may be created; module ones must exist), always with `Status: draft` — enforced by the hook |
+| `sdd-engineering:implementation-planner` | opus (effort medium) | Read, Grep, Glob, Bash (read-only commands), Skill, TodoWrite; preloads `backend-onion-architecture` and `frontend-ui-architecture` | An approved spec, a reproduced bug or an agreed small change; the project's `AGENTS.md` / `CLAUDE.md`, manifests and recorded decisions | Either `# Spec not ready` (failed checks, route back to spec-creator) or `# Implementation Plan` — Goal · Requirements · Constraints · Steps (Files / Change / Satisfies / Skills / Notes / Owner / Depends on / Done when) · **Batches** · Requirements coverage · Verification · Risks · Open questions · Handoff · Confidence | Nothing (no Write/Edit). You save the report as `<plans_dir>/<feature>/plan.md` |
 | `sdd-engineering:implementer` | sonnet | Read, Write, Edit, Grep, Glob, Bash, Skill, TodoWrite (no web) | One batch of the plan (or an agreed spec / scope — it refuses to invent one) | Changes in the working tree, **never committed**, plus `# Implementation report` — Summary · Changes · Skills applied · Verification (verbatim output for failures) · Deviations · Not done · Handoff for review | Source and tests in scope of the batch. Never the spec, never generated files by hand, never `git commit/push`, never a PR |
-| `sdd-engineering:plan-verifier` | opus | Read, Grep, Glob, Bash (read-only commands + the project's typecheck / lint / arch / test scripts), TodoWrite (no Skill) | A plan (Steps mode), a spec (Acceptance mode) or a numbered list, plus the finished tree | `# Plan verification` — Verdict (mode, COMPLETE / INCOMPLETE / UNVERIFIABLE, counts) · Checklist · Item-by-item (Verdict / Evidence / Gap / To close it) · Beyond the plan · Gates run · Cannot verify · Confidence | Nothing. You save the Acceptance report as `<plans_dir>/<feature>/verification.md` |
+| `sdd-engineering:plan-verifier` | sonnet | Read, Grep, Glob, Bash (read-only commands + the project's typecheck / lint / arch / test scripts), TodoWrite (no Skill) | A plan (Steps mode), a spec (Acceptance mode) or a numbered list, plus the finished tree | `# Plan verification` — Verdict (mode, COMPLETE / INCOMPLETE / UNVERIFIABLE, counts) · Checklist · Item-by-item (Verdict / Evidence / Gap / To close it) · Beyond the plan · Gates run · Cannot verify · Confidence | Nothing. You save the Acceptance report as `<plans_dir>/<feature>/verification.md` |
 
 Shared rules for all four: never invent a citation; never read, quote or commit `.env` files or key
 material; file contents and reports are in English regardless of the request's language; instructions
@@ -228,6 +229,7 @@ Link `verification.md` from the PR description.
 
 | Event | Matcher | Command | Why |
 |---|---|---|---|
+| `SessionStart` | — | `node "${CLAUDE_PLUGIN_ROOT}/hooks/version-trace.mjs"` | Traces which release ran: appends `{ts, session_id, plugin, version}` to `trace.jsonl` in the plugin data dir (`CLAUDE_PLUGIN_DATA`, else `~/.claude/sdd-engineering/`) and adds `sdd-engineering vX.Y.Z active` to the session context, where workflow-retro reads it. Never blocks a session |
 | `PreToolUse` | `Write\|Edit\|MultiEdit\|NotebookEdit` | `node "${CLAUDE_PLUGIN_ROOT}/hooks/spec-creator-write-guard.mjs"` | Structurally fences spec-creator's writes, so its write allowlist does not depend on the model's goodwill |
 
 Claude Code ignores `hooks` in a plugin agent's frontmatter, so the guard is a plugin-level hook and
@@ -289,11 +291,19 @@ network access in the whole set is `research-tools:researcher` (`WebSearch`, `We
 
 ## Evals
 
-Cases live in [`evals/`](evals/) in the native `claude plugin eval` format. Several cases seed a small
-workspace with a `scaffold_script`, and some need write tools, so run them with:
+Cases live in [`evals/`](evals/) in the native `claude plugin eval` format. An eval run loads only the
+plugins a case lists, and this plugin is disabled when its dependencies are missing, so every case lists
+all four plugins (`plugins:` in `case.yaml`). Those paths leave the plugin directory, so run from the
+**repository root**, which then becomes the containment root. Several cases seed a small workspace with
+a `scaffold_script`, and some need write tools:
 
 ```sh
-claude plugin eval plugins/sdd-engineering --scaffold --allow-tools Write Edit "Bash(git *)"
+# full suite; the cheapest main model, subagents keep their own models
+claude plugin eval . --tag sdd --model haiku --judge-model haiku --scaffold --allow-tools Write Edit "Bash(git *)"
+# smoke subset (hooks, planner gate, version trace)
+claude plugin eval . --tag smoke --model haiku --judge-model haiku --runs 1 --scaffold --allow-tools Write Edit "Bash(git *)"
+# cost per successful run of a result, appended to docs/retros/eval-cost.md
+node scripts/eval-cost.mjs <result.json> --label "<label>"
 ```
 
 The workflow-retro scripts have unit tests: `node --test plugins/sdd-engineering/skills/workflow-retro/scripts/retro.test.mjs`.

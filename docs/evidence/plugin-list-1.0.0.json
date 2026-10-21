@@ -1,0 +1,43 @@
+[
+  {
+    "id": "architecture-review@dwithb-ai-marketplace",
+    "version": "1.0.0-86807824ccac",
+    "scope": "user",
+    "enabled": true,
+    "installPath": "$CLAUDE_CONFIG_DIR/plugins/cache/dwithb-ai-marketplace/architecture-review/1.0.0-86807824ccac",
+    "installedAt": "2026-10-21T12:25:33.651Z",
+    "lastUpdated": "2026-10-21T12:25:33.651Z",
+    "projectEnabled": false
+  },
+  {
+    "id": "engineering-paved-path@dwithb-ai-marketplace",
+    "version": "1.0.1-a788d43b45ec",
+    "scope": "user",
+    "enabled": true,
+    "installPath": "$CLAUDE_CONFIG_DIR/plugins/cache/dwithb-ai-marketplace/engineering-paved-path/1.0.1-a788d43b45ec",
+    "installedAt": "2026-10-21T12:25:20.686Z",
+    "lastUpdated": "2026-10-21T12:25:20.686Z",
+    "projectEnabled": false
+  },
+  {
+    "id": "research-tools@dwithb-ai-marketplace",
+    "version": "1.0.1-a788d43b45ec",
+    "scope": "user",
+    "enabled": true,
+    "installPath": "$CLAUDE_CONFIG_DIR/plugins/cache/dwithb-ai-marketplace/research-tools/1.0.1-a788d43b45ec",
+    "installedAt": "2026-10-21T12:25:27.190Z",
+    "lastUpdated": "2026-10-21T12:25:27.190Z",
+    "projectEnabled": false
+  },
+  {
+    "id": "sdd-engineering@dwithb-ai-marketplace",
+    "version": "1.0.0",
+    "scope": "user",
+    "enabled": true,
+    "installPath": "$CLAUDE_CONFIG_DIR/plugins/cache/dwithb-ai-marketplace/sdd-engineering/1.0.0",
+    "installedAt": "2026-10-21T12:25:12.411Z",
+    "lastUpdated": "2026-10-21T12:25:12.411Z",
+    "projectEnabled": false,
+    "hasUserConfig": true
+  }
+]
