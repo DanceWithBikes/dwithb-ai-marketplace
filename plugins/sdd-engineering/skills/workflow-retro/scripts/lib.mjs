@@ -86,8 +86,22 @@ export function assistantMessages(records) {
   return [...byId.values()];
 }
 
+// USD per million tokens, first-party API list prices of the current model families (2026-10).
+// Cache writes are the 5-minute rate (1.25x input). A model that matches no family is not
+// priced: its turns are counted in `unpricedTurns` and its cost is left out.
+export const PRICES = {
+  opus: { input: 4, output: 20, cacheRead: 0.2, cacheWrite: 5 },
+  sonnet: { input: 2, output: 10, cacheRead: 0.2, cacheWrite: 2.5 },
+  haiku: { input: 0.1, output: 0.5, cacheRead: 0.01, cacheWrite: 0.125 },
+};
+
+export function priceFor(model) {
+  const family = Object.keys(PRICES).find((f) => typeof model === "string" && model.includes(f));
+  return family ? PRICES[family] : null;
+}
+
 export function emptyUsage() {
-  return { input: 0, output: 0, cacheRead: 0, cacheWrite: 0, thinking: 0, turns: 0, peakContext: 0 };
+  return { input: 0, output: 0, cacheRead: 0, cacheWrite: 0, thinking: 0, turns: 0, peakContext: 0, costUsd: 0, unpricedTurns: 0 };
 }
 
 export function sumUsage(records) {
@@ -104,9 +118,14 @@ export function sumUsage(records) {
     u.thinking += x.output_tokens_details?.thinking_tokens ?? 0;
     u.turns += 1;
     u.peakContext = Math.max(u.peakContext, input + cacheRead + cacheWrite);
+    const p = priceFor(m.model);
+    if (p) u.costUsd += (input * p.input + (x.output_tokens ?? 0) * p.output + cacheRead * p.cacheRead + cacheWrite * p.cacheWrite) / 1e6;
+    else if (m.model !== "<synthetic>") u.unpricedTurns += 1;
   }
   return u;
 }
+
+export const fmtUsd = (n) => (n == null ? "-" : `$${n < 1 ? n.toFixed(3) : n.toFixed(2)}`);
 
 export function addUsage(a, b) {
   return {
@@ -117,6 +136,8 @@ export function addUsage(a, b) {
     thinking: a.thinking + b.thinking,
     turns: a.turns + b.turns,
     peakContext: Math.max(a.peakContext, b.peakContext),
+    costUsd: a.costUsd + b.costUsd,
+    unpricedTurns: a.unpricedTurns + b.unpricedTurns,
   };
 }
 

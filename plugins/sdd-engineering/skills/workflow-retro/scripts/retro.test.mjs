@@ -5,9 +5,9 @@ import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
-import { appendLedger } from "./append-ledger.mjs";
+import { appendLedger, costPerSuccess } from "./append-ledger.mjs";
 import { sumUsage } from "./lib.mjs";
-import { retro, sweep } from "./retro.mjs";
+import { pluginVersion, retro, sweep, verifierOutcome } from "./retro.mjs";
 
 const SID = "11111111-2222-3333-4444-555555555555";
 const T0 = Date.parse("2026-10-01T10:00:00Z");
@@ -126,7 +126,7 @@ test("ledger is created with a header, appended to, and not duplicated", () => {
   assert.match(text, /^# Workflow retro ledger/);
   const rows = text.split("\n").filter((l) => l.startsWith("| 2026-"));
   assert.equal(rows.length, 2);
-  assert.match(rows[0], /\| 11111111 \| review \| deep \| 3 \/ 2 \|.*preload severity\.md \\\| once \|$/);
+  assert.match(rows[0], /\| 11111111 \| review \| - \| deep \| 3 \/ 2 \|.*preload severity\.md \\\| once \|$/);
 });
 
 // The user rejects a running foreground Agent call: no agentId comes back, only an is_error result.
@@ -161,4 +161,43 @@ test("an interrupted Agent call is a failure and its whole subtree counts as los
   const quick = retro({ logDir, sessionId: SID });
   assert.equal(quick.totals.interruptedCalls, 1);
   assert.match(quick.warnings[0], /1 Agent call\(s\) were rejected\/interrupted.*Review X/);
+});
+
+test("cost is priced per message by model family; unknown models are counted, not priced", () => {
+  const recs = [
+    ...assistant("m1", 0, usage(1_000_000, 0, 0, 0), [{ type: "text" }]), // opus: $4 input
+    { type: "assistant", timestamp: ts(1), message: { id: "m2", model: "claude-haiku-5-5", usage: usage(0, 0, 0, 1_000_000), content: [] } }, // haiku: $0.50 output
+    { type: "assistant", timestamp: ts(2), message: { id: "m3", model: "mystery-1", usage: usage(5, 0, 0, 5), content: [] } },
+  ];
+  const u = sumUsage(recs);
+  assert.equal(Math.round(u.costUsd * 100) / 100, 4.5);
+  assert.equal(u.unpricedTurns, 1);
+  const r = retro({ logDir: fixture(), sessionId: SID, deep: true });
+  assert.ok(r.totals.costUsd > 0);
+});
+
+test("plugin version comes from the version-trace hook context; verdict from the last plan-verifier report", () => {
+  const recs = [
+    { type: "attachment", attachment: { type: "hook_additional_context", content: ["sdd-engineering v1.1.0 active"] } },
+    ...assistant("m1", 1, usage(1, 0, 0, 1), [{ type: "tool_use", id: "tu_v", name: "Agent", input: { subagent_type: "sdd-engineering:plan-verifier", prompt: "…" } }]),
+    user(2, [{ type: "tool_result", tool_use_id: "tu_v", content: [{ type: "text", text: "## Verdict\nSteps · INCOMPLETE · 1 of 2 Met" }] }]),
+    ...assistant("m2", 3, usage(1, 0, 0, 1), [{ type: "tool_use", id: "tu_w", name: "Agent", input: { subagent_type: "plan-verifier", prompt: "…" } }]),
+    user(4, [{ type: "tool_result", tool_use_id: "tu_w", content: "## Verdict\nSteps · COMPLETE · 2 of 2 Met" }]),
+  ];
+  assert.equal(pluginVersion(recs), "1.1.0");
+  assert.deepEqual(verifierOutcome(recs), { verdict: "COMPLETE", success: true });
+  assert.deepEqual(verifierOutcome([]), { verdict: null, success: null });
+});
+
+test("cost per successful run sums every run of the label and version, divides by successes", () => {
+  const base = retro({ logDir: fixture(), sessionId: SID, deep: true, label: "sdd-pipeline" });
+  const ledger = join(mkdtempSync(join(tmpdir(), "ledger-")), "ledger.md");
+  const run = (id, version, cost) => ({ ...base, sessionId: id, pluginVersion: version, totals: { ...base.totals, costUsd: cost } });
+  appendLedger(ledger, run("aaaaaaaa", "1.0.1", 3), null, { success: true });
+  appendLedger(ledger, run("bbbbbbbb", "1.0.1", 3), null, { success: false });
+  const res = appendLedger(ledger, run("cccccccc", "1.1.0", 1.5), null, { success: true });
+  assert.deepEqual(res.trend, { label: "sdd-pipeline", version: "1.1.0", runs: 1, successes: 1, costUsd: 1.5, costPerSuccessUsd: 1.5 });
+  const before = costPerSuccess(readFileSync(ledger, "utf8"), "sdd-pipeline", "1.0.1");
+  assert.equal(before.costPerSuccessUsd, 6);
+  assert.equal(costPerSuccess(readFileSync(ledger, "utf8"), "sdd-pipeline").runs, 3);
 });

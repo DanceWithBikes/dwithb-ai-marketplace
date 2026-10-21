@@ -2,6 +2,20 @@
 
 All notable changes to this plugin are documented here. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versioning: [SemVer](https://semver.org/). Release tags: `sdd-engineering--v<version>`.
 
+## [1.1.0] - 2026-10-21
+
+### Added
+- `SessionStart` hook `version-trace`: records the active plugin version in `trace.jsonl` (plugin data dir) and in the session context.
+- workflow-retro: USD cost per run (`totals.costUsd`, list prices by model family), `pluginVersion`, `outcome` from the plan-verifier verdict; the ledger gains `version`, `cost` and `ok` columns, and `append-ledger.mjs` prints the cost per successful run (`--success yes|no` for runs without plan-verifier).
+- Eval case `version-trace-emitted`; `smoke` and `sdd` tags on the eval cases.
+
+### Changed
+- Cost: `spec-creator` and `plan-verifier` run on sonnet instead of opus; `implementation-planner` stays on opus at `effort: medium`. Cost per successful eval run before and after is in `docs/retros/eval-cost.md`.
+- The ledger header has new columns; start a new ledger file rather than appending to a 1.0.x one.
+
+### Fixed
+- Eval cases list all four plugins, so the plugin is no longer disabled during `claude plugin eval` with `dependency-unsatisfied` (before, no case could reach an sdd-engineering agent). Run evals from the repository root.
+
 ## [1.0.1] - 2026-10-21
 
 ### Changed

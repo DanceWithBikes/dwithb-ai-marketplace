@@ -19,6 +19,12 @@ const SOURCE_MAX_BYTES = 300_000;
 const sourceFiles = new Set();
 
 // Repo-relative paths of the files that make up an artifact, main file first.
+// Slash commands: commands/**/*.md. Counted for the plugin's contents line only.
+function commandCount(dir) {
+  const commandsDir = join(dir, "commands");
+  return existsSync(commandsDir) ? walk(commandsDir).filter((f) => f.endsWith(".md")).length : 0;
+}
+
 function walk(dir) {
   return readdirSync(dir, { withFileTypes: true })
     .sort((a, b) => a.name.localeCompare(b.name))
@@ -250,7 +256,7 @@ for (const entry of mp.plugins ?? []) {
     keywords,
     dependencies: (manifest.dependencies ?? []).map((d) => (typeof d === "string" ? d : `${d.name}${d.version ? ` ${d.version}` : ""}`)),
     updatedAt: lastCommit(pluginPath) ?? new Date().toISOString().slice(0, 10),
-    counts: { skills: found.skill.length, agents: found.agent.length, hooks: found.hook.length, mcp: found.mcp.length },
+    counts: { skills: found.skill.length, agents: found.agent.length, commands: commandCount(dir), hooks: found.hook.length, mcp: found.mcp.length },
     install: {
       marketplaceAdd: `claude plugin marketplace add ${repo}`,
       install: `claude plugin install ${id}@${mp.name}`,

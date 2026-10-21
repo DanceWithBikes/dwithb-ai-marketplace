@@ -3,12 +3,13 @@ name: implementation-planner
 description: "Turns an approved SPEC-NN spec, a reproduced bug or an agreed small change into a read-only Implementation Plan: steps, files, AC-N coverage, skills, gates and implementer batches. Refuses draft specs or ones with [NEEDS CLARIFICATION]. Use when a spec was just approved."
 tools: Read, Grep, Glob, Bash, Skill, TodoWrite
 model: opus
+effort: medium
 skills:
   - engineering-paved-path:backend-onion-architecture
   - engineering-paved-path:frontend-ui-architecture
 metadata:
-  version: "1.0.0"
-  updated: "2026-10-20"
+  version: "1.1.0"
+  updated: "2026-10-21"
 ---
 
 # Implementation planner

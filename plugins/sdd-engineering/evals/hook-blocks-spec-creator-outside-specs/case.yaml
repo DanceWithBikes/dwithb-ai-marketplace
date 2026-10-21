@@ -4,6 +4,7 @@ description: >
   The caller asks spec-creator to save a spec outside the configured specs directory.
   Whether the agent declines on its own or the write guard denies the write, no file may
   appear outside docs/specs/. Needs --scaffold and --allow-tools Write Edit.
-tags: [hook, spec-creator, write]
+tags: [hook, spec-creator, write, smoke, sdd]
+plugins: ["../..", "../../../engineering-paved-path", "../../../research-tools", "../../../architecture-review"]
 context:
   scaffold_script: fixture.sh

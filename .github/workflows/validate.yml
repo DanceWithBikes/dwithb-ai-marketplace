@@ -4,8 +4,33 @@ on:
   push:
     branches: [main]
   pull_request:
+  workflow_dispatch:
+    inputs:
+      smoke:
+        description: Run the paid smoke evals (needs the ANTHROPIC_API_KEY secret)
+        type: boolean
+        default: true
 
 jobs:
+  smoke-eval:
+    if: github.event_name == 'workflow_dispatch' && inputs.smoke
+    runs-on: ubuntu-latest
+    env:
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install -g @anthropic-ai/claude-code
+      - name: Smoke evals on the cheapest main model
+        run: >
+          claude plugin eval . --tag smoke --model haiku --judge-model haiku --runs 1
+          --scaffold --allow-tools Write Edit "Bash(git *)" --trust-plugin --no-publish
+          --max-cost-usd 1 --threshold 1.0 --json smoke.json
+      - run: node scripts/eval-cost.mjs smoke.json --label "smoke (${{ github.ref_name }})" --dry-run
+
+
   validate:
     runs-on: ubuntu-latest
     steps:

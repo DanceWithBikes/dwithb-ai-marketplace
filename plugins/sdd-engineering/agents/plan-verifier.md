@@ -2,10 +2,10 @@
 name: plan-verifier
 description: "Read-only check of finished work against every item of a plan, spec (AC-N / NFR-N) or requirement list: one verdict per item (Met / Partially met / Not met / Cannot verify) with path:line or command output as proof. Use after an implementer run or before a PR."
 tools: Read, Grep, Glob, Bash, TodoWrite
-model: opus
+model: sonnet
 metadata:
-  version: "1.0.0"
-  updated: "2026-10-20"
+  version: "1.1.0"
+  updated: "2026-10-21"
 ---
 
 # Plan verifier

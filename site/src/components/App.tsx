@@ -374,7 +374,7 @@ export default function App({ base }: { base: string }) {
           <div class="label-s muted">{s.d.plugin} · {dp.id}</div>
           <div class="brow"><span class="muted">{s.rows.version}</span><span class="brow-v">v{dp.version}</span></div>
           <div class="brow"><span class="muted">{s.d.dependencies}</span><span class="brow-v">{dp.dependencies?.length ? dp.dependencies.join(', ') : s.d.none}</span></div>
-          <div class="brow"><span class="muted">{s.d.contents}</span><span class="brow-v">{[['skills', dp.counts.skills], ['agents', dp.counts.agents], ['hooks', dp.counts.hooks], ['MCP', dp.counts.mcp]].filter(([, n]) => n).map(([k, n]) => `${n} ${k}`).join(' · ')}</span></div>
+          <div class="brow"><span class="muted">{s.d.contents}</span><span class="brow-v">{[['skills', dp.counts.skills], ['agents', dp.counts.agents], ['commands', dp.counts.commands ?? 0], ['hooks', dp.counts.hooks], ['MCP', dp.counts.mcp]].filter(([, n]) => n).map(([k, n]) => `${n} ${k}`).join(' · ')}</span></div>
           <div class="brow"><span class="muted">{s.rows.runs}</span><span class="brow-v">{yn(dp.trust.runsCommands)}</span></div>
           <div class="brow"><span class="muted">{s.rows.net}</span><span class="brow-v">{yn(dp.trust.usesNetwork)}</span></div>
           {dp.trust.hooks?.map((h) => <div class="brow" key={h.summary}><span class="muted">Hook</span><span class="brow-v mono">{h.summary}</span></div>)}

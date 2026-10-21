@@ -4,6 +4,7 @@ description: >
   The plugin's PreToolUse write guard fires on every write in the session. It must only
   fence spec-creator: an implementer run writing a source file must not be denied.
   Needs --scaffold and --allow-tools Write Edit.
-tags: [hook, implementer, write]
+tags: [hook, implementer, write, smoke, sdd]
+plugins: ["../..", "../../../engineering-paved-path", "../../../research-tools", "../../../architecture-review"]
 context:
   scaffold_script: fixture.sh
