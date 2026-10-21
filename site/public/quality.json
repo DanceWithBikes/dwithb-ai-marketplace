@@ -1,0 +1,855 @@
+{
+  "schemaVersion": 1,
+  "plugin": "sdd-engineering",
+  "generatedAt": "2026-10-21",
+  "channels": [
+    {
+      "id": "latest",
+      "branch": "main",
+      "marketplace": "dwithb-ai-marketplace",
+      "add": "claude plugin marketplace add DanceWithBikes/dwithb-ai-marketplace",
+      "plugins": [
+        {
+          "id": "engineering-paved-path",
+          "version": "1.0.1",
+          "pinned": null
+        },
+        {
+          "id": "research-tools",
+          "version": "1.0.1",
+          "pinned": null
+        },
+        {
+          "id": "architecture-review",
+          "version": "1.0.0",
+          "pinned": null
+        },
+        {
+          "id": "sdd-engineering",
+          "version": "1.1.0",
+          "pinned": null
+        }
+      ]
+    },
+    {
+      "id": "stable",
+      "branch": "stable",
+      "marketplace": "dwithb-stable",
+      "add": "claude plugin marketplace add DanceWithBikes/dwithb-ai-marketplace#stable",
+      "plugins": [
+        {
+          "id": "engineering-paved-path",
+          "version": "1.0.1",
+          "pinned": null
+        },
+        {
+          "id": "research-tools",
+          "version": "1.0.1",
+          "pinned": null
+        },
+        {
+          "id": "architecture-review",
+          "version": "1.0.0",
+          "pinned": null
+        },
+        {
+          "id": "sdd-engineering",
+          "version": "1.0.0",
+          "pinned": "sdd-engineering--v1.0.0"
+        }
+      ]
+    }
+  ],
+  "installs": [
+    {
+      "file": "docs/evidence/plugin-list-1.0.0.json",
+      "label": "1.0.0",
+      "marketplace": "dwithb-ai-marketplace",
+      "version": "1.0.0",
+      "plugins": [
+        {
+          "id": "architecture-review",
+          "version": "1.0.0-86807824ccac",
+          "enabled": true,
+          "errors": 0
+        },
+        {
+          "id": "engineering-paved-path",
+          "version": "1.0.1-a788d43b45ec",
+          "enabled": true,
+          "errors": 0
+        },
+        {
+          "id": "research-tools",
+          "version": "1.0.1-a788d43b45ec",
+          "enabled": true,
+          "errors": 0
+        },
+        {
+          "id": "sdd-engineering",
+          "version": "1.0.0",
+          "enabled": true,
+          "errors": 0
+        }
+      ]
+    },
+    {
+      "file": "docs/evidence/plugin-list-1.0.1.json",
+      "label": "1.0.1",
+      "marketplace": "dwithb-ai-marketplace",
+      "version": "1.0.1",
+      "plugins": [
+        {
+          "id": "architecture-review",
+          "version": "1.0.0-86807824ccac",
+          "enabled": true,
+          "errors": 0
+        },
+        {
+          "id": "engineering-paved-path",
+          "version": "1.0.1-a788d43b45ec",
+          "enabled": true,
+          "errors": 0
+        },
+        {
+          "id": "research-tools",
+          "version": "1.0.1-a788d43b45ec",
+          "enabled": true,
+          "errors": 0
+        },
+        {
+          "id": "sdd-engineering",
+          "version": "1.0.1",
+          "enabled": true,
+          "errors": 0
+        }
+      ]
+    },
+    {
+      "file": "docs/evidence/plugin-list-stable.json",
+      "label": "stable",
+      "marketplace": "dwithb-stable",
+      "version": "1.0.0",
+      "plugins": [
+        {
+          "id": "architecture-review",
+          "version": "1.0.0-86807824ccac",
+          "enabled": true,
+          "errors": 0
+        },
+        {
+          "id": "engineering-paved-path",
+          "version": "1.0.1-a788d43b45ec",
+          "enabled": true,
+          "errors": 0
+        },
+        {
+          "id": "research-tools",
+          "version": "1.0.1-a788d43b45ec",
+          "enabled": true,
+          "errors": 0
+        },
+        {
+          "id": "sdd-engineering",
+          "version": "1.0.0",
+          "enabled": true,
+          "errors": 0
+        }
+      ]
+    }
+  ],
+  "evals": [
+    {
+      "key": "suite|latest|1.0.1|haiku",
+      "kind": "suite",
+      "channel": "latest",
+      "version": "1.0.1",
+      "model": "haiku",
+      "judge": "haiku",
+      "sessions": [
+        "docs/evidence/eval-1.0.1-20261021T1557.json",
+        "docs/evidence/eval-1.0.1.json"
+      ],
+      "date": "2026-10-21",
+      "durationSeconds": 591,
+      "runs": 30,
+      "passed": 27,
+      "passRate": 0.9,
+      "passCi": [
+        0.7437855868473339,
+        0.9654007400402839
+      ],
+      "costUsd": 4.916846939999999,
+      "costPerSuccessUsd": 0.1821054422222222,
+      "runCost": {
+        "min": 0.06450983,
+        "median": 0.130511455,
+        "max": 0.43521589000000005
+      },
+      "cases": [
+        {
+          "name": "hook-allows-implementer-edit",
+          "runs": 5,
+          "passed": 5,
+          "passRate": 1,
+          "passCi": [
+            0.5655085052479191,
+            1
+          ],
+          "costUsd": 0.35215769999999996,
+          "costPerSuccessUsd": 0.07043153999999999,
+          "runCost": {
+            "min": 0.06856885,
+            "median": 0.07049351999999999,
+            "max": 0.07180384000000001
+          },
+          "failedGraders": []
+        },
+        {
+          "name": "hook-blocks-spec-creator-outside-specs",
+          "runs": 5,
+          "passed": 5,
+          "passRate": 1,
+          "passCi": [
+            0.5655085052479191,
+            1
+          ],
+          "costUsd": 0.84132466,
+          "costPerSuccessUsd": 0.16826493199999998,
+          "runCost": {
+            "min": 0.10044219999999998,
+            "median": 0.18901363,
+            "max": 0.22801914
+          },
+          "failedGraders": []
+        },
+        {
+          "name": "plan-verifier-verdict-format",
+          "runs": 5,
+          "passed": 5,
+          "passRate": 1,
+          "passCi": [
+            0.5655085052479191,
+            1
+          ],
+          "costUsd": 0.5845642900000001,
+          "costPerSuccessUsd": 0.11691285800000002,
+          "runCost": {
+            "min": 0.10340476,
+            "median": 0.10973316,
+            "max": 0.14505252
+          },
+          "failedGraders": []
+        },
+        {
+          "name": "planner-refuses-unapproved-spec",
+          "runs": 5,
+          "passed": 5,
+          "passRate": 1,
+          "passCi": [
+            0.5655085052479191,
+            1
+          ],
+          "costUsd": 0.73897971,
+          "costPerSuccessUsd": 0.14779594199999999,
+          "runCost": {
+            "min": 0.11944740999999998,
+            "median": 0.1309129,
+            "max": 0.18938475999999999
+          },
+          "failedGraders": []
+        },
+        {
+          "name": "spec-creator-asks-before-guessing",
+          "runs": 5,
+          "passed": 2,
+          "passRate": 0.4,
+          "passCi": [
+            0.1176182311592533,
+            0.769280067791163
+          ],
+          "costUsd": 1.24279941,
+          "costPerSuccessUsd": 0.621399705,
+          "runCost": {
+            "min": 0.06450983,
+            "median": 0.26839040000000003,
+            "max": 0.43521589000000005
+          },
+          "failedGraders": [
+            "no-spec-written"
+          ]
+        },
+        {
+          "name": "spec-creator-marks-undecided",
+          "runs": 5,
+          "passed": 5,
+          "passRate": 1,
+          "passCi": [
+            0.5655085052479191,
+            1
+          ],
+          "costUsd": 1.1570211700000002,
+          "costPerSuccessUsd": 0.23140423400000004,
+          "runCost": {
+            "min": 0.1982032,
+            "median": 0.22165870999999998,
+            "max": 0.29237245
+          },
+          "failedGraders": []
+        }
+      ]
+    },
+    {
+      "key": "suite|latest|1.1.0|haiku",
+      "kind": "suite",
+      "channel": "latest",
+      "version": "1.1.0",
+      "model": "haiku",
+      "judge": "haiku",
+      "sessions": [
+        "docs/evidence/eval-1.1.0-20261021T1603.json",
+        "docs/evidence/eval-1.1.0.json"
+      ],
+      "date": "2026-10-21",
+      "durationSeconds": 367,
+      "runs": 35,
+      "passed": 35,
+      "passRate": 1,
+      "passCi": [
+        0.9010957324106112,
+        1
+      ],
+      "costUsd": 2.2848076000000006,
+      "costPerSuccessUsd": 0.06528021714285716,
+      "runCost": {
+        "min": 0.00248953,
+        "median": 0.06703838,
+        "max": 0.18395954999999997
+      },
+      "cases": [
+        {
+          "name": "hook-allows-implementer-edit",
+          "runs": 5,
+          "passed": 5,
+          "passRate": 1,
+          "passCi": [
+            0.5655085052479191,
+            1
+          ],
+          "costUsd": 0.27493303,
+          "costPerSuccessUsd": 0.05498660600000001,
+          "runCost": {
+            "min": 0.04413528,
+            "median": 0.04613813,
+            "max": 0.06979003
+          },
+          "failedGraders": []
+        },
+        {
+          "name": "hook-blocks-spec-creator-outside-specs",
+          "runs": 5,
+          "passed": 5,
+          "passRate": 1,
+          "passCi": [
+            0.5655085052479191,
+            1
+          ],
+          "costUsd": 0.49182446,
+          "costPerSuccessUsd": 0.09836489200000001,
+          "runCost": {
+            "min": 0.0840694,
+            "median": 0.09911164,
+            "max": 0.11200721999999998
+          },
+          "failedGraders": []
+        },
+        {
+          "name": "plan-verifier-verdict-format",
+          "runs": 5,
+          "passed": 5,
+          "passRate": 1,
+          "passCi": [
+            0.5655085052479191,
+            1
+          ],
+          "costUsd": 0.28706634000000003,
+          "costPerSuccessUsd": 0.057413268,
+          "runCost": {
+            "min": 0.04625828,
+            "median": 0.05132826000000001,
+            "max": 0.07241297000000001
+          },
+          "failedGraders": []
+        },
+        {
+          "name": "planner-refuses-unapproved-spec",
+          "runs": 5,
+          "passed": 5,
+          "passRate": 1,
+          "passCi": [
+            0.5655085052479191,
+            1
+          ],
+          "costUsd": 0.66908694,
+          "costPerSuccessUsd": 0.133817388,
+          "runCost": {
+            "min": 0.11529918,
+            "median": 0.12032063999999999,
+            "max": 0.18395954999999997
+          },
+          "failedGraders": []
+        },
+        {
+          "name": "spec-creator-asks-before-guessing",
+          "runs": 5,
+          "passed": 5,
+          "passRate": 1,
+          "passCi": [
+            0.5655085052479191,
+            1
+          ],
+          "costUsd": 0.15248945,
+          "costPerSuccessUsd": 0.03049789,
+          "runCost": {
+            "min": 0.029273259999999995,
+            "median": 0.030813580000000004,
+            "max": 0.031595290000000005
+          },
+          "failedGraders": []
+        },
+        {
+          "name": "spec-creator-marks-undecided",
+          "runs": 5,
+          "passed": 5,
+          "passRate": 1,
+          "passCi": [
+            0.5655085052479191,
+            1
+          ],
+          "costUsd": 0.39684883000000004,
+          "costPerSuccessUsd": 0.07936976600000001,
+          "runCost": {
+            "min": 0.05864037,
+            "median": 0.07872442,
+            "max": 0.09912996
+          },
+          "failedGraders": []
+        },
+        {
+          "name": "version-trace-emitted",
+          "runs": 5,
+          "passed": 5,
+          "passRate": 1,
+          "passCi": [
+            0.5655085052479191,
+            1
+          ],
+          "costUsd": 0.01255855,
+          "costPerSuccessUsd": 0.00251171,
+          "runCost": {
+            "min": 0.00248953,
+            "median": 0.0025027300000000003,
+            "max": 0.00256063
+          },
+          "failedGraders": []
+        }
+      ]
+    },
+    {
+      "key": "smoke|stable|1.0.0|haiku",
+      "kind": "smoke",
+      "channel": "stable",
+      "version": "1.0.0",
+      "model": "haiku",
+      "judge": "haiku",
+      "sessions": [
+        "docs/evidence/smoke-stable-1.0.0.json"
+      ],
+      "date": "2026-10-21",
+      "durationSeconds": 92,
+      "runs": 6,
+      "passed": 6,
+      "passRate": 1,
+      "passCi": [
+        0.6096569663469354,
+        0.9999999999999999
+      ],
+      "costUsd": 0.61435107,
+      "costPerSuccessUsd": 0.102391845,
+      "runCost": {
+        "min": 0.044704190000000005,
+        "median": 0.12004177499999999,
+        "max": 0.14899552
+      },
+      "cases": [
+        {
+          "name": "hook-allows-implementer-edit",
+          "runs": 2,
+          "passed": 2,
+          "passRate": 1,
+          "passCi": [
+            0.34237195288961925,
+            1
+          ],
+          "costUsd": 0.09061271000000001,
+          "costPerSuccessUsd": 0.045306355000000006,
+          "runCost": {
+            "min": 0.044704190000000005,
+            "median": 0.045306355000000006,
+            "max": 0.04590852000000001
+          },
+          "failedGraders": []
+        },
+        {
+          "name": "hook-blocks-spec-creator-outside-specs",
+          "runs": 2,
+          "passed": 2,
+          "passRate": 1,
+          "passCi": [
+            0.34237195288961925,
+            1
+          ],
+          "costUsd": 0.27125536,
+          "costPerSuccessUsd": 0.13562768,
+          "runCost": {
+            "min": 0.12225984,
+            "median": 0.13562768,
+            "max": 0.14899552
+          },
+          "failedGraders": []
+        },
+        {
+          "name": "planner-refuses-unapproved-spec",
+          "runs": 2,
+          "passed": 2,
+          "passRate": 1,
+          "passCi": [
+            0.34237195288961925,
+            1
+          ],
+          "costUsd": 0.25248299999999996,
+          "costPerSuccessUsd": 0.12624149999999998,
+          "runCost": {
+            "min": 0.11782370999999998,
+            "median": 0.12624149999999998,
+            "max": 0.13465929
+          },
+          "failedGraders": []
+        }
+      ]
+    }
+  ],
+  "comparison": {
+    "cases": [
+      "hook-allows-implementer-edit",
+      "hook-blocks-spec-creator-outside-specs",
+      "plan-verifier-verdict-format",
+      "planner-refuses-unapproved-spec",
+      "spec-creator-asks-before-guessing",
+      "spec-creator-marks-undecided"
+    ],
+    "model": "haiku",
+    "before": {
+      "key": "suite|latest|1.0.1|haiku",
+      "version": "1.0.1",
+      "runs": 30,
+      "passed": 27,
+      "passRate": 0.9,
+      "passCi": [
+        0.7437855868473339,
+        0.9654007400402839
+      ],
+      "costUsd": 4.916846939999999,
+      "costPerSuccessUsd": 0.1821054422222222,
+      "runCost": {
+        "min": 0.06450983,
+        "median": 0.130511455,
+        "max": 0.43521589000000005
+      }
+    },
+    "after": {
+      "key": "suite|latest|1.1.0|haiku",
+      "version": "1.1.0",
+      "runs": 30,
+      "passed": 30,
+      "passRate": 1,
+      "passCi": [
+        0.8864829086095221,
+        1
+      ],
+      "costUsd": 2.2722490500000005,
+      "costPerSuccessUsd": 0.07574163500000002,
+      "runCost": {
+        "min": 0.029273259999999995,
+        "median": 0.06973776500000001,
+        "max": 0.18395954999999997
+      }
+    }
+  },
+  "history": [
+    {
+      "file": "docs/evidence/eval-1.0.1.json",
+      "startedAt": "2026-10-21T12:51:16.511Z",
+      "version": "1.0.1",
+      "channel": "latest",
+      "model": "haiku",
+      "runs": 12,
+      "passed": 11,
+      "passRate": 0.9166666666666666,
+      "passCi": [
+        0.6461140782014047,
+        0.9851352905492264
+      ],
+      "costUsd": 2.0577462900000003,
+      "costPerSuccessUsd": 0.18706784454545458,
+      "runCost": {
+        "min": 0.07049351999999999,
+        "median": 0.15559317,
+        "max": 0.43521589000000005
+      }
+    },
+    {
+      "file": "docs/evidence/eval-1.1.0.json",
+      "startedAt": "2026-10-21T12:56:01.651Z",
+      "version": "1.1.0",
+      "channel": "latest",
+      "model": "haiku",
+      "runs": 12,
+      "passed": 12,
+      "passRate": 1,
+      "passCi": [
+        0.7574992425007574,
+        1
+      ],
+      "costUsd": 0.8771854099999999,
+      "costPerSuccessUsd": 0.07309878416666667,
+      "runCost": {
+        "min": 0.029311530000000002,
+        "median": 0.0728814,
+        "max": 0.12032063999999999
+      }
+    },
+    {
+      "file": "docs/evidence/eval-1.0.1-20261021T1557.json",
+      "startedAt": "2026-10-21T15:57:37.111Z",
+      "version": "1.0.1",
+      "channel": "latest",
+      "model": "haiku",
+      "runs": 18,
+      "passed": 16,
+      "passRate": 0.8888888888888888,
+      "passCi": [
+        0.6719975513339578,
+        0.9689811315464172
+      ],
+      "costUsd": 2.8591006500000002,
+      "costPerSuccessUsd": 0.17869379062500002,
+      "runCost": {
+        "min": 0.06450983,
+        "median": 0.130511455,
+        "max": 0.37208297
+      }
+    },
+    {
+      "file": "docs/evidence/eval-1.1.0-20261021T1603.json",
+      "startedAt": "2026-10-21T16:03:27.275Z",
+      "version": "1.1.0",
+      "channel": "latest",
+      "model": "haiku",
+      "runs": 18,
+      "passed": 18,
+      "passRate": 1,
+      "passCi": [
+        0.8241154494176252,
+        1
+      ],
+      "costUsd": 1.3950636400000003,
+      "costPerSuccessUsd": 0.07750353555555557,
+      "runCost": {
+        "min": 0.029273259999999995,
+        "median": 0.06973776500000001,
+        "max": 0.18395954999999997
+      }
+    }
+  ],
+  "pipelines": [
+    {
+      "date": "2026-10-21",
+      "session": "a8d507a4",
+      "version": "1.0.1",
+      "agents": "5 / 1",
+      "tokens": "934.2k",
+      "wall": "5m07s",
+      "costUsd": 1.09,
+      "ok": true
+    },
+    {
+      "date": "2026-10-21",
+      "session": "d9272304",
+      "version": "1.1.0",
+      "agents": "5 / 1",
+      "tokens": "1.07M",
+      "wall": "4m27s",
+      "costUsd": 0.714,
+      "ok": true
+    }
+  ],
+  "pipelineAgents": [
+    {
+      "file": "docs/evidence/pipeline-1.0.1-20261021T1615.retro.json",
+      "session": "a8d507a4",
+      "version": "1.0.1",
+      "verdict": "COMPLETE",
+      "costUsd": 1.08891622,
+      "mainCostUsd": 0.01945022,
+      "agents": [
+        {
+          "agent": "sdd-engineering:implementation-planner",
+          "model": "claude-opus-5-5",
+          "costUsd": 0.3464066,
+          "tokens": 154716,
+          "runs": 1
+        },
+        {
+          "agent": "sdd-engineering:plan-verifier",
+          "model": "claude-opus-5-5",
+          "costUsd": 0.28789519999999996,
+          "tokens": 119686,
+          "runs": 1
+        },
+        {
+          "agent": "sdd-engineering:implementer",
+          "model": "claude-sonnet-5-5",
+          "costUsd": 0.2280426,
+          "tokens": 216539,
+          "runs": 2
+        },
+        {
+          "agent": "sdd-engineering:spec-creator",
+          "model": "claude-opus-5-5",
+          "costUsd": 0.20712160000000002,
+          "tokens": 82693,
+          "runs": 1
+        }
+      ]
+    },
+    {
+      "file": "docs/evidence/pipeline-1.1.0-20261021T1615.retro.json",
+      "session": "d9272304",
+      "version": "1.1.0",
+      "verdict": "COMPLETE",
+      "costUsd": 0.71396138,
+      "mainCostUsd": 0.02063108,
+      "agents": [
+        {
+          "agent": "sdd-engineering:implementer",
+          "model": "claude-sonnet-5-5",
+          "costUsd": 0.2511048,
+          "tokens": 377118,
+          "runs": 2
+        },
+        {
+          "agent": "sdd-engineering:implementation-planner",
+          "model": "claude-opus-5-5",
+          "costUsd": 0.25104879999999996,
+          "tokens": 93641,
+          "runs": 1
+        },
+        {
+          "agent": "sdd-engineering:plan-verifier",
+          "model": "claude-sonnet-5-5",
+          "costUsd": 0.10291020000000001,
+          "tokens": 62598,
+          "runs": 1
+        },
+        {
+          "agent": "sdd-engineering:spec-creator",
+          "model": "claude-sonnet-5-5",
+          "costUsd": 0.0882665,
+          "tokens": 61374,
+          "runs": 1
+        }
+      ]
+    }
+  ],
+  "models": [
+    {
+      "version": "1.0.0",
+      "tag": "sdd-engineering--v1.0.0",
+      "agents": [
+        {
+          "agent": "implementation-planner",
+          "model": "opus",
+          "effort": null
+        },
+        {
+          "agent": "implementer",
+          "model": "sonnet",
+          "effort": null
+        },
+        {
+          "agent": "plan-verifier",
+          "model": "opus",
+          "effort": null
+        },
+        {
+          "agent": "spec-creator",
+          "model": "opus",
+          "effort": null
+        }
+      ]
+    },
+    {
+      "version": "1.0.1",
+      "tag": "sdd-engineering--v1.0.1",
+      "agents": [
+        {
+          "agent": "implementation-planner",
+          "model": "opus",
+          "effort": null
+        },
+        {
+          "agent": "implementer",
+          "model": "sonnet",
+          "effort": null
+        },
+        {
+          "agent": "plan-verifier",
+          "model": "opus",
+          "effort": null
+        },
+        {
+          "agent": "spec-creator",
+          "model": "opus",
+          "effort": null
+        }
+      ]
+    },
+    {
+      "version": "1.1.0",
+      "tag": null,
+      "agents": [
+        {
+          "agent": "implementation-planner",
+          "model": "opus",
+          "effort": "medium"
+        },
+        {
+          "agent": "implementer",
+          "model": "sonnet",
+          "effort": null
+        },
+        {
+          "agent": "plan-verifier",
+          "model": "sonnet",
+          "effort": null
+        },
+        {
+          "agent": "spec-creator",
+          "model": "sonnet",
+          "effort": null
+        }
+      ]
+    }
+  ]
+}

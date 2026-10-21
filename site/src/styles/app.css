@@ -140,3 +140,50 @@ code { font-family: monospace; font-size: .9em; padding: 1px 4px; border-radius:
 .fm { width: 100%; border-collapse: collapse; font-size: 12.5px; margin: 0 0 1.2em; display: table; }
 .fm th { width: 1%; white-space: nowrap; font-family: monospace; font-weight: 400; color: var(--color-accent-700); background: none; }
 .fm td { white-space: pre-wrap; }
+
+/* Quality view. Series colors are the validated reference categorical slots 1-6 in fixed order,
+   stepped per theme; status colors are the fixed status palette and always ship with icon + word. */
+.q { --q-c1: #2a78d6; --q-c2: #eb6834; --q-c3: #1baf7a; --q-c4: #eda100; --q-c5: #e87ba4; --q-c6: #008300;
+     --q-good: #0a7d0a; --q-warn: #8a5a00; --q-bad: #d03b3b; }
+:root[data-theme='dark'] .q { --q-c1: #3987e5; --q-c2: #d95926; --q-c3: #199e70; --q-c4: #c98500; --q-c5: #d55181; --q-c6: #008300;
+     --q-good: #0ca30c; --q-warn: #fab219; --q-bad: #e66767; }
+.q section { margin-top: 48px; }
+.q-h2 { font-weight: 400; font-size: 30px; margin: 0 0 16px; }
+.q-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0; border-top: 1px solid var(--color-text); }
+.q-tile { padding: 18px 18px 18px 0; border-bottom: 1px solid var(--color-divider); }
+.q-tile + .q-tile { padding-left: 18px; border-left: 1px solid var(--color-divider); }
+.q-tile-k { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--color-neutral-600); }
+.q-tile-v { font-family: var(--font-heading); font-size: 46px; line-height: 1.1; margin: 6px 0; font-variant-numeric: tabular-nums; }
+.q-tile-d { font-size: 13px; color: var(--color-neutral-700); }
+.q-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.q-table th, .q-table td { text-align: left; padding: 12px; border-top: 1px solid var(--color-divider); vertical-align: top; font-variant-numeric: tabular-nums; }
+.q-table th { font-weight: 400; font-family: var(--font-heading); font-size: 20px; border-top: 0; }
+.q-table td:first-child { padding-left: 0; font-family: monospace; font-size: 13px; }
+.q-table th:first-child { padding-left: 0; }
+.q-table td.diff { background: var(--color-accent-100); }
+.q-total td { border-top: 1px solid var(--color-text); }
+.q-sub { font-size: 12px; margin-top: 4px; font-family: var(--font-body); }
+.q-status { font-size: 13px; white-space: nowrap; margin-right: 4px; }
+.q-good { color: var(--q-good); } .q-warn { color: var(--q-warn); } .q-bad { color: var(--q-bad); }
+.q-cmd { margin-top: 10px; }
+.q-chart { position: relative; margin-bottom: 18px; }
+.q-chart svg { width: 100%; height: auto; display: block; overflow: visible; }
+.q-c1 { fill: var(--q-c1); background: var(--q-c1); } .q-c2 { fill: var(--q-c2); background: var(--q-c2); }
+.q-c3 { fill: var(--q-c3); background: var(--q-c3); } .q-c4 { fill: var(--q-c4); background: var(--q-c4); }
+.q-c5 { fill: var(--q-c5); background: var(--q-c5); } .q-c6 { fill: var(--q-c6); background: var(--q-c6); }
+.q-k1 { stroke: var(--q-c1); } .q-k2 { stroke: var(--q-c2); } .q-k3 { stroke: var(--q-c3); }
+.q-k4 { stroke: var(--q-c4); } .q-k5 { stroke: var(--q-c5); } .q-k6 { stroke: var(--q-c6); }
+.q-line { fill: none; stroke-width: 2; }
+.q-ring { stroke: var(--color-bg); stroke-width: 2; }
+.q-axis { font-size: 12px; font-family: monospace; fill: var(--color-neutral-700); }
+.q-val { font-size: 12px; fill: var(--color-text); font-variant-numeric: tabular-nums; }
+.q-base { stroke: var(--color-neutral-400); stroke-width: 1; }
+.q-grid { stroke: var(--color-divider); stroke-width: 1; }
+.q-ci { stroke: var(--color-neutral-600); stroke-width: 2; }
+.q-dot { fill: var(--color-text); stroke: var(--color-bg); stroke-width: 2; }
+.q-legend { display: flex; gap: 18px; font-size: 13px; margin-bottom: 10px; flex-wrap: wrap; }
+.q-legend span { display: flex; gap: 6px; align-items: center; }
+.q-sw { display: inline-block; width: 12px; height: 12px; border-radius: 2px; }
+.q-tip { position: absolute; pointer-events: none; background: var(--color-bg); border: 1px solid var(--color-text); border-radius: 4px; padding: 8px 10px; font-size: 12px; box-shadow: var(--shadow-md); white-space: nowrap; z-index: 2; }
+.q-tip-h { font-family: monospace; margin-bottom: 4px; }
+.q-note { font-size: 12.5px; margin-top: 10px; }
