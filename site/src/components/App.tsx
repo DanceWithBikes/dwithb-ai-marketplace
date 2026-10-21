@@ -7,12 +7,13 @@ import {
 } from '../lib/catalog';
 import { TypeBadge, TypeIcon } from './TypeBadge';
 import { SourceViewer } from './SourceViewer';
+import { Quality } from './Quality';
 
 type Strings = typeof en;
 const STR: Record<string, Strings> = { en, uk };
-type View = 'browse' | 'compare' | 'wizard';
+type View = 'browse' | 'compare' | 'wizard' | 'quality';
 const TYPES = ['all', 'plugin', 'skill', 'agent', 'hook', 'mcp'];
-const VIEWS: View[] = ['browse', 'compare', 'wizard'];
+const VIEWS: View[] = ['browse', 'compare', 'wizard', 'quality'];
 
 const fill = (t: string, n: number) => t.replace('{n}', String(n));
 // Changelog items use `code` spans; render them without pulling in a markdown parser.
@@ -27,6 +28,7 @@ function readUrl() {
     sort: (sort === 'az' || sort === 'new' ? sort : 'rel') as 'rel' | 'az' | 'new',
     basket: (p.get('basket') ?? '').split(',').filter(Boolean),
     item: p.get('item'),
+    view: p.get('view') === 'quality' ? ('quality' as const) : null,
   };
 }
 
@@ -47,7 +49,7 @@ export default function App({ base }: { base: string }) {
   const [error, setError] = useState(false);
   const [lang, setLang] = useState(loadLang);
   const [theme, setTheme] = useState(loadTheme);
-  const [view, setView] = useState<View>('browse');
+  const [view, setView] = useState<View>(init.view ?? 'browse');
   const [q, setQ] = useState(init.q);
   const [type, setType] = useState(init.type);
   const [sort, setSort] = useState(init.sort);
@@ -91,9 +93,10 @@ export default function App({ base }: { base: string }) {
     if (sort !== 'rel') p.set('sort', sort);
     if (basket.length) p.set('basket', basket.join(','));
     if (detail) p.set('item', detail);
+    if (view === 'quality') p.set('view', view);
     const qs = p.toString();
     history.replaceState(null, '', location.pathname + (qs ? `?${qs}` : ''));
-  }, [q, type, sort, basket, detail]);
+  }, [q, type, sort, basket, detail, view]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -149,6 +152,7 @@ export default function App({ base }: { base: string }) {
       <footer class="ftr">
         <span>{s.privacy}</span>
         <a href={`${base}catalog.json`}>catalog.json</a>
+        <a href={`${base}quality.json`}>quality.json</a>
       </footer>
     </div>
   );
@@ -420,7 +424,7 @@ export default function App({ base }: { base: string }) {
 
   return chrome(
     <>
-      {view === 'browse' ? browse : view === 'compare' ? compare : wizard}
+      {view === 'browse' ? browse : view === 'compare' ? compare : view === 'wizard' ? wizard : <Quality base={base} s={s.quality} />}
       {cmp.length > 0 && view === 'browse' && (
         <div class="tray">
           <span style="font-size:13px">{fill(s.tray, cmp.length)}</span>

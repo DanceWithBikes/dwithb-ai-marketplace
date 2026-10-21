@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "catalog": "node ../scripts/build-catalog.mjs",
+    "catalog": "node ../scripts/build-catalog.mjs && node ../scripts/build-quality.mjs",
     "predev": "npm run catalog",
     "dev": "astro dev",
     "prebuild": "npm run catalog",

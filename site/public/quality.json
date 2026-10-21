@@ -1,0 +1,478 @@
+{
+  "schemaVersion": 1,
+  "plugin": "sdd-engineering",
+  "generatedAt": "2026-10-21",
+  "channels": [
+    {
+      "id": "latest",
+      "branch": "main",
+      "marketplace": "dwithb-ai-marketplace",
+      "add": "claude plugin marketplace add DanceWithBikes/dwithb-ai-marketplace",
+      "plugins": [
+        {
+          "id": "engineering-paved-path",
+          "version": "1.0.1",
+          "pinned": null
+        },
+        {
+          "id": "research-tools",
+          "version": "1.0.1",
+          "pinned": null
+        },
+        {
+          "id": "architecture-review",
+          "version": "1.0.0",
+          "pinned": null
+        },
+        {
+          "id": "sdd-engineering",
+          "version": "1.1.0",
+          "pinned": null
+        }
+      ]
+    },
+    {
+      "id": "stable",
+      "branch": "stable",
+      "marketplace": "dwithb-stable",
+      "add": "claude plugin marketplace add DanceWithBikes/dwithb-ai-marketplace#stable",
+      "plugins": [
+        {
+          "id": "engineering-paved-path",
+          "version": "1.0.1",
+          "pinned": null
+        },
+        {
+          "id": "research-tools",
+          "version": "1.0.1",
+          "pinned": null
+        },
+        {
+          "id": "architecture-review",
+          "version": "1.0.0",
+          "pinned": null
+        },
+        {
+          "id": "sdd-engineering",
+          "version": "1.0.0",
+          "pinned": "sdd-engineering--v1.0.0"
+        }
+      ]
+    }
+  ],
+  "installs": [
+    {
+      "file": "docs/evidence/plugin-list-1.0.0.json",
+      "label": "1.0.0",
+      "marketplace": "dwithb-ai-marketplace",
+      "version": "1.0.0",
+      "plugins": [
+        {
+          "id": "architecture-review",
+          "version": "1.0.0-86807824ccac",
+          "enabled": true,
+          "errors": 0
+        },
+        {
+          "id": "engineering-paved-path",
+          "version": "1.0.1-a788d43b45ec",
+          "enabled": true,
+          "errors": 0
+        },
+        {
+          "id": "research-tools",
+          "version": "1.0.1-a788d43b45ec",
+          "enabled": true,
+          "errors": 0
+        },
+        {
+          "id": "sdd-engineering",
+          "version": "1.0.0",
+          "enabled": true,
+          "errors": 0
+        }
+      ]
+    },
+    {
+      "file": "docs/evidence/plugin-list-1.0.1.json",
+      "label": "1.0.1",
+      "marketplace": "dwithb-ai-marketplace",
+      "version": "1.0.1",
+      "plugins": [
+        {
+          "id": "architecture-review",
+          "version": "1.0.0-86807824ccac",
+          "enabled": true,
+          "errors": 0
+        },
+        {
+          "id": "engineering-paved-path",
+          "version": "1.0.1-a788d43b45ec",
+          "enabled": true,
+          "errors": 0
+        },
+        {
+          "id": "research-tools",
+          "version": "1.0.1-a788d43b45ec",
+          "enabled": true,
+          "errors": 0
+        },
+        {
+          "id": "sdd-engineering",
+          "version": "1.0.1",
+          "enabled": true,
+          "errors": 0
+        }
+      ]
+    },
+    {
+      "file": "docs/evidence/plugin-list-stable.json",
+      "label": "stable",
+      "marketplace": "dwithb-stable",
+      "version": "1.0.0",
+      "plugins": [
+        {
+          "id": "architecture-review",
+          "version": "1.0.0-86807824ccac",
+          "enabled": true,
+          "errors": 0
+        },
+        {
+          "id": "engineering-paved-path",
+          "version": "1.0.1-a788d43b45ec",
+          "enabled": true,
+          "errors": 0
+        },
+        {
+          "id": "research-tools",
+          "version": "1.0.1-a788d43b45ec",
+          "enabled": true,
+          "errors": 0
+        },
+        {
+          "id": "sdd-engineering",
+          "version": "1.0.0",
+          "enabled": true,
+          "errors": 0
+        }
+      ]
+    }
+  ],
+  "evals": [
+    {
+      "key": "eval-1.0.1",
+      "file": "docs/evidence/eval-1.0.1.json",
+      "kind": "suite",
+      "channel": "latest",
+      "version": "1.0.1",
+      "date": "2026-10-21",
+      "model": "haiku",
+      "judge": "haiku",
+      "threshold": 0,
+      "durationSeconds": 268,
+      "claudeVersion": "2.1.306",
+      "runs": 12,
+      "passed": 11,
+      "passRate": 0.9166666666666666,
+      "costUsd": 2.05774629,
+      "costPerSuccessUsd": 0.18706784454545453,
+      "cases": [
+        {
+          "name": "hook-allows-implementer-edit",
+          "runs": 2,
+          "passed": 2,
+          "costUsd": 0.14229735999999998,
+          "costPerSuccessUsd": 0.07114867999999999,
+          "graders": 3,
+          "failedGraders": []
+        },
+        {
+          "name": "hook-blocks-spec-creator-outside-specs",
+          "runs": 2,
+          "passed": 2,
+          "costUsd": 0.41703277,
+          "costPerSuccessUsd": 0.208516385,
+          "graders": 4,
+          "failedGraders": []
+        },
+        {
+          "name": "plan-verifier-verdict-format",
+          "runs": 2,
+          "passed": 2,
+          "costUsd": 0.23190587000000001,
+          "costPerSuccessUsd": 0.11595293500000001,
+          "graders": 4,
+          "failedGraders": []
+        },
+        {
+          "name": "planner-refuses-unapproved-spec",
+          "runs": 2,
+          "passed": 2,
+          "costUsd": 0.30883216999999996,
+          "costPerSuccessUsd": 0.15441608499999998,
+          "graders": 4,
+          "failedGraders": []
+        },
+        {
+          "name": "spec-creator-asks-before-guessing",
+          "runs": 2,
+          "passed": 1,
+          "costUsd": 0.53781621,
+          "costPerSuccessUsd": 0.53781621,
+          "graders": 3,
+          "failedGraders": [
+            "no-spec-written"
+          ]
+        },
+        {
+          "name": "spec-creator-marks-undecided",
+          "runs": 2,
+          "passed": 2,
+          "costUsd": 0.41986190999999995,
+          "costPerSuccessUsd": 0.20993095499999997,
+          "graders": 4,
+          "failedGraders": []
+        }
+      ]
+    },
+    {
+      "key": "eval-1.1.0",
+      "file": "docs/evidence/eval-1.1.0.json",
+      "kind": "suite",
+      "channel": "latest",
+      "version": "1.1.0",
+      "date": "2026-10-21",
+      "model": "haiku",
+      "judge": "haiku",
+      "threshold": 0,
+      "durationSeconds": 161,
+      "claudeVersion": "2.1.306",
+      "runs": 14,
+      "passed": 14,
+      "passRate": 1,
+      "costUsd": 0.88223557,
+      "costPerSuccessUsd": 0.06301682642857143,
+      "cases": [
+        {
+          "name": "hook-allows-implementer-edit",
+          "runs": 2,
+          "passed": 2,
+          "costUsd": 0.09132222,
+          "costPerSuccessUsd": 0.04566111,
+          "graders": 3,
+          "failedGraders": []
+        },
+        {
+          "name": "hook-blocks-spec-creator-outside-specs",
+          "runs": 2,
+          "passed": 2,
+          "costUsd": 0.19262619,
+          "costPerSuccessUsd": 0.096313095,
+          "graders": 4,
+          "failedGraders": []
+        },
+        {
+          "name": "plan-verifier-verdict-format",
+          "runs": 2,
+          "passed": 2,
+          "costUsd": 0.11706683,
+          "costPerSuccessUsd": 0.058533415,
+          "graders": 4,
+          "failedGraders": []
+        },
+        {
+          "name": "planner-refuses-unapproved-spec",
+          "runs": 2,
+          "passed": 2,
+          "costUsd": 0.23750846999999997,
+          "costPerSuccessUsd": 0.11875423499999999,
+          "graders": 4,
+          "failedGraders": []
+        },
+        {
+          "name": "spec-creator-asks-before-guessing",
+          "runs": 2,
+          "passed": 2,
+          "costUsd": 0.06080732,
+          "costPerSuccessUsd": 0.03040366,
+          "graders": 3,
+          "failedGraders": []
+        },
+        {
+          "name": "spec-creator-marks-undecided",
+          "runs": 2,
+          "passed": 2,
+          "costUsd": 0.17785438,
+          "costPerSuccessUsd": 0.08892719,
+          "graders": 4,
+          "failedGraders": []
+        },
+        {
+          "name": "version-trace-emitted",
+          "runs": 2,
+          "passed": 2,
+          "costUsd": 0.00505016,
+          "costPerSuccessUsd": 0.00252508,
+          "graders": 2,
+          "failedGraders": []
+        }
+      ]
+    },
+    {
+      "key": "smoke-stable-1.0.0",
+      "file": "docs/evidence/smoke-stable-1.0.0.json",
+      "kind": "smoke",
+      "channel": "stable",
+      "version": "1.0.0",
+      "date": "2026-10-21",
+      "model": "haiku",
+      "judge": "haiku",
+      "threshold": 1,
+      "durationSeconds": 92,
+      "claudeVersion": "2.1.306",
+      "runs": 6,
+      "passed": 6,
+      "passRate": 1,
+      "costUsd": 0.6143510699999999,
+      "costPerSuccessUsd": 0.10239184499999998,
+      "cases": [
+        {
+          "name": "hook-allows-implementer-edit",
+          "runs": 2,
+          "passed": 2,
+          "costUsd": 0.09061271000000001,
+          "costPerSuccessUsd": 0.045306355000000006,
+          "graders": 3,
+          "failedGraders": []
+        },
+        {
+          "name": "hook-blocks-spec-creator-outside-specs",
+          "runs": 2,
+          "passed": 2,
+          "costUsd": 0.27125536,
+          "costPerSuccessUsd": 0.13562768,
+          "graders": 4,
+          "failedGraders": []
+        },
+        {
+          "name": "planner-refuses-unapproved-spec",
+          "runs": 2,
+          "passed": 2,
+          "costUsd": 0.25248299999999996,
+          "costPerSuccessUsd": 0.12624149999999998,
+          "graders": 4,
+          "failedGraders": []
+        }
+      ]
+    }
+  ],
+  "comparison": {
+    "cases": [
+      "hook-allows-implementer-edit",
+      "hook-blocks-spec-creator-outside-specs",
+      "plan-verifier-verdict-format",
+      "planner-refuses-unapproved-spec",
+      "spec-creator-asks-before-guessing",
+      "spec-creator-marks-undecided"
+    ],
+    "model": "haiku",
+    "before": {
+      "key": "eval-1.0.1",
+      "version": "1.0.1",
+      "runs": 12,
+      "passed": 11,
+      "passRate": 0.9166666666666666,
+      "costUsd": 2.05774629,
+      "costPerSuccessUsd": 0.18706784454545453
+    },
+    "after": {
+      "key": "eval-1.1.0",
+      "version": "1.1.0",
+      "runs": 12,
+      "passed": 12,
+      "passRate": 1,
+      "costUsd": 0.8771854099999999,
+      "costPerSuccessUsd": 0.07309878416666667
+    }
+  },
+  "models": [
+    {
+      "version": "1.0.0",
+      "tag": "sdd-engineering--v1.0.0",
+      "agents": [
+        {
+          "agent": "implementation-planner",
+          "model": "opus",
+          "effort": null
+        },
+        {
+          "agent": "implementer",
+          "model": "sonnet",
+          "effort": null
+        },
+        {
+          "agent": "plan-verifier",
+          "model": "opus",
+          "effort": null
+        },
+        {
+          "agent": "spec-creator",
+          "model": "opus",
+          "effort": null
+        }
+      ]
+    },
+    {
+      "version": "1.0.1",
+      "tag": "sdd-engineering--v1.0.1",
+      "agents": [
+        {
+          "agent": "implementation-planner",
+          "model": "opus",
+          "effort": null
+        },
+        {
+          "agent": "implementer",
+          "model": "sonnet",
+          "effort": null
+        },
+        {
+          "agent": "plan-verifier",
+          "model": "opus",
+          "effort": null
+        },
+        {
+          "agent": "spec-creator",
+          "model": "opus",
+          "effort": null
+        }
+      ]
+    },
+    {
+      "version": "1.1.0",
+      "tag": null,
+      "agents": [
+        {
+          "agent": "implementation-planner",
+          "model": "opus",
+          "effort": "medium"
+        },
+        {
+          "agent": "implementer",
+          "model": "sonnet",
+          "effort": null
+        },
+        {
+          "agent": "plan-verifier",
+          "model": "sonnet",
+          "effort": null
+        },
+        {
+          "agent": "spec-creator",
+          "model": "sonnet",
+          "effort": null
+        }
+      ]
+    }
+  ]
+}
